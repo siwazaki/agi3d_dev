@@ -1,17 +1,16 @@
 PROGNAME := agi3d
+#release or debug
 buildtype := release
-EX_LIB_DIR := $(HOME)/homebrew/lib
-
+BIN_WXCONFIG :=$(HOME)/homebrew/bin/wx-config
+	
 CXX := g++
 CPPFLAGS += 
 LDFLAGS +=
 LBFGSLIB = -llbfgs
-WXLIBS = `wx-config --libs --gl-libs`
-LIBS += -L$(EX_LIB_DIR) -lpng15 $(FRAMEWORK) -lpthread -llapack -lblas $(LBFGSLIB) $(WXLIBS)
-
-WXCONFIG = `wx-config --cxxflags`
+WXLIBS = `$(BIN_WXCONFIG) --libs --gl-libs`
+LIBS += -lpng15 $(FRAMEWORK) -lpthread -llapack -lblas $(LBFGSLIB) $(WXLIBS)
+WXCONFIG = `$(BIN_WXCONFIG) --cxxflags`
 INCLUDES := -Ivendor
-INCLUDES += -I$(HOME)/homebrew/include
 DEFS := $(INCLUDES) $(WXCONFIG) 
 FRAMEWORK = -framework OpenGL
 FRAMEWORK += -framework GLUT
