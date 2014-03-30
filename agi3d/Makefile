@@ -16,7 +16,7 @@ FRAMEWORK = -framework OpenGL
 FRAMEWORK += -framework GLUT
 FRAMEWORK += -framework Accelerate
 
-SRCS = Config.cpp GraphicPanel.cpp ControlPanel.cpp Frame.cpp AppearanceWindow.cpp App.cpp calcLayout.cpp constraintsolver3d.cpp constraintsolver2d.cpp
+SRCS = Config.cpp MenuBar.cpp GraphicPanel.cpp ControlPanel.cpp Frame.cpp AppearanceWindow.cpp App.cpp calcLayout.cpp constraintsolver3d.cpp constraintsolver2d.cpp
 
 CXXFLAGS := -Wall -Wextra
 ifeq ($(buildtype),release)

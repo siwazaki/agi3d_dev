@@ -1,11 +1,11 @@
 #include "wx/wx.h"
 #include "wx/splitter.h"
 #include "wx/panel.h"
-#include <wx/menu.h>
+
 #include "GraphicPanel.h"
 #include "ControlPanel.h"
 #include "AppearanceWindow.h"
-
+#include "MenuBar.h"
 
 /**
  *  

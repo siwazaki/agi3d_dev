@@ -17,6 +17,7 @@
 		506CDC4F18E821F400EF8DCA /* GraphicPanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 506CDC4318E821F400EF8DCA /* GraphicPanel.cpp */; };
 		506CDC5018E821F400EF8DCA /* Makefile in Sources */ = {isa = PBXBuildFile; fileRef = 506CDC4518E821F400EF8DCA /* Makefile */; };
 		506CDC5118E821F400EF8DCA /* ControlPanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 506CDC4618E821F400EF8DCA /* ControlPanel.cpp */; };
+		50F0D2C018E8303B0067249A /* MenuBar.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50F0D2BE18E8303B0067249A /* MenuBar.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -49,6 +50,8 @@
 		506CDC4518E821F400EF8DCA /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
 		506CDC4618E821F400EF8DCA /* ControlPanel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ControlPanel.cpp; sourceTree = "<group>"; };
 		506CDC4718E821F400EF8DCA /* ControlPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ControlPanel.h; sourceTree = "<group>"; };
+		50F0D2BE18E8303B0067249A /* MenuBar.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MenuBar.cpp; sourceTree = "<group>"; };
+		50F0D2BF18E8303B0067249A /* MenuBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MenuBar.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -95,6 +98,8 @@
 				506CDC3D18E821F400EF8DCA /* Frame.h */,
 				506CDC3E18E821F400EF8DCA /* AppearanceWindow.cpp */,
 				506CDC3F18E821F400EF8DCA /* AppearanceWindow.h */,
+				50F0D2BE18E8303B0067249A /* MenuBar.cpp */,
+				50F0D2BF18E8303B0067249A /* MenuBar.h */,
 			);
 			name = views;
 			sourceTree = "<group>";
@@ -185,6 +190,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				50F0D2C018E8303B0067249A /* MenuBar.cpp in Sources */,
 				506CDC5018E821F400EF8DCA /* Makefile in Sources */,
 				506CDC4A18E821F400EF8DCA /* Frame.cpp in Sources */,
 				506CDC4B18E821F400EF8DCA /* AppearanceWindow.cpp in Sources */,

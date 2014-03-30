@@ -1,4 +1,5 @@
 #include "Frame.h"
+#include "MenuBar.h"
 #include <fstream>
 #include <iostream>
 using namespace std;
@@ -29,43 +30,8 @@ Frame::Frame(const wxString& title)
   base->SplitVertically(left, right);
 
   //MenuBar
-  menubar = new wxMenuBar();
-  file = new wxMenu();
-  file->Append(wxID_OPEN, wxT("Open"));
-  file->AppendSeparator();
-
-  edit = new wxMenu();
-  edit->Append(10, wxT("Reset"));
-  edit->AppendSeparator();
-
-  edit->Append(16, wxT("Appearance"));
-  edit->AppendSeparator();
-
-  layoutMenu = new wxMenu();
-  layoutMenu->Append(11, wxT(" 3D  ✓"));
-  layoutMenu->Append(12, wxT(" 2D"));
-
-  edit->AppendSubMenu(layoutMenu, wxT("Layout Mode"));
-  edit->AppendSeparator();
-
-  rotationMenu = new wxMenu();
-  rotationMenu->Append(13, wxT(" X Rotation  "));
-  rotationMenu->Append(14, wxT(" Y Rotation  "));
-  rotationMenu->Append(15, wxT(" Stop "));
-  x_rotation = false;
-  y_rotation = false;
-
-  edit->AppendSubMenu(rotationMenu, wxT("Auto Rotation"));
-  edit->AppendSeparator();
-
-  edit->Append(17, wxT("Capture Image"));
-
-  quit = new wxMenuItem(file, wxID_EXIT, wxT("&Quit\tCtrl+W"));
-  file->Append(quit);
-
-  menubar->Append(file, wxT("&File"));
-  menubar->Append(edit, wxT("&Edit"));
-  SetMenuBar(menubar);
+  menubar = new MenuBar();
+    SetMenuBar(menubar);
 
   appw = new AppearanceWindow(right, wxT("Appearance"));
 

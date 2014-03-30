@@ -11,3 +11,29 @@ Config& Config::instance()
                  });
   return *m_instance.get();
 }
+
+Config::Config()
+{
+  this->xRotation = 0;
+  this->yRotation = 0;
+}
+
+bool Config::rotateX()
+{
+  return this->xRotation;
+}
+
+bool Config::rotateY()
+{
+  return this->yRotation;
+}
+
+void Config::rotateX(bool rotation)
+{
+  this->xRotation = rotation;
+}
+
+void Config::rotateY(bool rotation)
+{
+  this->yRotation = rotation;
+}
