@@ -7,17 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		506CDC2E18E81ED000EF8DCA /* agi3d.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = 506CDC2D18E81ED000EF8DCA /* agi3d.1 */; };
-		506CDC4818E821F400EF8DCA /* AGIApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 506CDC3818E821F400EF8DCA /* AGIApp.cpp */; };
-		506CDC4918E821F400EF8DCA /* AGIConfig.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 506CDC3A18E821F400EF8DCA /* AGIConfig.cpp */; };
-		506CDC4A18E821F400EF8DCA /* AGIFrame.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 506CDC3C18E821F400EF8DCA /* AGIFrame.cpp */; };
+		506CDC4818E821F400EF8DCA /* App.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 506CDC3818E821F400EF8DCA /* App.cpp */; };
+		506CDC4918E821F400EF8DCA /* Config.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 506CDC3A18E821F400EF8DCA /* Config.cpp */; };
+		506CDC4A18E821F400EF8DCA /* Frame.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 506CDC3C18E821F400EF8DCA /* Frame.cpp */; };
 		506CDC4B18E821F400EF8DCA /* AppearanceWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 506CDC3E18E821F400EF8DCA /* AppearanceWindow.cpp */; };
 		506CDC4C18E821F400EF8DCA /* calcLayout.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 506CDC4018E821F400EF8DCA /* calcLayout.cpp */; };
 		506CDC4D18E821F400EF8DCA /* constraintsolver2d.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 506CDC4118E821F400EF8DCA /* constraintsolver2d.cpp */; };
 		506CDC4E18E821F400EF8DCA /* constraintsolver3d.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 506CDC4218E821F400EF8DCA /* constraintsolver3d.cpp */; };
-		506CDC4F18E821F400EF8DCA /* DrawPanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 506CDC4318E821F400EF8DCA /* DrawPanel.cpp */; };
+		506CDC4F18E821F400EF8DCA /* GraphicPanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 506CDC4318E821F400EF8DCA /* GraphicPanel.cpp */; };
 		506CDC5018E821F400EF8DCA /* Makefile in Sources */ = {isa = PBXBuildFile; fileRef = 506CDC4518E821F400EF8DCA /* Makefile */; };
-		506CDC5118E821F400EF8DCA /* SubPanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 506CDC4618E821F400EF8DCA /* SubPanel.cpp */; };
+		506CDC5118E821F400EF8DCA /* ControlPanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 506CDC4618E821F400EF8DCA /* ControlPanel.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -27,31 +26,29 @@
 			dstPath = /usr/share/man/man1/;
 			dstSubfolderSpec = 0;
 			files = (
-				506CDC2E18E81ED000EF8DCA /* agi3d.1 in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 1;
 		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		506CDC2818E81ED000EF8DCA /* agi3d */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = agi3d; sourceTree = BUILT_PRODUCTS_DIR; };
-		506CDC2D18E81ED000EF8DCA /* agi3d.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = agi3d.1; sourceTree = "<group>"; };
-		506CDC3818E821F400EF8DCA /* AGIApp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AGIApp.cpp; sourceTree = "<group>"; };
-		506CDC3918E821F400EF8DCA /* AGIApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AGIApp.h; sourceTree = "<group>"; };
-		506CDC3A18E821F400EF8DCA /* AGIConfig.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AGIConfig.cpp; sourceTree = "<group>"; };
-		506CDC3B18E821F400EF8DCA /* AGIConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AGIConfig.h; sourceTree = "<group>"; };
-		506CDC3C18E821F400EF8DCA /* AGIFrame.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AGIFrame.cpp; sourceTree = "<group>"; };
-		506CDC3D18E821F400EF8DCA /* AGIFrame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AGIFrame.h; sourceTree = "<group>"; };
+		506CDC2818E81ED000EF8DCA /* agi3d */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; name = agi3d; path = /Users/iwazaki/Workspace/Repository/Git/agi3d/build/Debug/agi3d; sourceTree = "<absolute>"; };
+		506CDC3818E821F400EF8DCA /* App.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = App.cpp; sourceTree = "<group>"; };
+		506CDC3918E821F400EF8DCA /* App.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = App.h; sourceTree = "<group>"; };
+		506CDC3A18E821F400EF8DCA /* Config.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Config.cpp; sourceTree = "<group>"; };
+		506CDC3B18E821F400EF8DCA /* Config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Config.h; sourceTree = "<group>"; };
+		506CDC3C18E821F400EF8DCA /* Frame.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Frame.cpp; sourceTree = "<group>"; };
+		506CDC3D18E821F400EF8DCA /* Frame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Frame.h; sourceTree = "<group>"; };
 		506CDC3E18E821F400EF8DCA /* AppearanceWindow.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AppearanceWindow.cpp; sourceTree = "<group>"; };
 		506CDC3F18E821F400EF8DCA /* AppearanceWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppearanceWindow.h; sourceTree = "<group>"; };
 		506CDC4018E821F400EF8DCA /* calcLayout.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = calcLayout.cpp; sourceTree = "<group>"; };
 		506CDC4118E821F400EF8DCA /* constraintsolver2d.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = constraintsolver2d.cpp; sourceTree = "<group>"; };
 		506CDC4218E821F400EF8DCA /* constraintsolver3d.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = constraintsolver3d.cpp; sourceTree = "<group>"; };
-		506CDC4318E821F400EF8DCA /* DrawPanel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DrawPanel.cpp; sourceTree = "<group>"; };
-		506CDC4418E821F400EF8DCA /* DrawPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DrawPanel.h; sourceTree = "<group>"; };
+		506CDC4318E821F400EF8DCA /* GraphicPanel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GraphicPanel.cpp; sourceTree = "<group>"; };
+		506CDC4418E821F400EF8DCA /* GraphicPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GraphicPanel.h; sourceTree = "<group>"; };
 		506CDC4518E821F400EF8DCA /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
-		506CDC4618E821F400EF8DCA /* SubPanel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SubPanel.cpp; sourceTree = "<group>"; };
-		506CDC4718E821F400EF8DCA /* SubPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SubPanel.h; sourceTree = "<group>"; };
+		506CDC4618E821F400EF8DCA /* ControlPanel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ControlPanel.cpp; sourceTree = "<group>"; };
+		506CDC4718E821F400EF8DCA /* ControlPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ControlPanel.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -69,40 +66,54 @@
 			isa = PBXGroup;
 			children = (
 				506CDC2A18E81ED000EF8DCA /* agi3d */,
-				506CDC2918E81ED000EF8DCA /* Products */,
 			);
-			sourceTree = "<group>";
-		};
-		506CDC2918E81ED000EF8DCA /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				506CDC2818E81ED000EF8DCA /* agi3d */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 		506CDC2A18E81ED000EF8DCA /* agi3d */ = {
 			isa = PBXGroup;
 			children = (
-				506CDC3818E821F400EF8DCA /* AGIApp.cpp */,
-				506CDC3918E821F400EF8DCA /* AGIApp.h */,
-				506CDC3A18E821F400EF8DCA /* AGIConfig.cpp */,
-				506CDC3B18E821F400EF8DCA /* AGIConfig.h */,
-				506CDC3C18E821F400EF8DCA /* AGIFrame.cpp */,
-				506CDC3D18E821F400EF8DCA /* AGIFrame.h */,
+				506CDC4518E821F400EF8DCA /* Makefile */,
+				506CDC3818E821F400EF8DCA /* App.cpp */,
+				506CDC3918E821F400EF8DCA /* App.h */,
+				506CDC3A18E821F400EF8DCA /* Config.cpp */,
+				506CDC3B18E821F400EF8DCA /* Config.h */,
+				50F0D2BD18E82C690067249A /* controllers */,
+				50F0D2BC18E82C5F0067249A /* models */,
+				50F0D2BB18E82C1B0067249A /* views */,
+			);
+			path = agi3d;
+			sourceTree = "<group>";
+		};
+		50F0D2BB18E82C1B0067249A /* views */ = {
+			isa = PBXGroup;
+			children = (
+				506CDC4618E821F400EF8DCA /* ControlPanel.cpp */,
+				506CDC4718E821F400EF8DCA /* ControlPanel.h */,
+				506CDC4318E821F400EF8DCA /* GraphicPanel.cpp */,
+				506CDC4418E821F400EF8DCA /* GraphicPanel.h */,
+				506CDC3C18E821F400EF8DCA /* Frame.cpp */,
+				506CDC3D18E821F400EF8DCA /* Frame.h */,
 				506CDC3E18E821F400EF8DCA /* AppearanceWindow.cpp */,
 				506CDC3F18E821F400EF8DCA /* AppearanceWindow.h */,
+			);
+			name = views;
+			sourceTree = "<group>";
+		};
+		50F0D2BC18E82C5F0067249A /* models */ = {
+			isa = PBXGroup;
+			children = (
 				506CDC4018E821F400EF8DCA /* calcLayout.cpp */,
 				506CDC4118E821F400EF8DCA /* constraintsolver2d.cpp */,
 				506CDC4218E821F400EF8DCA /* constraintsolver3d.cpp */,
-				506CDC4318E821F400EF8DCA /* DrawPanel.cpp */,
-				506CDC4418E821F400EF8DCA /* DrawPanel.h */,
-				506CDC4518E821F400EF8DCA /* Makefile */,
-				506CDC4618E821F400EF8DCA /* SubPanel.cpp */,
-				506CDC4718E821F400EF8DCA /* SubPanel.h */,
-				506CDC2D18E81ED000EF8DCA /* agi3d.1 */,
 			);
-			path = agi3d;
+			name = models;
+			sourceTree = "<group>";
+		};
+		50F0D2BD18E82C690067249A /* controllers */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = controllers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -119,7 +130,7 @@
 			dependencies = (
 			);
 			name = make;
-			passBuildSettingsInEnvironment = 1;
+			passBuildSettingsInEnvironment = 0;
 			productName = make;
 		};
 /* End PBXLegacyTarget section */
@@ -159,7 +170,7 @@
 				en,
 			);
 			mainGroup = 506CDC1F18E81ED000EF8DCA;
-			productRefGroup = 506CDC2918E81ED000EF8DCA /* Products */;
+			productRefGroup = 506CDC1F18E81ED000EF8DCA;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
@@ -175,15 +186,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				506CDC5018E821F400EF8DCA /* Makefile in Sources */,
-				506CDC4A18E821F400EF8DCA /* AGIFrame.cpp in Sources */,
+				506CDC4A18E821F400EF8DCA /* Frame.cpp in Sources */,
 				506CDC4B18E821F400EF8DCA /* AppearanceWindow.cpp in Sources */,
 				506CDC4E18E821F400EF8DCA /* constraintsolver3d.cpp in Sources */,
 				506CDC4C18E821F400EF8DCA /* calcLayout.cpp in Sources */,
-				506CDC4F18E821F400EF8DCA /* DrawPanel.cpp in Sources */,
-				506CDC4818E821F400EF8DCA /* AGIApp.cpp in Sources */,
-				506CDC4918E821F400EF8DCA /* AGIConfig.cpp in Sources */,
+				506CDC4F18E821F400EF8DCA /* GraphicPanel.cpp in Sources */,
+				506CDC4818E821F400EF8DCA /* App.cpp in Sources */,
+				506CDC4918E821F400EF8DCA /* Config.cpp in Sources */,
 				506CDC4D18E821F400EF8DCA /* constraintsolver2d.cpp in Sources */,
-				506CDC5118E821F400EF8DCA /* SubPanel.cpp in Sources */,
+				506CDC5118E821F400EF8DCA /* ControlPanel.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -10,9 +10,9 @@
 
 // MainFrame extends wxFrame
 
-class SubPanel : public wxPanel {
+class ControlPanel : public wxPanel {
 public:
-  SubPanel(wxWindow* parent);
+  ControlPanel(wxWindow* parent);
 
   wxSlider * cameraPositionSlider;
   wxSlider * DeltaSlider;

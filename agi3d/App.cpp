@@ -1,20 +1,21 @@
-#include "AGIApp.h"
-#include "AGIFrame.h"
+#include "Config.h"
+#include "App.h"
+#include "Frame.h"
 // For OSX
 #include <ApplicationServices/ApplicationServices.h>
 
 // called OnInit in "Main" class
 
-IMPLEMENT_APP(AGIApp)
+IMPLEMENT_APP(App)
 
-bool AGIApp::OnInit() {
+bool App::OnInit() {
   // MainFrame: public wxFrame
   // Omajinai for Mac OS
   ProcessSerialNumber PSN;
   GetCurrentProcess(&PSN);
   TransformProcessType(&PSN, kProcessTransformToForegroundApplication);
 
-  AGIFrame *mFrame = new AGIFrame(wxT("Active Graph Interface 3D"));
+  Frame *mFrame = new Frame(wxT("Active Graph Interface 3D"));
   mFrame->Show(true);
-  return true;
+    return true;
 }

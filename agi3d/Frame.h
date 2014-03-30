@@ -2,19 +2,23 @@
 #include "wx/splitter.h"
 #include "wx/panel.h"
 #include <wx/menu.h>
-#include "DrawPanel.h"
-#include "SubPanel.h"
+#include "GraphicPanel.h"
+#include "ControlPanel.h"
 #include "AppearanceWindow.h"
 
-// MainFrame extends wxFrame
 
-class MainFrame : public wxFrame {
+/**
+ *  
+ * メインのフレームを表すクラス。次のコンポーネントを持つ
+ * - MenuBar 
+ */
+class Frame : public wxFrame {
 public:
-  MainFrame(const wxString& title);
+  Frame(const wxString& title);
 
   wxSplitterWindow *base;
-  DrawPanel *left;
-  SubPanel *right;
+  GraphicPanel *left;
+  ControlPanel *right;
 
   wxMenuBar *menubar;
   wxMenu *file;
@@ -24,12 +28,12 @@ public:
   wxMenu *layoutMenu;
   wxMenu *rotationMenu;
   wxMenuItem *quit;
-
+  
   AppearanceWindow * appw;
 
   void initload();
-  SubPanel * GetSubPanel();
-  DrawPanel * GetDrawPanel();
+  ControlPanel * GetSubPanel();
+  GraphicPanel * GetDrawPanel();
   void ResetMenuParams();
   void OnQuit(wxCommandEvent& event);
   void CaptureImage(wxCommandEvent& event);

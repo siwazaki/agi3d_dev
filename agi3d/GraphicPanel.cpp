@@ -12,11 +12,11 @@
 #include "wx/wx.h"
 #include "wx/sizer.h"
 #include "wx/glcanvas.h"
-#include "DrawPanel.h"
-#include "SubPanel.h"
+#include "GraphicPanel.h"
+#include "ControlPanel.h"
 #include <png.h>
 #include "wx/stopwatch.h"
-#include "MainFrame.h"
+#include "Frame.h"
 
 typedef cml::vector3f vector3;
 typedef cml::vector4f vector4;
@@ -138,8 +138,8 @@ static int imgnum = 1;
 //Timer for FPS
 static wxStopWatch * sw;
 
-//SubPanel
-static SubPanel * sbp;
+//ControlPanel
+static ControlPanel * sbp;
 
 //View Matrix?
 static GLdouble mvMatrix[16];
@@ -151,19 +151,19 @@ static float fps = 0.0f;
 
 //wx Macros
 
-BEGIN_EVENT_TABLE(DrawPanel, wxGLCanvas)
-EVT_MOTION(DrawPanel::mouseMoved)
-EVT_LEFT_DOWN(DrawPanel::mouseLeftDown)
-EVT_LEFT_UP(DrawPanel::mouseLeftReleased)
-EVT_RIGHT_DOWN(DrawPanel::mouseRightDown)
-EVT_RIGHT_UP(DrawPanel::mouseRightReleased)
-EVT_SIZE(DrawPanel::resized)
-EVT_PAINT(DrawPanel::RenderScene)
-EVT_IDLE(DrawPanel::OnIdle)
-EVT_MOUSEWHEEL(DrawPanel::mouseScroll)
+BEGIN_EVENT_TABLE(GraphicPanel, wxGLCanvas)
+EVT_MOTION(GraphicPanel::mouseMoved)
+EVT_LEFT_DOWN(GraphicPanel::mouseLeftDown)
+EVT_LEFT_UP(GraphicPanel::mouseLeftReleased)
+EVT_RIGHT_DOWN(GraphicPanel::mouseRightDown)
+EVT_RIGHT_UP(GraphicPanel::mouseRightReleased)
+EVT_SIZE(GraphicPanel::resized)
+EVT_PAINT(GraphicPanel::RenderScene)
+EVT_IDLE(GraphicPanel::OnIdle)
+EVT_MOUSEWHEEL(GraphicPanel::mouseScroll)
 END_EVENT_TABLE()
 
-DrawPanel::~DrawPanel() {
+GraphicPanel::~GraphicPanel() {
   delete m_context;
 }
 
@@ -236,7 +236,7 @@ void relayout2D() {
   }
 }
 
-void DrawPanel::SetupPanel() {
+void GraphicPanel::SetupPanel() {
   //Free Memory
   {
     delete[] pos_x;
@@ -316,7 +316,7 @@ void DrawPanel::SetupPanel() {
   Refresh();
 }
 
-void DrawPanel::ResetLayout() {
+void GraphicPanel::ResetLayout() {
   linewidth = default_linewidth;
 
   DRAW_EDGES = true;
@@ -392,7 +392,7 @@ void DrawPanel::ResetLayout() {
   Refresh();
 }
 
-DrawPanel::DrawPanel(wxWindow* parent, int* args) :
+GraphicPanel::GraphicPanel(wxWindow* parent, int* args) :
 wxGLCanvas(parent, wxID_ANY, args, wxDefaultPosition, wxSize(width, height), wxFULL_REPAINT_ON_RESIZE) {
 
   m_context = new wxGLContext(this);
@@ -400,8 +400,8 @@ wxGLCanvas(parent, wxID_ANY, args, wxDefaultPosition, wxSize(width, height), wxF
   sw = new wxStopWatch();
 
   wxWindow * p = this->GetParent();
-  MainFrame * mf = (MainFrame *) (p->GetParent());
-  sbp = (SubPanel *) mf->GetSubPanel();
+  Frame * mf = (Frame *) (p->GetParent());
+  sbp = (ControlPanel *) mf->GetSubPanel();
 
   SetBackgroundStyle(wxBG_STYLE_CUSTOM);
 
@@ -442,7 +442,7 @@ wxGLCanvas(parent, wxID_ANY, args, wxDefaultPosition, wxSize(width, height), wxF
 
 }
 
-void DrawPanel::resized(wxSizeEvent& evt) {
+void GraphicPanel::resized(wxSizeEvent& evt) {
   int topleft_x = 0, topleft_y = 0, bottomrigth_x = getWidth(), bottomrigth_y = getHeight();
 
   glClearColor(1.0f, 1.0f, 1.0f, 1.0f); //white Background
@@ -472,7 +472,7 @@ void DrawPanel::resized(wxSizeEvent& evt) {
   Refresh();
 }
 
-void DrawPanel::resize() {
+void GraphicPanel::resize() {
   int topleft_x = 0, topleft_y = 0, bottomrigth_x = getWidth(), bottomrigth_y = getHeight();
 
   glClearColor(1.0f, 1.0f, 1.0f, 1.0f); //white i
@@ -503,15 +503,15 @@ void DrawPanel::resize() {
   Refresh();
 }
 
-int DrawPanel::getWidth() {
+int GraphicPanel::getWidth() {
   return GetSize().x;
 }
 
-int DrawPanel::getHeight() {
+int GraphicPanel::getHeight() {
   return GetSize().y;
 }
 
-void DrawPanel::RenderScene(wxPaintEvent& evt) {
+void GraphicPanel::RenderScene(wxPaintEvent& evt) {
   wxGLCanvas::SetCurrent(*m_context);
   wxPaintDC(this);
 
@@ -714,7 +714,7 @@ void DrawPanel::RenderScene(wxPaintEvent& evt) {
   glDisable(GL_DEPTH_TEST);
 }
 
-void DrawPanel::Render(float x, float y, float z) {
+void GraphicPanel::Render(float x, float y, float z) {
   wxGLCanvas::SetCurrent(*m_context);
   wxPaintDC(this);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -803,7 +803,7 @@ void DrawPanel::Render(float x, float y, float z) {
   glDisable(GL_DEPTH_TEST);
 }
 
-void DrawPanel::changeColor(int m) {
+void GraphicPanel::changeColor(int m) {
   if (id != -1) {
     colors[neighbor[id][m]] = red;
     if (highlited_id != -1) {
@@ -813,28 +813,28 @@ void DrawPanel::changeColor(int m) {
   }
 }
 
-void DrawPanel::UpdateEye(float _v) {
+void GraphicPanel::UpdateEye(float _v) {
   v = default_v*_v;
   eye.set(eye[0] * v, eye[1] * v, eye[2] * v);
   Refresh();
 }
 
-void DrawPanel::UpdateSize(float _s) {
+void GraphicPanel::UpdateSize(float _s) {
   size_rate = _s;
   Refresh();
 }
 
-void DrawPanel::UpdateThickness(float t) {
+void GraphicPanel::UpdateThickness(float t) {
   linewidth = t;
   Refresh();
 }
 
-void DrawPanel::ChangeLayoutMode(int mode) {
+void GraphicPanel::ChangeLayoutMode(int mode) {
   LayoutMode = mode;
   ResetLayout();
 }
 
-void DrawPanel::ResetIsDrawingNodes() {
+void GraphicPanel::ResetIsDrawingNodes() {
   nodethreshold_b = nodevalue_min;
   nodethreshold_t = nodevalue_max;
   for (int i = 0; i < N; i++) {
@@ -842,7 +842,7 @@ void DrawPanel::ResetIsDrawingNodes() {
   }
 }
 
-void DrawPanel::ResetIsDrawingEdges() {
+void GraphicPanel::ResetIsDrawingEdges() {
   edgethreshold_b = edgevalue_min;
   edgethreshold_t = edgevalue_max;
   for (int i = 0; i < M; i++) {
@@ -850,7 +850,7 @@ void DrawPanel::ResetIsDrawingEdges() {
   }
 }
 
-float DrawPanel::UpdateNodeThreshold_b(float t, int attrID) {
+float GraphicPanel::UpdateNodeThreshold_b(float t, int attrID) {
   nodethreshold_b = (1.0 - t * t)*(nodevalue_min) + (t * t)*(nodevalue_max);
   for (int i = 0; i < N; i++) {
     isdrawingNodes[i] = ((nodevalues[i] >= nodethreshold_b) && (nodevalues[i] <= nodethreshold_t));
@@ -869,7 +869,7 @@ float DrawPanel::UpdateNodeThreshold_b(float t, int attrID) {
   return nodethreshold_b;
 }
 
-float DrawPanel::UpdateNodeThreshold_t(float t, int attrID) {
+float GraphicPanel::UpdateNodeThreshold_t(float t, int attrID) {
   nodethreshold_t = (1.0 - t * t)*(nodevalue_min) + (t * t)*(nodevalue_max);
   for (int i = 0; i < N; i++) {
     isdrawingNodes[i] = ((nodevalues[i] >= nodethreshold_b) && (nodevalues[i] <= nodethreshold_t));
@@ -888,7 +888,7 @@ float DrawPanel::UpdateNodeThreshold_t(float t, int attrID) {
   return nodethreshold_t;
 }
 
-void DrawPanel::UpdateEdgeThreshold_b(float t, int attrID) {
+void GraphicPanel::UpdateEdgeThreshold_b(float t, int attrID) {
   edgethreshold_b = (1 - t * t)*(edgevalue_min) + t * t * (edgevalue_max);
   for (int i = 0; i < M; i++) {
     isdrawingEdges[i] = ((edgevalues[i] >= edgethreshold_b) && (edgevalues[i] <= edgethreshold_t));
@@ -896,7 +896,7 @@ void DrawPanel::UpdateEdgeThreshold_b(float t, int attrID) {
   Refresh();
 }
 
-void DrawPanel::UpdateEdgeThreshold_t(float t, int attrID) {
+void GraphicPanel::UpdateEdgeThreshold_t(float t, int attrID) {
   edgethreshold_t = (1 - t * t)*(edgevalue_min) + t * t * (edgevalue_max);
   for (int i = 0; i < M; i++) {
     isdrawingEdges[i] = ((edgevalues[i] >= edgethreshold_b) && (edgevalues[i] <= edgethreshold_t));
@@ -904,7 +904,7 @@ void DrawPanel::UpdateEdgeThreshold_t(float t, int attrID) {
   Refresh();
 }
 
-void DrawPanel::ScaleLayout(float f) {
+void GraphicPanel::ScaleLayout(float f) {
   if (LayoutMode == 3) {
     UpdateScale3D(f);
     relayout3D();
@@ -915,7 +915,7 @@ void DrawPanel::ScaleLayout(float f) {
   Refresh();
 }
 
-void DrawPanel::ModifyDelta(float f) {
+void GraphicPanel::ModifyDelta(float f) {
   if (LayoutMode == 3) {
     UpdateProjection3D(f);
     relayout3D();
@@ -926,7 +926,7 @@ void DrawPanel::ModifyDelta(float f) {
   Refresh();
 }
 
-void DrawPanel::ChangeDimension(float f) {
+void GraphicPanel::ChangeDimension(float f) {
   if (LayoutMode == 3) {
     UpdateDimension3D(f);
     relayout3D();
@@ -936,27 +936,27 @@ void DrawPanel::ChangeDimension(float f) {
   }
 }
 
-void DrawPanel::DrawEdge() {
+void GraphicPanel::DrawEdge() {
   DRAW_EDGES = !DRAW_EDGES;
   Refresh();
 }
 
-void DrawPanel::NodeModeChange() {
+void GraphicPanel::NodeModeChange() {
   NODE_MODE = !NODE_MODE;
   Refresh();
 }
 
-void DrawPanel::SetXRotation(bool value) {
+void GraphicPanel::SetXRotation(bool value) {
   AUTO_X_ROTATION = value;
   Refresh();
 }
 
-void DrawPanel::SetYRotation(bool value) {
+void GraphicPanel::SetYRotation(bool value) {
   AUTO_Y_ROTATION = value;
   Refresh();
 }
 
-void DrawPanel::SavePixelData() {
+void GraphicPanel::SavePixelData() {
   string name = graphName + "img" + IntToString(imgnum) + ".png";
   imgnum++;
 
@@ -1015,7 +1015,7 @@ void CalculateWorldCo(int x, int y, float depth, double &wx, double &wy, double 
 
 #define BUFFER_LENGTH 64
 
-int DrawPanel::ProcessSelection(int xPos, int yPos) {
+int GraphicPanel::ProcessSelection(int xPos, int yPos) {
   GLfloat fAspect;
   static GLuint selectBuff[BUFFER_LENGTH];
   GLint hits, viewport[4];
@@ -1059,11 +1059,11 @@ int DrawPanel::ProcessSelection(int xPos, int yPos) {
   return res;
 }
 
-void DrawPanel::OnIdle(wxIdleEvent&) {
+void GraphicPanel::OnIdle(wxIdleEvent&) {
   Refresh();
 }
 
-void DrawPanel::mouseMoved(wxMouseEvent& event) {
+void GraphicPanel::mouseMoved(wxMouseEvent& event) {
   if (LOAD_FLAG) {
     int x = event.GetX(), y = event.GetY();
     int dx = x - mouse_pos_x;
@@ -1156,7 +1156,7 @@ void DrawPanel::mouseMoved(wxMouseEvent& event) {
   }
 }
 
-void DrawPanel::mouseLeftDown(wxMouseEvent& event) {
+void GraphicPanel::mouseLeftDown(wxMouseEvent& event) {
   if (LOAD_FLAG) {
     int x = event.GetX(), y = event.GetY();
     {
@@ -1254,14 +1254,14 @@ void DrawPanel::mouseLeftDown(wxMouseEvent& event) {
   }
 }
 
-void DrawPanel::mouseLeftReleased(wxMouseEvent& event) {
+void GraphicPanel::mouseLeftReleased(wxMouseEvent& event) {
   if (LOAD_FLAG) {
     isDrag = false;
     Refresh();
   }
 }
 
-void DrawPanel::mouseRightDown(wxMouseEvent& event) {
+void GraphicPanel::mouseRightDown(wxMouseEvent& event) {
   if (LOAD_FLAG) {
     int x = event.GetX(), y = event.GetY();
 
@@ -1273,7 +1273,7 @@ void DrawPanel::mouseRightDown(wxMouseEvent& event) {
   }
 }
 
-void DrawPanel::mouseRightReleased(wxMouseEvent& event) {
+void GraphicPanel::mouseRightReleased(wxMouseEvent& event) {
   if (LOAD_FLAG) {
     isDrag = false;
     isRightPressed = false;
@@ -1281,7 +1281,7 @@ void DrawPanel::mouseRightReleased(wxMouseEvent& event) {
   }
 }
 
-void DrawPanel::mouseScroll(wxMouseEvent& event) {
+void GraphicPanel::mouseScroll(wxMouseEvent& event) {
   int delta = event.GetWheelRotation();
   if (delta != 0) {
     wheel_pos -= (float) delta / 4.0;

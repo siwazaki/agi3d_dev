@@ -1,4 +1,4 @@
-#include "AGIFrame.h"
+#include "Frame.h"
 #include <fstream>
 #include <iostream>
 using namespace std;
@@ -14,7 +14,7 @@ extern string graphName;
 static bool x_rotation;
 static bool y_rotation;
 
-AGIFrame::AGIFrame(const wxString& title)
+Frame::Frame(const wxString& title)
 : wxFrame(NULL, wxID_ANY, title, wxDefaultPosition, wxSize(1280, 870)) {
 
   base = new wxSplitterWindow(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxSP_LIVE_UPDATE);
@@ -23,8 +23,8 @@ AGIFrame::AGIFrame(const wxString& title)
 
   //Panels
   int args[] = {WX_GL_RGBA, WX_GL_DOUBLEBUFFER, WX_GL_DEPTH_SIZE, 16};
-  left = new DrawPanel(base, args);
-  right = new SubPanel(base);
+  left = new GraphicPanel(base, args);
+  right = new ControlPanel(base);
 
   base->SplitVertically(left, right);
 
@@ -70,34 +70,34 @@ AGIFrame::AGIFrame(const wxString& title)
   appw = new AppearanceWindow(right, wxT("Appearance"));
 
   //Connect Event
-  Connect(wxID_EXIT, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(AGIFrame::OnQuit));
-  Connect(10, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(AGIFrame::Reset));
-  Connect(11, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(AGIFrame::ChangeLayoutModeTo3D));
-  Connect(12, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(AGIFrame::ChangeLayoutModeTo2D));
-  Connect(13, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(AGIFrame::SetAutoXRotation));
-  Connect(14, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(AGIFrame::SetAutoYRotation));
-  Connect(15, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(AGIFrame::StopAutoRotation));
-  Connect(16, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(AGIFrame::OpenAppearanceWindow));
-  Connect(17, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(AGIFrame::CaptureImage));
+  Connect(wxID_EXIT, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(Frame::OnQuit));
+  Connect(10, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(Frame::Reset));
+  Connect(11, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(Frame::ChangeLayoutModeTo3D));
+  Connect(12, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(Frame::ChangeLayoutModeTo2D));
+  Connect(13, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(Frame::SetAutoXRotation));
+  Connect(14, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(Frame::SetAutoYRotation));
+  Connect(15, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(Frame::StopAutoRotation));
+  Connect(16, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(Frame::OpenAppearanceWindow));
+  Connect(17, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(Frame::CaptureImage));
 
-  Connect(wxID_OPEN, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(AGIFrame::OnOpen));
+  Connect(wxID_OPEN, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(Frame::OnOpen));
 
   this->Centre();
 }
 
-SubPanel * AGIFrame::GetSubPanel() {
+ControlPanel * Frame::GetSubPanel() {
   return right;
 }
 
-DrawPanel * AGIFrame::GetDrawPanel() {
+GraphicPanel * Frame::GetDrawPanel() {
   return left;
 }
 
-void AGIFrame::OnQuit(wxCommandEvent& WXUNUSED(event)) {
+void Frame::OnQuit(wxCommandEvent& WXUNUSED(event)) {
   Close(true);
 }
 
-void AGIFrame::initload() {
+void Frame::initload() {
   wxFileDialog * openFileDialog = new wxFileDialog(this);
   if (openFileDialog->ShowModal() == wxID_OK) {
     wxString filePath = openFileDialog->GetPath();
@@ -145,7 +145,7 @@ void AGIFrame::initload() {
   }
 }
 
-void AGIFrame::OnOpen(wxCommandEvent& event) {
+void Frame::OnOpen(wxCommandEvent& event) {
   wxFileDialog * openFileDialog = new wxFileDialog(this);
   if (openFileDialog->ShowModal() == wxID_OK) {
     wxString filePath = openFileDialog->GetPath();
@@ -191,7 +191,7 @@ void AGIFrame::OnOpen(wxCommandEvent& event) {
   }
 }
 
-void AGIFrame::ResetMenuParams() {
+void Frame::ResetMenuParams() {
   x_rotation = false;
   left->SetXRotation(false);
   rotationMenu->SetLabel(13, wxT(" X Rotation"));
@@ -200,14 +200,14 @@ void AGIFrame::ResetMenuParams() {
   rotationMenu->SetLabel(14, wxT(" Y Rotation"));
 }
 
-void AGIFrame::Reset(wxCommandEvent& event) {
+void Frame::Reset(wxCommandEvent& event) {
   left->ResetLayout();
   right->Init();
   appw->Init();
   ResetMenuParams();
 }
 
-void AGIFrame::ChangeLayoutModeTo2D(wxCommandEvent& event) {
+void Frame::ChangeLayoutModeTo2D(wxCommandEvent& event) {
   left->ChangeLayoutMode(2);
   right->Init();
   appw->Init();
@@ -216,7 +216,7 @@ void AGIFrame::ChangeLayoutModeTo2D(wxCommandEvent& event) {
   ResetMenuParams();
 }
 
-void AGIFrame::ChangeLayoutModeTo3D(wxCommandEvent& event) {
+void Frame::ChangeLayoutModeTo3D(wxCommandEvent& event) {
   left->ChangeLayoutMode(3);
   right->Init();
   appw->Init();
@@ -225,7 +225,7 @@ void AGIFrame::ChangeLayoutModeTo3D(wxCommandEvent& event) {
   ResetMenuParams();
 }
 
-void AGIFrame::SetAutoXRotation(wxCommandEvent& event) {
+void Frame::SetAutoXRotation(wxCommandEvent& event) {
   if (x_rotation) {
     left->SetXRotation(false);
     x_rotation = false;
@@ -237,7 +237,7 @@ void AGIFrame::SetAutoXRotation(wxCommandEvent& event) {
   }
 }
 
-void AGIFrame::SetAutoYRotation(wxCommandEvent& event) {
+void Frame::SetAutoYRotation(wxCommandEvent& event) {
   if (y_rotation) {
     left->SetYRotation(false);
     y_rotation = false;
@@ -249,15 +249,15 @@ void AGIFrame::SetAutoYRotation(wxCommandEvent& event) {
   }
 }
 
-void AGIFrame::StopAutoRotation(wxCommandEvent& event) {
+void Frame::StopAutoRotation(wxCommandEvent& event) {
   ResetMenuParams();
 }
 
-void AGIFrame::CaptureImage(wxCommandEvent& event) {
+void Frame::CaptureImage(wxCommandEvent& event) {
   left->SavePixelData();
 }
 
-void AGIFrame::OpenAppearanceWindow(wxCommandEvent& event) {
+void Frame::OpenAppearanceWindow(wxCommandEvent& event) {
   appw->Show(true);
   appw->Raise();
 }

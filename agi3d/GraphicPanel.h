@@ -4,12 +4,12 @@
 #include "wx/wx.h"
 #include "wx/glcanvas.h"
 
-class DrawPanel : public wxGLCanvas {
+class GraphicPanel : public wxGLCanvas {
   wxGLContext* m_context;
 
 public:
-  DrawPanel(wxWindow* parent, int* args);
-  virtual ~DrawPanel();
+  GraphicPanel(wxWindow* parent, int* args);
+  virtual ~GraphicPanel();
 
   int getWidth();
   int getHeight();

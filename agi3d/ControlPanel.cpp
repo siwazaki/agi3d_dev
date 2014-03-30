@@ -1,5 +1,5 @@
-#include "SubPanel.h"
-#include "AGIFrame.h"
+#include "ControlPanel.h"
+#include "Frame.h"
 #include <iostream>
 #include <string>
 #include <vector>
@@ -9,7 +9,7 @@
 typedef cml::vector4f vector4;
 using namespace std;
 
-static DrawPanel* dp;
+static GraphicPanel* dp;
 static float fps = 0.0f;
 static float tmp = 0.0f;
 static wxStaticText * m_FPS;
@@ -50,17 +50,17 @@ void loadEdgeAttrData(int);
 
 //wx Macros
 
-BEGIN_EVENT_TABLE(SubPanel, wxPanel)
-EVT_LISTBOX(555, SubPanel::handleListEvent)
+BEGIN_EVENT_TABLE(ControlPanel, wxPanel)
+EVT_LISTBOX(555, ControlPanel::handleListEvent)
 END_EVENT_TABLE()
 
-SubPanel::SubPanel(wxWindow* parent)
+ControlPanel::ControlPanel(wxWindow* parent)
 : wxPanel(parent, wxID_ANY, wxDefaultPosition, wxSize(280, 870)) {
 
   wxWindow * p = this->GetParent();
 
-  AGIFrame * mf = (AGIFrame *) (p->GetParent());
-  dp = (DrawPanel *) mf->GetDrawPanel();
+  Frame * mf = (Frame *) (p->GetParent());
+  dp = (GraphicPanel *) mf->GetDrawPanel();
 
   wxPanel *myPanel = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxSize(280, 870));
 
@@ -121,33 +121,33 @@ SubPanel::SubPanel(wxWindow* parent)
   listbox = new wxListBox(myPanel, 555, wxPoint(5, 270), wxSize(260, 460));
   labelMap.clear();
 
-  Connect(40, wxEVT_COMMAND_SLIDER_UPDATED, wxScrollEventHandler(SubPanel::NortifyUpdateNodeSize));
-  Connect(50, wxEVT_COMMAND_SLIDER_UPDATED, wxScrollEventHandler(SubPanel::NortifyUpdateEdgeThickness));
-  Connect(60, wxEVT_COMMAND_SLIDER_UPDATED, wxScrollEventHandler(SubPanel::NortifyUpdateDelta));
-  Connect(61, wxEVT_COMMAND_SLIDER_UPDATED, wxScrollEventHandler(SubPanel::NortifyUpdateScale));
-  Connect(62, wxEVT_COMMAND_SLIDER_UPDATED, wxScrollEventHandler(SubPanel::NortifyUpdateDimension));
+  Connect(40, wxEVT_COMMAND_SLIDER_UPDATED, wxScrollEventHandler(ControlPanel::NortifyUpdateNodeSize));
+  Connect(50, wxEVT_COMMAND_SLIDER_UPDATED, wxScrollEventHandler(ControlPanel::NortifyUpdateEdgeThickness));
+  Connect(60, wxEVT_COMMAND_SLIDER_UPDATED, wxScrollEventHandler(ControlPanel::NortifyUpdateDelta));
+  Connect(61, wxEVT_COMMAND_SLIDER_UPDATED, wxScrollEventHandler(ControlPanel::NortifyUpdateScale));
+  Connect(62, wxEVT_COMMAND_SLIDER_UPDATED, wxScrollEventHandler(ControlPanel::NortifyUpdateDimension));
 
-  Connect(70, wxEVT_COMMAND_SLIDER_UPDATED, wxScrollEventHandler(SubPanel::UpdateNodeValueThreshold_b));
-  Connect(71, wxEVT_COMMAND_SLIDER_UPDATED, wxScrollEventHandler(SubPanel::UpdateNodeValueThreshold_t));
-  Connect(80, wxEVT_COMMAND_SLIDER_UPDATED, wxScrollEventHandler(SubPanel::UpdateEdgeValueThreshold_b));
-  Connect(81, wxEVT_COMMAND_SLIDER_UPDATED, wxScrollEventHandler(SubPanel::UpdateEdgeValueThreshold_t));
+  Connect(70, wxEVT_COMMAND_SLIDER_UPDATED, wxScrollEventHandler(ControlPanel::UpdateNodeValueThreshold_b));
+  Connect(71, wxEVT_COMMAND_SLIDER_UPDATED, wxScrollEventHandler(ControlPanel::UpdateNodeValueThreshold_t));
+  Connect(80, wxEVT_COMMAND_SLIDER_UPDATED, wxScrollEventHandler(ControlPanel::UpdateEdgeValueThreshold_b));
+  Connect(81, wxEVT_COMMAND_SLIDER_UPDATED, wxScrollEventHandler(ControlPanel::UpdateEdgeValueThreshold_t));
 
-  Connect(120, wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler(SubPanel::SelectNodeAttr));
-  Connect(121, wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler(SubPanel::SelectEdgeAttr));
+  Connect(120, wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler(ControlPanel::SelectNodeAttr));
+  Connect(121, wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler(ControlPanel::SelectEdgeAttr));
 
-  Connect(200, wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler(SubPanel::OnToggleEdge));
-  Connect(201, wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler(SubPanel::OnToggleNodeSize));
+  Connect(200, wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler(ControlPanel::OnToggleEdge));
+  Connect(201, wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler(ControlPanel::OnToggleNodeSize));
 
 }
 
-void SubPanel::SetFPS(float _f) {
+void ControlPanel::SetFPS(float _f) {
   fps = _f;
   wxString str = wxString::Format(wxT("   FPS : %f"), fps);
   m_FPS->SetLabel(str);
   tmp = _f;
 }
 
-void SubPanel::Init() {
+void ControlPanel::Init() {
   DeltaSlider->SetValue(50);
 
   nodeThresholdSlider_b->SetValue(0);
@@ -188,7 +188,7 @@ void SubPanel::Init() {
   edgeSizeLabel->SetLabel(_edgeSize);
 }
 
-void SubPanel::setTarget(int id) {
+void ControlPanel::setTarget(int id) {
   target->Clear();
   listbox->Clear();
   labelMap.clear();
@@ -210,37 +210,37 @@ void SubPanel::setTarget(int id) {
   }
 }
 
-void SubPanel::handleListEvent(wxCommandEvent& event) {
+void ControlPanel::handleListEvent(wxCommandEvent& event) {
   int m = event.GetInt();
   dp->changeColor(labelMap[m]);
 }
 
-void SubPanel::NortifyUpdateNodeSize(wxScrollEvent& event) {
+void ControlPanel::NortifyUpdateNodeSize(wxScrollEvent& event) {
   float rate = (float) (event.GetInt()) / 100.0f;
   dp->UpdateSize(rate);
 }
 
-void SubPanel::NortifyUpdateEdgeThickness(wxScrollEvent& event) {
+void ControlPanel::NortifyUpdateEdgeThickness(wxScrollEvent& event) {
   float rate = (float) (event.GetInt()) / 50.0f;
   dp->UpdateThickness(rate);
 }
 
-void SubPanel::NortifyUpdateDelta(wxScrollEvent& event) {
+void ControlPanel::NortifyUpdateDelta(wxScrollEvent& event) {
   float rate = (float) (DeltaSlider->GetValue()) / 100.0f;
   dp->ModifyDelta(rate);
 }
 
-void SubPanel::NortifyUpdateScale(wxScrollEvent& event) {
+void ControlPanel::NortifyUpdateScale(wxScrollEvent& event) {
   float rate = (float) (event.GetInt()) / 20.0f;
   dp->ScaleLayout(rate);
 }
 
-void SubPanel::NortifyUpdateDimension(wxScrollEvent& event) {
+void ControlPanel::NortifyUpdateDimension(wxScrollEvent& event) {
   float rate = (float) (event.GetInt()) / 1000.0f;
   dp->ChangeDimension(rate);
 }
 
-void SubPanel::UpdateNodeValueThreshold_b(wxScrollEvent& event) {
+void ControlPanel::UpdateNodeValueThreshold_b(wxScrollEvent& event) {
   node_slider_b_pos = nodeThresholdSlider_b->GetValue();
   if (node_slider_b_pos <= node_slider_t_pos) {
     float z = (float) (node_slider_b_pos) / 100.0f;
@@ -251,7 +251,7 @@ void SubPanel::UpdateNodeValueThreshold_b(wxScrollEvent& event) {
   }
 }
 
-void SubPanel::UpdateNodeValueThreshold_t(wxScrollEvent& event) {
+void ControlPanel::UpdateNodeValueThreshold_t(wxScrollEvent& event) {
   node_slider_t_pos = nodeThresholdSlider_t->GetValue();
   if (node_slider_b_pos <= node_slider_t_pos) {
     float z = (float) (node_slider_t_pos) / 100.0f;
@@ -262,7 +262,7 @@ void SubPanel::UpdateNodeValueThreshold_t(wxScrollEvent& event) {
   }
 }
 
-void SubPanel::UpdateEdgeValueThreshold_b(wxScrollEvent& event) {
+void ControlPanel::UpdateEdgeValueThreshold_b(wxScrollEvent& event) {
   edge_slider_b_pos = edgeThresholdSlider_b->GetValue();
   if (edge_slider_b_pos < edge_slider_t_pos) {
     float z = (float) (edge_slider_b_pos) / 100.0f;
@@ -272,7 +272,7 @@ void SubPanel::UpdateEdgeValueThreshold_b(wxScrollEvent& event) {
   }
 }
 
-void SubPanel::UpdateEdgeValueThreshold_t(wxScrollEvent& event) {
+void ControlPanel::UpdateEdgeValueThreshold_t(wxScrollEvent& event) {
   edge_slider_t_pos = edgeThresholdSlider_t->GetValue();
   if (edge_slider_b_pos < edge_slider_t_pos) {
     float z = (float) (edge_slider_t_pos) / 100.0f;
@@ -282,15 +282,15 @@ void SubPanel::UpdateEdgeValueThreshold_t(wxScrollEvent& event) {
   }
 }
 
-void SubPanel::OnToggleEdge(wxCommandEvent& event) {
+void ControlPanel::OnToggleEdge(wxCommandEvent& event) {
   dp->DrawEdge();
 }
 
-void SubPanel::OnToggleNodeSize(wxCommandEvent& event) {
+void ControlPanel::OnToggleNodeSize(wxCommandEvent& event) {
   dp->NodeModeChange();
 }
 
-void SubPanel::SelectNodeAttr(wxCommandEvent& event) {
+void ControlPanel::SelectNodeAttr(wxCommandEvent& event) {
   wxString label = nodeAttrsChoice->GetStringSelection();
   int n = nodeAttrsChoice->GetSelection();
   nodeThresholdSlider_b->SetValue(0);
@@ -303,7 +303,7 @@ void SubPanel::SelectNodeAttr(wxCommandEvent& event) {
   dp->ResetIsDrawingNodes();
 }
 
-void SubPanel::SelectEdgeAttr(wxCommandEvent& event) {
+void ControlPanel::SelectEdgeAttr(wxCommandEvent& event) {
   wxString label = edgeAttrsChoice->GetStringSelection();
   int n = edgeAttrsChoice->GetSelection();
   edgeThresholdSlider_b->SetValue(0);
