@@ -84,6 +84,3 @@ const std::shared_ptr<ControlPanel>& AppDelegete::getControlPanel()
 {
   return _controlPanel;
 }
-
-
-

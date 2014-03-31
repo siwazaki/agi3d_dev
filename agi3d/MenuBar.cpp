@@ -17,9 +17,6 @@
 #include <wx/event.h>
 
 #include "MenuBar.h"
-#include "UserDefaultController.h"
-#include "Config.h"
-
 
 using namespace agi3d;
 
@@ -47,10 +44,6 @@ MenuBar::MenuBar()
   rotationMenu->Append(13, wxT(" X Rotation  "));
   rotationMenu->Append(14, wxT(" Y Rotation  "));
   rotationMenu->Append(15, wxT(" Stop "));
-  
-  Config& config = Config::instance();
-  config.rotateX(false);
-  config.rotateY(false);
   
   edit->AppendSubMenu(rotationMenu, wxT("Auto Rotation"));
   edit->AppendSeparator();

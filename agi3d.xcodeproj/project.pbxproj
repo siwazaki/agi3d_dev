@@ -15,7 +15,6 @@
 		504D277F18E9C25700F2CA63 /* GraphicController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 504D277D18E9C25700F2CA63 /* GraphicController.cpp */; };
 		504D278218E9C59E00F2CA63 /* AppDelegete.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 504D278018E9C59E00F2CA63 /* AppDelegete.cpp */; };
 		506CDC4818E821F400EF8DCA /* App.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 506CDC3818E821F400EF8DCA /* App.cpp */; };
-		506CDC4918E821F400EF8DCA /* Config.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 506CDC3A18E821F400EF8DCA /* Config.cpp */; };
 		506CDC4A18E821F400EF8DCA /* Frame.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 506CDC3C18E821F400EF8DCA /* Frame.cpp */; };
 		506CDC4B18E821F400EF8DCA /* AppearanceWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 506CDC3E18E821F400EF8DCA /* AppearanceWindow.cpp */; };
 		506CDC4C18E821F400EF8DCA /* calcLayout.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 506CDC4018E821F400EF8DCA /* calcLayout.cpp */; };
@@ -57,8 +56,6 @@
 		504D278118E9C59E00F2CA63 /* AppDelegete.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegete.h; sourceTree = "<group>"; };
 		506CDC3818E821F400EF8DCA /* App.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = App.cpp; sourceTree = "<group>"; };
 		506CDC3918E821F400EF8DCA /* App.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = App.h; sourceTree = "<group>"; };
-		506CDC3A18E821F400EF8DCA /* Config.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Config.cpp; sourceTree = "<group>"; };
-		506CDC3B18E821F400EF8DCA /* Config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Config.h; sourceTree = "<group>"; };
 		506CDC3C18E821F400EF8DCA /* Frame.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Frame.cpp; sourceTree = "<group>"; };
 		506CDC3D18E821F400EF8DCA /* Frame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Frame.h; sourceTree = "<group>"; };
 		506CDC3E18E821F400EF8DCA /* AppearanceWindow.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AppearanceWindow.cpp; sourceTree = "<group>"; };
@@ -102,8 +99,6 @@
 				506CDC3918E821F400EF8DCA /* App.h */,
 				504D278018E9C59E00F2CA63 /* AppDelegete.cpp */,
 				504D278118E9C59E00F2CA63 /* AppDelegete.h */,
-				506CDC3A18E821F400EF8DCA /* Config.cpp */,
-				506CDC3B18E821F400EF8DCA /* Config.h */,
 				50F0D2BD18E82C690067249A /* controllers */,
 				50F0D2BC18E82C5F0067249A /* models */,
 				50F0D2BB18E82C1B0067249A /* views */,
@@ -238,7 +233,6 @@
 				506CDC4C18E821F400EF8DCA /* calcLayout.cpp in Sources */,
 				506CDC4F18E821F400EF8DCA /* GraphicPanel.cpp in Sources */,
 				506CDC4818E821F400EF8DCA /* App.cpp in Sources */,
-				506CDC4918E821F400EF8DCA /* Config.cpp in Sources */,
 				506CDC4D18E821F400EF8DCA /* constraintsolver2d.cpp in Sources */,
 				504D278218E9C59E00F2CA63 /* AppDelegete.cpp in Sources */,
 				504D277F18E9C25700F2CA63 /* GraphicController.cpp in Sources */,

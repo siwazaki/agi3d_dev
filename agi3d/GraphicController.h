@@ -27,5 +27,4 @@ namespace agi3d {
   
 }
 
-
 #endif /* defined(__agi3d__GraphicController__) */
