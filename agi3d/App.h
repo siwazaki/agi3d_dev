@@ -1,6 +1,6 @@
 #include <memory>
 #include <wx/wx.h>
-#include "SettingController.h"
+#include "AppDelegete.h"
 /**
  @mainpage
  アプリケーションの説明を書く
@@ -15,8 +15,5 @@ namespace agi3d {
   class App : public wxApp {
   public:
     virtual bool OnInit();
-  private:
-    std::shared_ptr<SettingController> _settingController;
-    
   };
 }

@@ -7,8 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		504D276A18E949C800F2CA63 /* SettingController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 504D276818E949C800F2CA63 /* SettingController.cpp */; };
-		504D276D18E949D200F2CA63 /* Setting.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 504D276B18E949D200F2CA63 /* Setting.cpp */; };
+		504D276A18E949C800F2CA63 /* UserDefaultController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 504D276818E949C800F2CA63 /* UserDefaultController.cpp */; };
+		504D276D18E949D200F2CA63 /* UserDefault.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 504D276B18E949D200F2CA63 /* UserDefault.cpp */; };
+		504D277018E9B1D700F2CA63 /* Enums.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 504D276E18E9B1D700F2CA63 /* Enums.cpp */; };
+		504D277918E9BF6400F2CA63 /* Configuration.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 504D277718E9BF6400F2CA63 /* Configuration.cpp */; };
+		504D277C18E9BFB400F2CA63 /* ConfigurationController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 504D277A18E9BFB400F2CA63 /* ConfigurationController.cpp */; };
+		504D277F18E9C25700F2CA63 /* GraphicController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 504D277D18E9C25700F2CA63 /* GraphicController.cpp */; };
+		504D278218E9C59E00F2CA63 /* AppDelegete.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 504D278018E9C59E00F2CA63 /* AppDelegete.cpp */; };
 		506CDC4818E821F400EF8DCA /* App.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 506CDC3818E821F400EF8DCA /* App.cpp */; };
 		506CDC4918E821F400EF8DCA /* Config.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 506CDC3A18E821F400EF8DCA /* Config.cpp */; };
 		506CDC4A18E821F400EF8DCA /* Frame.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 506CDC3C18E821F400EF8DCA /* Frame.cpp */; };
@@ -36,10 +41,20 @@
 
 /* Begin PBXFileReference section */
 		503E3F6518E940FB00C5C098 /* agi3d */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = agi3d; sourceTree = BUILT_PRODUCTS_DIR; };
-		504D276818E949C800F2CA63 /* SettingController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SettingController.cpp; sourceTree = "<group>"; };
-		504D276918E949C800F2CA63 /* SettingController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingController.h; sourceTree = "<group>"; };
-		504D276B18E949D200F2CA63 /* Setting.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Setting.cpp; sourceTree = "<group>"; };
-		504D276C18E949D200F2CA63 /* Setting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Setting.h; sourceTree = "<group>"; };
+		504D276818E949C800F2CA63 /* UserDefaultController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = UserDefaultController.cpp; sourceTree = "<group>"; };
+		504D276918E949C800F2CA63 /* UserDefaultController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserDefaultController.h; sourceTree = "<group>"; };
+		504D276B18E949D200F2CA63 /* UserDefault.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = UserDefault.cpp; sourceTree = "<group>"; };
+		504D276C18E949D200F2CA63 /* UserDefault.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserDefault.h; sourceTree = "<group>"; };
+		504D276E18E9B1D700F2CA63 /* Enums.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Enums.cpp; sourceTree = "<group>"; };
+		504D276F18E9B1D700F2CA63 /* Enums.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Enums.h; sourceTree = "<group>"; };
+		504D277718E9BF6400F2CA63 /* Configuration.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Configuration.cpp; sourceTree = "<group>"; };
+		504D277818E9BF6400F2CA63 /* Configuration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Configuration.h; sourceTree = "<group>"; };
+		504D277A18E9BFB400F2CA63 /* ConfigurationController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ConfigurationController.cpp; sourceTree = "<group>"; };
+		504D277B18E9BFB400F2CA63 /* ConfigurationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConfigurationController.h; sourceTree = "<group>"; };
+		504D277D18E9C25700F2CA63 /* GraphicController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GraphicController.cpp; sourceTree = "<group>"; };
+		504D277E18E9C25700F2CA63 /* GraphicController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GraphicController.h; sourceTree = "<group>"; };
+		504D278018E9C59E00F2CA63 /* AppDelegete.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AppDelegete.cpp; sourceTree = "<group>"; };
+		504D278118E9C59E00F2CA63 /* AppDelegete.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegete.h; sourceTree = "<group>"; };
 		506CDC3818E821F400EF8DCA /* App.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = App.cpp; sourceTree = "<group>"; };
 		506CDC3918E821F400EF8DCA /* App.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = App.h; sourceTree = "<group>"; };
 		506CDC3A18E821F400EF8DCA /* Config.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Config.cpp; sourceTree = "<group>"; };
@@ -85,6 +100,8 @@
 				506CDC4518E821F400EF8DCA /* Makefile */,
 				506CDC3818E821F400EF8DCA /* App.cpp */,
 				506CDC3918E821F400EF8DCA /* App.h */,
+				504D278018E9C59E00F2CA63 /* AppDelegete.cpp */,
+				504D278118E9C59E00F2CA63 /* AppDelegete.h */,
 				506CDC3A18E821F400EF8DCA /* Config.cpp */,
 				506CDC3B18E821F400EF8DCA /* Config.h */,
 				50F0D2BD18E82C690067249A /* controllers */,
@@ -117,8 +134,12 @@
 				506CDC4018E821F400EF8DCA /* calcLayout.cpp */,
 				506CDC4118E821F400EF8DCA /* constraintsolver2d.cpp */,
 				506CDC4218E821F400EF8DCA /* constraintsolver3d.cpp */,
-				504D276B18E949D200F2CA63 /* Setting.cpp */,
-				504D276C18E949D200F2CA63 /* Setting.h */,
+				504D276B18E949D200F2CA63 /* UserDefault.cpp */,
+				504D276C18E949D200F2CA63 /* UserDefault.h */,
+				504D276E18E9B1D700F2CA63 /* Enums.cpp */,
+				504D276F18E9B1D700F2CA63 /* Enums.h */,
+				504D277718E9BF6400F2CA63 /* Configuration.cpp */,
+				504D277818E9BF6400F2CA63 /* Configuration.h */,
 			);
 			name = models;
 			sourceTree = "<group>";
@@ -126,8 +147,12 @@
 		50F0D2BD18E82C690067249A /* controllers */ = {
 			isa = PBXGroup;
 			children = (
-				504D276818E949C800F2CA63 /* SettingController.cpp */,
-				504D276918E949C800F2CA63 /* SettingController.h */,
+				504D276818E949C800F2CA63 /* UserDefaultController.cpp */,
+				504D276918E949C800F2CA63 /* UserDefaultController.h */,
+				504D277A18E9BFB400F2CA63 /* ConfigurationController.cpp */,
+				504D277B18E9BFB400F2CA63 /* ConfigurationController.h */,
+				504D277D18E9C25700F2CA63 /* GraphicController.cpp */,
+				504D277E18E9C25700F2CA63 /* GraphicController.h */,
 			);
 			name = controllers;
 			sourceTree = "<group>";
@@ -203,17 +228,22 @@
 			files = (
 				50F0D2C018E8303B0067249A /* MenuBar.cpp in Sources */,
 				506CDC5018E821F400EF8DCA /* Makefile in Sources */,
+				504D277018E9B1D700F2CA63 /* Enums.cpp in Sources */,
 				506CDC4A18E821F400EF8DCA /* Frame.cpp in Sources */,
 				506CDC4B18E821F400EF8DCA /* AppearanceWindow.cpp in Sources */,
-				504D276A18E949C800F2CA63 /* SettingController.cpp in Sources */,
+				504D276A18E949C800F2CA63 /* UserDefaultController.cpp in Sources */,
 				506CDC4E18E821F400EF8DCA /* constraintsolver3d.cpp in Sources */,
+				504D277918E9BF6400F2CA63 /* Configuration.cpp in Sources */,
+				504D277C18E9BFB400F2CA63 /* ConfigurationController.cpp in Sources */,
 				506CDC4C18E821F400EF8DCA /* calcLayout.cpp in Sources */,
 				506CDC4F18E821F400EF8DCA /* GraphicPanel.cpp in Sources */,
 				506CDC4818E821F400EF8DCA /* App.cpp in Sources */,
 				506CDC4918E821F400EF8DCA /* Config.cpp in Sources */,
 				506CDC4D18E821F400EF8DCA /* constraintsolver2d.cpp in Sources */,
+				504D278218E9C59E00F2CA63 /* AppDelegete.cpp in Sources */,
+				504D277F18E9C25700F2CA63 /* GraphicController.cpp in Sources */,
 				506CDC5118E821F400EF8DCA /* ControlPanel.cpp in Sources */,
-				504D276D18E949D200F2CA63 /* Setting.cpp in Sources */,
+				504D276D18E949D200F2CA63 /* UserDefault.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

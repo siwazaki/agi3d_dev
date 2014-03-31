@@ -1,12 +1,11 @@
-#include "Config.h"
 #include "App.h"
-#include "Frame.h"
+#include "AppDelegete.h"
+
 // For OSX
 #include <ApplicationServices/ApplicationServices.h>
 
 using namespace agi3d;
 
-// called OnInit in "Main" class
 IMPLEMENT_APP(App)
 
 bool App::OnInit() {
@@ -14,10 +13,9 @@ bool App::OnInit() {
   // Omajinai for Mac OS
   ProcessSerialNumber PSN;
   GetCurrentProcess(&PSN);
-  TransformProcessType(&PSN, kProcessTransformToForegroundApplication);
-  _settingController = std::shared_ptr<SettingController>(new SettingController(NULL,NULL));
-  Frame *mFrame = new Frame(wxT("Active Graph Interface 3D"));
-  mFrame->addController(_settingController);
-  mFrame->Show(true);
-    return true;
+  TransformProcessType(&PSN, kProcessTransformToForegroundApplication);  
+  AppDelegete &delegete = AppDelegete::instance();
+  delegete.initControllers();
+  delegete.run();
+  return true;
 }

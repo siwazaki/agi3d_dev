@@ -6,9 +6,22 @@
 //  Copyright (c) 2014年 com.nefrock. All rights reserved.
 //
 
-#include "Config.h"
-#include "MenuBar.h"
+#include <fstream>
+#include <iostream>
 
+#include <boost/function.hpp>
+#include <boost/bind.hpp>
+#include <boost/lexical_cast.hpp>
+
+#include <wx/wx.h>
+#include <wx/event.h>
+
+#include "MenuBar.h"
+#include "UserDefaultController.h"
+#include "Config.h"
+
+
+using namespace agi3d;
 
 MenuBar::MenuBar()
 {

@@ -41,38 +41,6 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "agi3d/SettingController.cpp"
-            timestampString = "417947413.716665"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "34"
-            endingLineNumber = "34"
-            landmarkName = "SettingController::nortifyUpdateNodeSize(wxScrollEvent&amp; event)"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "agi3d/SettingController.cpp"
-            timestampString = "417945600.272884"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "22"
-            endingLineNumber = "22"
-            landmarkName = "SettingController::SettingController(std::shared_ptr&lt;GraphicPanel&gt; graphicPanel, std::shared_ptr&lt;ControlPanel&gt; controlPanel)"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
             filePath = "agi3d/ControlPanel.cpp"
             timestampString = "417948324.661518"
             startingColumnNumber = "9223372036854775807"
@@ -86,17 +54,15 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "agi3d/SettingController.cpp"
-            timestampString = "417950760.585585"
+            filePath = "agi3d/Config.h"
+            timestampString = "417976029.227181"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "39"
-            endingLineNumber = "39"
-            landmarkName = "SettingController::SetAutoXRotation(wxCommandEvent &amp;event)"
-            landmarkType = "5">
+            startingLineNumber = "4"
+            endingLineNumber = "4">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>
