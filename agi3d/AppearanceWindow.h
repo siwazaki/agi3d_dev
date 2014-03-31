@@ -1,3 +1,6 @@
+#ifndef __agi3d_appearance_window_h__
+#define	__agi3d_appearance_window_h__
+
 #include <wx/wx.h>
 #include "wx/slider.h"
 /**
@@ -39,3 +42,5 @@ public:
   void OnToggleShowEdge(wxCommandEvent& event);
   void OnToggleNodeSize(wxCommandEvent& event);
 };
+
+#endif

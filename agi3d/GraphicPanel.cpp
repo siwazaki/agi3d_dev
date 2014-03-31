@@ -149,6 +149,8 @@ static int GLframe = 0;
 static long GLtimenow = 0;
 static float fps = 0.0f;
 
+using namespace agi3d;
+
 //wx Macros
 
 BEGIN_EVENT_TABLE(GraphicPanel, wxGLCanvas)

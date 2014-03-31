@@ -54,6 +54,8 @@ BEGIN_EVENT_TABLE(ControlPanel, wxPanel)
 EVT_LISTBOX(555, ControlPanel::handleListEvent)
 END_EVENT_TABLE()
 
+using namespace agi3d;
+
 ControlPanel::ControlPanel(wxWindow* parent)
 : wxPanel(parent, wxID_ANY, wxDefaultPosition, wxSize(280, 870)) {
 
@@ -121,7 +123,7 @@ ControlPanel::ControlPanel(wxWindow* parent)
   listbox = new wxListBox(myPanel, 555, wxPoint(5, 270), wxSize(260, 460));
   labelMap.clear();
 
-  Connect(40, wxEVT_COMMAND_SLIDER_UPDATED, wxScrollEventHandler(ControlPanel::NortifyUpdateNodeSize));
+//  Connect(40, wxEVT_COMMAND_SLIDER_UPDATED, wxScrollEventHandler(ControlPanel::NortifyUpdateNodeSize));
   Connect(50, wxEVT_COMMAND_SLIDER_UPDATED, wxScrollEventHandler(ControlPanel::NortifyUpdateEdgeThickness));
   Connect(60, wxEVT_COMMAND_SLIDER_UPDATED, wxScrollEventHandler(ControlPanel::NortifyUpdateDelta));
   Connect(61, wxEVT_COMMAND_SLIDER_UPDATED, wxScrollEventHandler(ControlPanel::NortifyUpdateScale));

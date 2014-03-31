@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		504D276A18E949C800F2CA63 /* SettingController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 504D276818E949C800F2CA63 /* SettingController.cpp */; };
+		504D276D18E949D200F2CA63 /* Setting.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 504D276B18E949D200F2CA63 /* Setting.cpp */; };
 		506CDC4818E821F400EF8DCA /* App.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 506CDC3818E821F400EF8DCA /* App.cpp */; };
 		506CDC4918E821F400EF8DCA /* Config.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 506CDC3A18E821F400EF8DCA /* Config.cpp */; };
 		506CDC4A18E821F400EF8DCA /* Frame.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 506CDC3C18E821F400EF8DCA /* Frame.cpp */; };
@@ -33,7 +35,11 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		506CDC2818E81ED000EF8DCA /* agi3d */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; name = agi3d; path = /Users/iwazaki/Workspace/Repository/Git/agi3d/build/Debug/agi3d; sourceTree = "<absolute>"; };
+		503E3F6518E940FB00C5C098 /* agi3d */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = agi3d; sourceTree = BUILT_PRODUCTS_DIR; };
+		504D276818E949C800F2CA63 /* SettingController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SettingController.cpp; sourceTree = "<group>"; };
+		504D276918E949C800F2CA63 /* SettingController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingController.h; sourceTree = "<group>"; };
+		504D276B18E949D200F2CA63 /* Setting.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Setting.cpp; sourceTree = "<group>"; };
+		504D276C18E949D200F2CA63 /* Setting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Setting.h; sourceTree = "<group>"; };
 		506CDC3818E821F400EF8DCA /* App.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = App.cpp; sourceTree = "<group>"; };
 		506CDC3918E821F400EF8DCA /* App.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = App.h; sourceTree = "<group>"; };
 		506CDC3A18E821F400EF8DCA /* Config.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Config.cpp; sourceTree = "<group>"; };
@@ -69,6 +75,7 @@
 			isa = PBXGroup;
 			children = (
 				506CDC2A18E81ED000EF8DCA /* agi3d */,
+				503E3F6518E940FB00C5C098 /* agi3d */,
 			);
 			sourceTree = "<group>";
 		};
@@ -110,6 +117,8 @@
 				506CDC4018E821F400EF8DCA /* calcLayout.cpp */,
 				506CDC4118E821F400EF8DCA /* constraintsolver2d.cpp */,
 				506CDC4218E821F400EF8DCA /* constraintsolver3d.cpp */,
+				504D276B18E949D200F2CA63 /* Setting.cpp */,
+				504D276C18E949D200F2CA63 /* Setting.h */,
 			);
 			name = models;
 			sourceTree = "<group>";
@@ -117,6 +126,8 @@
 		50F0D2BD18E82C690067249A /* controllers */ = {
 			isa = PBXGroup;
 			children = (
+				504D276818E949C800F2CA63 /* SettingController.cpp */,
+				504D276918E949C800F2CA63 /* SettingController.h */,
 			);
 			name = controllers;
 			sourceTree = "<group>";
@@ -155,7 +166,7 @@
 			);
 			name = agi3d;
 			productName = agi3d;
-			productReference = 506CDC2818E81ED000EF8DCA /* agi3d */;
+			productReference = 503E3F6518E940FB00C5C098 /* agi3d */;
 			productType = "com.apple.product-type.tool";
 		};
 /* End PBXNativeTarget section */
@@ -194,6 +205,7 @@
 				506CDC5018E821F400EF8DCA /* Makefile in Sources */,
 				506CDC4A18E821F400EF8DCA /* Frame.cpp in Sources */,
 				506CDC4B18E821F400EF8DCA /* AppearanceWindow.cpp in Sources */,
+				504D276A18E949C800F2CA63 /* SettingController.cpp in Sources */,
 				506CDC4E18E821F400EF8DCA /* constraintsolver3d.cpp in Sources */,
 				506CDC4C18E821F400EF8DCA /* calcLayout.cpp in Sources */,
 				506CDC4F18E821F400EF8DCA /* GraphicPanel.cpp in Sources */,
@@ -201,6 +213,7 @@
 				506CDC4918E821F400EF8DCA /* Config.cpp in Sources */,
 				506CDC4D18E821F400EF8DCA /* constraintsolver2d.cpp in Sources */,
 				506CDC5118E821F400EF8DCA /* ControlPanel.cpp in Sources */,
+				504D276D18E949D200F2CA63 /* Setting.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

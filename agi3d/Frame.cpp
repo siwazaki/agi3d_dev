@@ -1,7 +1,11 @@
 #include "Frame.h"
 #include "MenuBar.h"
+#include <wx/event.h>
 #include <fstream>
 #include <iostream>
+#include <boost/function.hpp>
+#include <boost/bind.hpp>
+#include <boost/lexical_cast.hpp>
 using namespace std;
 
 //import from calclayout.cpp
@@ -15,40 +19,46 @@ extern string graphName;
 static bool x_rotation;
 static bool y_rotation;
 
+using namespace agi3d;
+
 Frame::Frame(const wxString& title)
 : wxFrame(NULL, wxID_ANY, title, wxDefaultPosition, wxSize(1280, 870)) {
-
+  
   base = new wxSplitterWindow(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxSP_LIVE_UPDATE);
   base->SetSashGravity(0.80);
   base->SetMinimumPaneSize(100);
-
+  
   //Panels
   int args[] = {WX_GL_RGBA, WX_GL_DOUBLEBUFFER, WX_GL_DEPTH_SIZE, 16};
   left = new GraphicPanel(base, args);
-  right = new ControlPanel(base);
-
+  right = new ControlPanel(base);    
+  
   base->SplitVertically(left, right);
-
+  
   //MenuBar
   menubar = new MenuBar();
-    SetMenuBar(menubar);
-
+  SetMenuBar(menubar);
+  
   appw = new AppearanceWindow(right, wxT("Appearance"));
-
+  
   //Connect Event
   Connect(wxID_EXIT, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(Frame::OnQuit));
   Connect(10, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(Frame::Reset));
   Connect(11, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(Frame::ChangeLayoutModeTo3D));
   Connect(12, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(Frame::ChangeLayoutModeTo2D));
-  Connect(13, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(Frame::SetAutoXRotation));
   Connect(14, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(Frame::SetAutoYRotation));
   Connect(15, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(Frame::StopAutoRotation));
   Connect(16, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(Frame::OpenAppearanceWindow));
   Connect(17, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(Frame::CaptureImage));
-
   Connect(wxID_OPEN, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(Frame::OnOpen));
-
+  
   this->Centre();
+}
+
+void Frame::addController(const std::shared_ptr<agi3d::SettingController> &settingCongroller)
+{
+  function< void ( wxCommandEvent & ) > customHandler( boost::bind(&SettingController::SetAutoXRotation, settingCongroller, _1 ));
+  Bind(wxEVT_COMMAND_MENU_SELECTED, customHandler, 13);
 }
 
 ControlPanel * Frame::GetSubPanel() {
@@ -72,7 +82,7 @@ void Frame::initload() {
     int ext_i = fname.find_last_of(".");
     string f_ext = fname.substr(ext_i + 1);
     string filename = fname.substr(path_i + 1);
-
+    
     if (f_ext == "txt") {
       if (filename.find("DisMat") != string::npos) {
         graphName = fname.substr(path_i + 1, fname.size() - path_i - 11);
@@ -120,7 +130,7 @@ void Frame::OnOpen(wxCommandEvent& event) {
     int ext_i = fname.find_last_of(".");
     string f_ext = fname.substr(ext_i + 1);
     string filename = fname.substr(path_i + 1);
-
+    
     if (f_ext == "txt") {
       if (filename.find("DisMat") != string::npos) {
         graphName = fname.substr(path_i + 1, fname.size() - path_i - 11);

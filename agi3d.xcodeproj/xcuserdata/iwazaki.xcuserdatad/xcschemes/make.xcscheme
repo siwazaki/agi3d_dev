@@ -40,7 +40,7 @@
       debugDocumentVersioning = "YES"
       allowLocationSimulation = "YES">
       <PathRunnable
-         FilePath = "/Users/iwazaki/Workspace/Repository/Git/agi3d/build/debug/agi3d">
+         FilePath = "/Users/iwazaki/Workspace/Repository/Git/agi3d/build/release/agi3d">
       </PathRunnable>
       <AdditionalOptions>
       </AdditionalOptions>
