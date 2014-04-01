@@ -6,11 +6,8 @@
 #include "wx/splitter.h"
 #include "wx/panel.h"
 
-#include "UserDefaultController.h"
 #include "GraphicPanel.h"
 #include "ControlPanel.h"
-#include "AppearanceWindow.h"
-#include "MenuBar.h"
 
 namespace agi3d {
   /**

@@ -14,15 +14,29 @@
 
 namespace agi3d {
   
+  class UserDefaultController;
   /**
    * MenuBarで変更可能なデータを保持するモデル。
+   * UserDefaultController以外はプロパティ変更不可。
    * @TODO: Jsonにシリアライズ
    */
   class UserDefault
   {
+    friend class UserDefaultController;
+    
   public:
     UserDefault();
     virtual ~UserDefault();
+    E_Layout layout();
+    E_Rotation rotation();
+    int nodeSize();
+    int edgeThickness();
+    int scale();
+    int delta();
+    int dimention();
+    bool isDrawNode();
+    bool isDrawEdge();
+    
   private:
     E_Layout _layout;
     E_Rotation _rotation;
@@ -31,10 +45,10 @@ namespace agi3d {
     int _scale;
     int _delta;
     int _dimention;
-    bool _drawNode;
-    bool _drawEdge;
-
-
+    bool _isDrawNode;
+    bool _isDrawEdge;
+    
+    
   };
 }
 

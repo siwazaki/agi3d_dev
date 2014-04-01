@@ -23,6 +23,7 @@
 		506CDC4F18E821F400EF8DCA /* GraphicPanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 506CDC4318E821F400EF8DCA /* GraphicPanel.cpp */; };
 		506CDC5018E821F400EF8DCA /* Makefile in Sources */ = {isa = PBXBuildFile; fileRef = 506CDC4518E821F400EF8DCA /* Makefile */; };
 		506CDC5118E821F400EF8DCA /* ControlPanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 506CDC4618E821F400EF8DCA /* ControlPanel.cpp */; };
+		508863E118EAC4B8002BEBDD /* Graph.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 508863DF18EAC4B8002BEBDD /* Graph.cpp */; };
 		50F0D2C018E8303B0067249A /* MenuBar.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50F0D2BE18E8303B0067249A /* MenuBar.cpp */; };
 /* End PBXBuildFile section */
 
@@ -68,6 +69,8 @@
 		506CDC4518E821F400EF8DCA /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
 		506CDC4618E821F400EF8DCA /* ControlPanel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ControlPanel.cpp; sourceTree = "<group>"; };
 		506CDC4718E821F400EF8DCA /* ControlPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ControlPanel.h; sourceTree = "<group>"; };
+		508863DF18EAC4B8002BEBDD /* Graph.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Graph.cpp; sourceTree = "<group>"; };
+		508863E018EAC4B8002BEBDD /* Graph.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Graph.h; sourceTree = "<group>"; };
 		50F0D2BE18E8303B0067249A /* MenuBar.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MenuBar.cpp; sourceTree = "<group>"; };
 		50F0D2BF18E8303B0067249A /* MenuBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MenuBar.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -135,6 +138,8 @@
 				504D276F18E9B1D700F2CA63 /* Enums.h */,
 				504D277718E9BF6400F2CA63 /* Configuration.cpp */,
 				504D277818E9BF6400F2CA63 /* Configuration.h */,
+				508863DF18EAC4B8002BEBDD /* Graph.cpp */,
+				508863E018EAC4B8002BEBDD /* Graph.h */,
 			);
 			name = models;
 			sourceTree = "<group>";
@@ -144,10 +149,10 @@
 			children = (
 				504D276818E949C800F2CA63 /* UserDefaultController.cpp */,
 				504D276918E949C800F2CA63 /* UserDefaultController.h */,
-				504D277A18E9BFB400F2CA63 /* ConfigurationController.cpp */,
 				504D277B18E9BFB400F2CA63 /* ConfigurationController.h */,
-				504D277D18E9C25700F2CA63 /* GraphicController.cpp */,
+				504D277A18E9BFB400F2CA63 /* ConfigurationController.cpp */,
 				504D277E18E9C25700F2CA63 /* GraphicController.h */,
+				504D277D18E9C25700F2CA63 /* GraphicController.cpp */,
 			);
 			name = controllers;
 			sourceTree = "<group>";
@@ -231,6 +236,7 @@
 				504D277918E9BF6400F2CA63 /* Configuration.cpp in Sources */,
 				504D277C18E9BFB400F2CA63 /* ConfigurationController.cpp in Sources */,
 				506CDC4C18E821F400EF8DCA /* calcLayout.cpp in Sources */,
+				508863E118EAC4B8002BEBDD /* Graph.cpp in Sources */,
 				506CDC4F18E821F400EF8DCA /* GraphicPanel.cpp in Sources */,
 				506CDC4818E821F400EF8DCA /* App.cpp in Sources */,
 				506CDC4D18E821F400EF8DCA /* constraintsolver2d.cpp in Sources */,

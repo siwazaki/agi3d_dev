@@ -21,4 +21,9 @@ ConfigurationController::~ConfigurationController() {
   
 }
 
+void ConfigurationController::changeGraphName(const std::string &graphName)
+{
+  _current->_graphName = graphName;
+}
+
 

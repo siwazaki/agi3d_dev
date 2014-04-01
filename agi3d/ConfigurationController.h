@@ -15,7 +15,7 @@
 
 namespace agi3d {
   
-  class AppDelegete;
+  class AppDelegete;  
   class ConfigurationController
   {
     friend class AppDelegete;
@@ -23,6 +23,8 @@ namespace agi3d {
   public:
     virtual ~ConfigurationController();
     ConfigurationController();
+    
+    void changeGraphName(const std::string& graphName);
 
   private:
     std::shared_ptr<Configuration> _current;

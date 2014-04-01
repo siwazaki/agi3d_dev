@@ -1,6 +1,6 @@
 PROGNAME := agi3d
 #release or debug
-buildtype := release
+buildtype := debug
 BIN_WXCONFIG :=$(HOME)/homebrew/bin/wx-config	
 CXX := g++
 CPPFLAGS += -std=c++11 -stdlib=libc++ 

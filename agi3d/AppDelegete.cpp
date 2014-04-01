@@ -40,7 +40,8 @@ AppDelegete::AppDelegete()
   _controlPanel = std::shared_ptr<ControlPanel>(new ControlPanel(_base.get()));
   
   _base->SplitVertically(_graphicPanel.get(), _controlPanel.get());
-
+  
+  _appearanceWindow  = std::shared_ptr<AppearanceWindow>(new AppearanceWindow(_controlPanel.get(), wxT("Appearance")));
 }
 
 AppDelegete::~AppDelegete()
@@ -83,4 +84,18 @@ const std::shared_ptr<GraphicPanel>& AppDelegete::getGraphicPanel()
 const std::shared_ptr<ControlPanel>& AppDelegete::getControlPanel()
 {
   return _controlPanel;
+}
+
+const std::shared_ptr<AppearanceWindow>& AppDelegete::getAppearanceWindow()
+{
+  return _appearanceWindow;
+}
+
+const std::shared_ptr<ConfigurationController>& AppDelegete::getConfigurationController(){
+  return _configurationController;
+}
+
+const std::shared_ptr<GraphicController>& AppDelegete::getGraphicController()
+{
+  return _graphicController;
 }

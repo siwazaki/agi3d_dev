@@ -11,20 +11,13 @@
 
 #include <memory>
 
-#include <boost/function.hpp>
-#include <boost/bind.hpp>
-#include <boost/lexical_cast.hpp>
-
 #include <wx/wx.h>
 #include <wx/event.h>
 #include <wx/menu.h>
 
-
-
+#include "UserDefault.h"
 
 namespace agi3d {
-  
-  class UserDefaultController;
   
   class MenuBar : public wxMenuBar
   {
@@ -32,6 +25,7 @@ namespace agi3d {
   public:
     MenuBar();
     virtual ~MenuBar(){}
+    void renderModel(const std::shared_ptr<UserDefault>& userDefault);
   private:
     wxMenuItem *quit;
     wxMenu *file;
@@ -40,15 +34,6 @@ namespace agi3d {
     wxMenu *rotationMenu;
     
   };
-  
-/*  template<typename T>
-  void MenuBar::addHandler(wxEventType eventType, boost::function< void ( T& )> handler, int wxId)
-  {
-      this->Bind(eventType, handler, wxId);
-  }
- */
-
-  
 }
 
 #endif /* defined(__agi3d__MenuBar__) */

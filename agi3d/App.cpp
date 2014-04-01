@@ -1,3 +1,5 @@
+#include <sstream>
+
 #include "App.h"
 #include "AppDelegete.h"
 

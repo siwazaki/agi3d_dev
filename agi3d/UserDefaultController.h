@@ -20,9 +20,11 @@
 #include "AppearanceWindow.h"
 
 namespace agi3d {
+  class AppDelegete;
   
   class UserDefaultController
   {
+    friend class AppDelegete;
   public:
     UserDefaultController();
     virtual ~UserDefaultController();
@@ -30,6 +32,7 @@ namespace agi3d {
   private:
     std::shared_ptr<UserDefault> _current;
     std::shared_ptr<MenuBar> _menuBar;
+    std::shared_ptr<AppearanceWindow> _appearanceWindow;
 
     void nortifyUpdateNodeSize(wxScrollEvent& event);
     void SetAutoXRotation(wxCommandEvent& event);

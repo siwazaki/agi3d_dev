@@ -17,6 +17,7 @@
 #include "UserDefaultController.h"
 #include "ConfigurationController.h"
 #include "GraphicController.h"
+#include "AppearanceWindow.h"
 
 namespace agi3d {
   
@@ -33,6 +34,9 @@ namespace agi3d {
     const std::shared_ptr<MenuBar>& getMenuBar();
     const std::shared_ptr<ControlPanel>& getControlPanel();
     const std::shared_ptr<GraphicPanel>& getGraphicPanel();
+    const std::shared_ptr<AppearanceWindow>& getAppearanceWindow();    
+    const std::shared_ptr<ConfigurationController>& getConfigurationController();
+    const std::shared_ptr<GraphicController>& getGraphicController();
     
     
   private:
@@ -41,10 +45,12 @@ namespace agi3d {
     std::shared_ptr<MenuBar> _menuBar;
     std::shared_ptr<GraphicPanel> _graphicPanel;
     std::shared_ptr<ControlPanel> _controlPanel;
+    std::shared_ptr<AppearanceWindow> _appearanceWindow;
     
     std::shared_ptr<UserDefaultController> _userDefaultController;
     std::shared_ptr<ConfigurationController> _configurationController;
     std::shared_ptr<GraphicController> _graphicController;
+  
     
   private:
     static std::unique_ptr<AppDelegete> m_instance;

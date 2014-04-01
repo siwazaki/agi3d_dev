@@ -9,15 +9,23 @@
 #ifndef __agi3d__Configuration__
 #define __agi3d__Configuration__
 
+#include <string>
+
 
 namespace agi3d {
-  
+
+  class ConfigurationController;
   /**
    * ControlPanelで変更可能なデータを保持するモデル。
    * @TODO: Jsonにシリアライズ
    */
   class Configuration
   {
+    friend class ConfigurationController;
+    
+    const std::string& graphName();
+  private:
+    std::string _graphName;
   };
 }
 

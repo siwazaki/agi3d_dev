@@ -17,9 +17,10 @@ namespace agi3d {
   } E_Layout;
   
   typedef enum {
-    X,
-    Y,
-    None
+    None = 0,
+    X = 1,
+    Y = 2,
+    XY = 3,
   } E_Rotation;
   
 }

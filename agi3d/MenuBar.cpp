@@ -6,16 +6,12 @@
 //  Copyright (c) 2014年 com.nefrock. All rights reserved.
 //
 
-#include <fstream>
-#include <iostream>
-
-#include <boost/function.hpp>
-#include <boost/bind.hpp>
-#include <boost/lexical_cast.hpp>
+#include <exception>
 
 #include <wx/wx.h>
 #include <wx/event.h>
 
+#include "Enums.h"
 #include "MenuBar.h"
 
 using namespace agi3d;
@@ -55,5 +51,34 @@ MenuBar::MenuBar()
   
   this->Append(file, wxT("&File"));
   this->Append(edit, wxT("&Edit"));
+}
 
+void MenuBar::renderModel(const std::shared_ptr<UserDefault> &userDefault)
+{
+  switch(userDefault->rotation()) {
+    case E_Rotation::X: {
+      rotationMenu->SetLabel(13, wxT(" X Rotation  ✓"));
+      rotationMenu->SetLabel(14, wxT(" Y Rotation  "));
+      break;
+    }
+      
+    case E_Rotation::Y: {
+      rotationMenu->SetLabel(13, wxT(" X Rotation  "));
+      rotationMenu->SetLabel(14, wxT(" Y Rotation  ✓"));
+      break;
+    }
+      
+    case E_Rotation::XY: {
+      rotationMenu->SetLabel(13, wxT(" X Rotation  ✓"));
+      rotationMenu->SetLabel(14, wxT(" Y Rotation  ✓"));
+      break;
+    }
+    case E_Rotation::None: {
+      rotationMenu->SetLabel(13, wxT(" X Rotation  "));
+      rotationMenu->SetLabel(14, wxT(" Y Rotation  "));
+      break;
+    }      
+    default:
+      throw std::invalid_argument("unknown rotaion type found");
+  }
 }

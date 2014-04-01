@@ -1,5 +1,5 @@
 #include "Frame.h"
-#include "MenuBar.h"
+
 #include <wx/event.h>
 #include <fstream>
 #include <iostream>
@@ -8,20 +8,7 @@ using namespace agi3d;
 
 Frame::Frame(const wxString& title)
 : wxFrame(NULL, wxID_ANY, title, wxDefaultPosition, wxSize(1280, 870)) {
-//  
-//  base = new wxSplitterWindow(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxSP_LIVE_UPDATE);
-//  base->SetSashGravity(0.80);
-//  base->SetMinimumPaneSize(100);
-//  
-//  //Panels
-//  int args[] = {WX_GL_RGBA, WX_GL_DOUBLEBUFFER, WX_GL_DEPTH_SIZE, 16};
-//  left = new GraphicPanel(base, args);
-//  right = new ControlPanel(base);    
-//  
-//  base->SplitVertically(left, right);  
-//  
-//  appw = new AppearanceWindow(right, wxT("Appearance"));
-//  
+
   Connect(wxID_EXIT, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(Frame::OnQuit));
   this->Centre();
 }
