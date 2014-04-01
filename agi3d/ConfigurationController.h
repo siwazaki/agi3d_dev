@@ -25,6 +25,12 @@ namespace agi3d {
     ConfigurationController();
     
     void changeGraphName(const std::string& graphName);
+    
+    //@TODO remove this
+    //リファクタリングのための一時的な実装
+    const std::string& getGraphName(){
+      return _current->graphName();
+    }
 
   private:
     std::shared_ptr<Configuration> _current;

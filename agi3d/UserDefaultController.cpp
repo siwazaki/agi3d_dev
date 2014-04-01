@@ -23,10 +23,10 @@
 
 
 //import from calclayout.cpp
-void loadMatrixData_t(const char *);
-void loadLayoutData_t(const char *);
-void loadMatrixData_b(const char *);
-void loadLayoutData_b(const char *);
+void loadMatrixData_t(const char *, const std::string&);
+void loadLayoutData_t(const char *, const std::string&);
+void loadMatrixData_b(const char *, const std::string&);
+void loadLayoutData_b(const char *, const std::string&);
 
 using namespace agi3d;
 using namespace std;
@@ -125,26 +125,26 @@ void UserDefaultController::OnOpen(wxCommandEvent& event) {
     if (f_ext == "txt") {
       if (filename.find("DisMat") != string::npos) {
         graphName = fname.substr(path_i + 1, fname.size() - path_i - 11);
-        //loadMatrixData_t(filePath.mb_str());
+        loadMatrixData_t(filePath.mb_str(), graphName);
       } else if (filename.find("Data.") != string::npos) {
         graphName = fname.substr(path_i + 1, fname.size() - path_i - 9);
-        //loadLayoutData_t(filePath.mb_str());
+        loadLayoutData_t(filePath.mb_str(), graphName);
       } else if (filename.find("DataAll") != string::npos) {
         graphName = fname.substr(path_i + 1, fname.size() - path_i - 12);
-        //loadLayoutData_t(filePath.mb_str());
+        loadLayoutData_t(filePath.mb_str(), graphName);
       } else {
         cerr << "This file is not available" << endl;
       }
     } else if (f_ext == "bin") {
       if (filename.find("DisMat") != string::npos) {
         graphName = fname.substr(path_i + 1, fname.size() - path_i - 11);
-        //loadMatrixData_b(filePath.mb_str());
+        loadMatrixData_b(filePath.mb_str(), graphName);
       } else if (filename.find("Data.") != string::npos) {
         graphName = fname.substr(path_i + 1, fname.size() - path_i - 15);
-        //loadLayoutData_b(filePath.mb_str());
+        loadLayoutData_b(filePath.mb_str(), graphName);
       } else if (filename.find("DataAll") != string::npos) {
         graphName = fname.substr(path_i + 1, fname.size() - path_i - 18);
-        //loadLayoutData_b(filePath.mb_str());
+        loadLayoutData_b(filePath.mb_str(), graphName);
       } else {
         cerr << "This file is not available" << endl;
       }
@@ -152,10 +152,14 @@ void UserDefaultController::OnOpen(wxCommandEvent& event) {
     
     auto configurationController = AppDelegete::instance().getConfigurationController();
     configurationController->changeGraphName(graphName);
-    cout << "graphName:" << graphName << endl;
-//    _graphicPanel->SetupPanel();
-    //right->Init();
-    //appw->Init();
+    
+    //should be refactored
+    auto graphicPanel = AppDelegete::instance().getGraphicPanel();
+    auto configurationPanel = AppDelegete::instance().getControlPanel();
+    auto appearanceWindow = AppDelegete::instance().getAppearanceWindow();
+    graphicPanel->SetupPanel();
+    configurationPanel->Init();
+    appearanceWindow->Init();
   }
 }
 

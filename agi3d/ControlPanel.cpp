@@ -5,11 +5,11 @@
 #include <vector>
 #include <cml/cml.h>
 #include <map>
+#include "AppDelegete.h"
 
 typedef cml::vector4f vector4;
 using namespace std;
 
-static GraphicPanel* dp;
 static float fps = 0.0f;
 static float tmp = 0.0f;
 static wxStaticText * m_FPS;
@@ -40,13 +40,12 @@ extern float nodevalue_min;
 extern string filename;
 extern int N;
 extern int M;
-extern string graphName;
 
 static int _id = -1;
 
 //import function from calclayout.cpp
-void loadNodeAttrData(int);
-void loadEdgeAttrData(int);
+void loadNodeAttrData(int, const std::string& graphName);
+void loadEdgeAttrData(int, const std::string& graphName);
 
 //wx Macros
 
@@ -58,12 +57,7 @@ using namespace agi3d;
 
 ControlPanel::ControlPanel(wxWindow* parent)
 : wxPanel(parent, wxID_ANY, wxDefaultPosition, wxSize(280, 870)) {
-
-  wxWindow * p = this->GetParent();
-
-  Frame * mf = (Frame *) (p->GetParent());
-  dp = (GraphicPanel *) mf->GetDrawPanel();
-
+  
   wxPanel *myPanel = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxSize(280, 870));
 
   wxBoxSizer *mybox = new wxBoxSizer(wxVERTICAL);
@@ -174,6 +168,8 @@ void ControlPanel::Init() {
   listbox->Clear();
 
   labelMap.clear();
+  
+  auto dp = AppDelegete::instance().getGraphicPanel();
 
   dp->UpdateSize(1.0f);
   dp->UpdateThickness(1.0f);
@@ -181,6 +177,9 @@ void ControlPanel::Init() {
   dp->SetXRotation(false);
   dp->SetYRotation(false);
 
+  //@TODO 一時的な実装
+  auto configurationController = AppDelegete::instance().getConfigurationController();
+  const std::string& graphName = configurationController->getGraphName();
   wxString _graphlabel = wxString::Format(wxT("   FileName \t %s"), graphName);
   wxString _nodeSize = wxString::Format(wxT("   #Node \t %i"), N);
   wxString _edgeSize = wxString::Format(wxT("   #Edge   \t %i"), M);
@@ -214,35 +213,42 @@ void ControlPanel::setTarget(int id) {
 
 void ControlPanel::handleListEvent(wxCommandEvent& event) {
   int m = event.GetInt();
+  auto dp = AppDelegete::instance().getGraphicPanel();
   dp->changeColor(labelMap[m]);
 }
 
 void ControlPanel::NortifyUpdateNodeSize(wxScrollEvent& event) {
   float rate = (float) (event.GetInt()) / 100.0f;
+  auto dp = AppDelegete::instance().getGraphicPanel();
   dp->UpdateSize(rate);
 }
 
 void ControlPanel::NortifyUpdateEdgeThickness(wxScrollEvent& event) {
   float rate = (float) (event.GetInt()) / 50.0f;
+  auto dp = AppDelegete::instance().getGraphicPanel();
   dp->UpdateThickness(rate);
 }
 
 void ControlPanel::NortifyUpdateDelta(wxScrollEvent& event) {
   float rate = (float) (DeltaSlider->GetValue()) / 100.0f;
+  auto dp = AppDelegete::instance().getGraphicPanel();
   dp->ModifyDelta(rate);
 }
 
 void ControlPanel::NortifyUpdateScale(wxScrollEvent& event) {
   float rate = (float) (event.GetInt()) / 20.0f;
+  auto dp = AppDelegete::instance().getGraphicPanel();
   dp->ScaleLayout(rate);
 }
 
 void ControlPanel::NortifyUpdateDimension(wxScrollEvent& event) {
   float rate = (float) (event.GetInt()) / 1000.0f;
+  auto dp = AppDelegete::instance().getGraphicPanel();
   dp->ChangeDimension(rate);
 }
 
 void ControlPanel::UpdateNodeValueThreshold_b(wxScrollEvent& event) {
+  auto dp = AppDelegete::instance().getGraphicPanel();
   node_slider_b_pos = nodeThresholdSlider_b->GetValue();
   if (node_slider_b_pos <= node_slider_t_pos) {
     float z = (float) (node_slider_b_pos) / 100.0f;
@@ -254,6 +260,7 @@ void ControlPanel::UpdateNodeValueThreshold_b(wxScrollEvent& event) {
 }
 
 void ControlPanel::UpdateNodeValueThreshold_t(wxScrollEvent& event) {
+  auto dp = AppDelegete::instance().getGraphicPanel();
   node_slider_t_pos = nodeThresholdSlider_t->GetValue();
   if (node_slider_b_pos <= node_slider_t_pos) {
     float z = (float) (node_slider_t_pos) / 100.0f;
@@ -265,6 +272,7 @@ void ControlPanel::UpdateNodeValueThreshold_t(wxScrollEvent& event) {
 }
 
 void ControlPanel::UpdateEdgeValueThreshold_b(wxScrollEvent& event) {
+  auto dp = AppDelegete::instance().getGraphicPanel();
   edge_slider_b_pos = edgeThresholdSlider_b->GetValue();
   if (edge_slider_b_pos < edge_slider_t_pos) {
     float z = (float) (edge_slider_b_pos) / 100.0f;
@@ -275,6 +283,7 @@ void ControlPanel::UpdateEdgeValueThreshold_b(wxScrollEvent& event) {
 }
 
 void ControlPanel::UpdateEdgeValueThreshold_t(wxScrollEvent& event) {
+  auto dp = AppDelegete::instance().getGraphicPanel();
   edge_slider_t_pos = edgeThresholdSlider_t->GetValue();
   if (edge_slider_b_pos < edge_slider_t_pos) {
     float z = (float) (edge_slider_t_pos) / 100.0f;
@@ -285,14 +294,17 @@ void ControlPanel::UpdateEdgeValueThreshold_t(wxScrollEvent& event) {
 }
 
 void ControlPanel::OnToggleEdge(wxCommandEvent& event) {
+  auto dp = AppDelegete::instance().getGraphicPanel();
   dp->DrawEdge();
 }
 
 void ControlPanel::OnToggleNodeSize(wxCommandEvent& event) {
+  auto dp = AppDelegete::instance().getGraphicPanel();
   dp->NodeModeChange();
 }
 
 void ControlPanel::SelectNodeAttr(wxCommandEvent& event) {
+  auto dp = AppDelegete::instance().getGraphicPanel();
   wxString label = nodeAttrsChoice->GetStringSelection();
   int n = nodeAttrsChoice->GetSelection();
   nodeThresholdSlider_b->SetValue(0);
@@ -301,11 +313,15 @@ void ControlPanel::SelectNodeAttr(wxCommandEvent& event) {
   node_slider_t_pos = 100;
   nodeThresholdAttrID = n;
   string strs = string(label.mb_str());
-  loadNodeAttrData(n);
+  
+  //一時的な実装
+  auto configurationController = AppDelegete::instance().getConfigurationController();
+  loadNodeAttrData(n, configurationController->getGraphName());
   dp->ResetIsDrawingNodes();
 }
 
 void ControlPanel::SelectEdgeAttr(wxCommandEvent& event) {
+  auto dp = AppDelegete::instance().getGraphicPanel();
   wxString label = edgeAttrsChoice->GetStringSelection();
   int n = edgeAttrsChoice->GetSelection();
   edgeThresholdSlider_b->SetValue(0);
@@ -314,6 +330,9 @@ void ControlPanel::SelectEdgeAttr(wxCommandEvent& event) {
   edge_slider_t_pos = 100;
   edgeThresholdAttrID = n;
   string strs = string(label.mb_str());
-  loadEdgeAttrData(n);
+  
+  //一時的な実装
+  auto configurationController = AppDelegete::instance().getConfigurationController();
+  loadEdgeAttrData(n, configurationController->getGraphName());
   dp->ResetIsDrawingEdges();
 }

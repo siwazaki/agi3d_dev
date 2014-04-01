@@ -17,12 +17,8 @@ namespace agi3d {
   class Frame : public wxFrame {
   public:
     Frame(const wxString& title);
-    GraphicPanel *left;
-    ControlPanel *right;    
     //@TODO: should be removed
     void initload();
-    ControlPanel * GetSubPanel();
-    GraphicPanel * GetDrawPanel();
     
   private:
     void OnQuit(wxCommandEvent& event);

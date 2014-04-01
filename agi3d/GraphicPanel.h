@@ -59,6 +59,8 @@ public:
   void NodeModeChange();
   void SetXRotation(bool);
   void SetYRotation(bool);
+  
+private:
 
   DECLARE_EVENT_TABLE()
 };

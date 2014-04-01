@@ -13,14 +13,6 @@ Frame::Frame(const wxString& title)
   this->Centre();
 }
 
-ControlPanel * Frame::GetSubPanel() {
-  return right;
-}
-
-GraphicPanel * Frame::GetDrawPanel() {
-  return left;
-}
-
 void Frame::OnQuit(wxCommandEvent& WXUNUSED(event)) {
   Close(true);
 }

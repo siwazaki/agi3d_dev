@@ -22,7 +22,6 @@ float * solver3D(float *, float *, float, float *);
 float * solver2D(float *, float *, float, float *);
 
 //Params about Graph
-string graphName = "";
 int N;
 int M;
 int ** D;
@@ -454,7 +453,7 @@ void calc2DLayout() {
   init2D[5] = 0.4;
 }
 
-void loadNodeAttrData(int n) {
+void loadNodeAttrData(int n, const std::string& graphName) {
   string datadir = "../data/" + graphName + "/";
   bool isNormal = false;
   switch (n) {
@@ -507,7 +506,7 @@ void loadNodeAttrData(int n) {
   }
 }
 
-void loadEdgeAttrData(int n) {
+void loadEdgeAttrData(int n, const std::string& graphName) {
   string datadir = "../data/" + graphName + "/";
   bool isDefault = false;
   switch (n) {
@@ -602,7 +601,7 @@ void loadEdgeAttrData(int n) {
   }
 }
 
-void loadLabelData() {
+void loadLabelData(const std::string& graphName) {
   string labeldata = "../data/" + graphName + "/" + graphName + "labels.txt";
   ifstream lifs(labeldata.c_str());
   if (lifs.fail()) {
@@ -641,7 +640,7 @@ void setNodeEdgeValue() {
   edgevalue_min = 0;
 }
 
-void loadMatrixData_t(const char * data) {
+void loadMatrixData_t(const char * data, const std::string& graphName) {
   //Free Memory
   {
     if (memory_status) {
@@ -707,7 +706,7 @@ void loadMatrixData_t(const char * data) {
   }
 
   //Load Label Data
-  loadLabelData();
+  loadLabelData(graphName);
   //Set Default Node & Edge value
   setNodeEdgeValue();
 
@@ -715,7 +714,7 @@ void loadMatrixData_t(const char * data) {
   delta = 0.5;
 }
 
-void loadMatrixData_b(const char * data) {
+void loadMatrixData_b(const char * data, const std::string& graphName) {
   //Free Memory
   {
     if (memory_status) {
@@ -788,14 +787,14 @@ void loadMatrixData_b(const char * data) {
   }
 
   //Load Label Data
-  loadLabelData();
+  loadLabelData(graphName);
   //Set Default Node & Edge value
   setNodeEdgeValue();
   scale = 1.0f;
   delta = 0.5;
 }
 
-void loadLayoutData_t(const char * data) {
+void loadLayoutData_t(const char * data, const std::string& graphName) {
   //Free Memory
   {
     if (memory_status) {
@@ -868,7 +867,7 @@ void loadLayoutData_t(const char * data) {
   }
 
   //Load Label Data
-  loadLabelData();
+  loadLabelData(graphName);
   //Set Default Node & Edge value
   setNodeEdgeValue();
 
@@ -876,7 +875,7 @@ void loadLayoutData_t(const char * data) {
   delta = 0.5;
 }
 
-void loadLayoutData_b(const char * data) {
+void loadLayoutData_b(const char * data, const std::string& graphName) {
   //Free Memory
   {
     if (memory_status) {
@@ -971,7 +970,7 @@ void loadLayoutData_b(const char * data) {
     edgeData.close();
   }
   //Load Label Data
-  loadLabelData();
+  loadLabelData(graphName);
   //Set Default Node & Edge value
   setNodeEdgeValue();
   cout << N << " " << M << " " << dim << endl;

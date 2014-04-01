@@ -42,7 +42,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "agi3d/ControlPanel.cpp"
-            timestampString = "417948324.661518"
+            timestampString = "418041641.549838"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "221"
@@ -120,11 +120,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "agi3d/UserDefaultController.cpp"
-            timestampString = "418038100.369874"
+            timestampString = "418039727.232927"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "204"
-            endingLineNumber = "204"
+            startingLineNumber = "206"
+            endingLineNumber = "206"
             landmarkName = "UserDefaultController::OpenAppearanceWindow(wxCommandEvent&amp; event)"
             landmarkType = "5">
          </BreakpointContent>

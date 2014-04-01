@@ -17,6 +17,7 @@
 #include <png.h>
 #include "wx/stopwatch.h"
 #include "Frame.h"
+#include "AppDelegete.h"
 
 typedef cml::vector3f vector3;
 typedef cml::vector4f vector4;
@@ -46,7 +47,6 @@ extern int M;
 extern vector<int> *neighbor;
 extern vector< pair<int, int> > edges;
 extern vector<int> *edgelist;
-extern string graphName;
 
 extern float * nodevalues;
 extern float * edgevalues;
@@ -137,9 +137,6 @@ static int imgnum = 1;
 
 //Timer for FPS
 static wxStopWatch * sw;
-
-//ControlPanel
-static ControlPanel * sbp;
 
 //View Matrix?
 static GLdouble mvMatrix[16];
@@ -401,10 +398,6 @@ wxGLCanvas(parent, wxID_ANY, args, wxDefaultPosition, wxSize(width, height), wxF
 
   sw = new wxStopWatch();
 
-  wxWindow * p = this->GetParent();
-  Frame * mf = (Frame *) (p->GetParent());
-  sbp = (ControlPanel *) mf->GetSubPanel();
-
   SetBackgroundStyle(wxBG_STYLE_CUSTOM);
 
   for (int i = 0; i < N; i++) {
@@ -514,6 +507,7 @@ int GraphicPanel::getHeight() {
 }
 
 void GraphicPanel::RenderScene(wxPaintEvent& evt) {
+  auto sbp = AppDelegete::instance().getControlPanel();
   wxGLCanvas::SetCurrent(*m_context);
   wxPaintDC(this);
 
@@ -959,6 +953,9 @@ void GraphicPanel::SetYRotation(bool value) {
 }
 
 void GraphicPanel::SavePixelData() {
+  //@TODO 一時的な実装
+  auto configurationController = AppDelegete::instance().getConfigurationController();
+  const std::string& graphName = configurationController->getGraphName();
   string name = graphName + "img" + IntToString(imgnum) + ".png";
   imgnum++;
 
@@ -1159,6 +1156,7 @@ void GraphicPanel::mouseMoved(wxMouseEvent& event) {
 }
 
 void GraphicPanel::mouseLeftDown(wxMouseEvent& event) {
+  auto sbp = AppDelegete::instance().getControlPanel();
   if (LOAD_FLAG) {
     int x = event.GetX(), y = event.GetY();
     {
@@ -1210,7 +1208,7 @@ void GraphicPanel::mouseLeftDown(wxMouseEvent& event) {
           edgeAttribute[l] = false;
           isdrawingEdges[l] = ((edgevalues[l] >= edgethreshold_b) && (edgevalues[l] <= edgethreshold_t));
         }
-
+        auto sbp = AppDelegete::instance().getControlPanel();
         sbp->setTarget(id);
       }
       else {
