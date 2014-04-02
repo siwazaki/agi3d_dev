@@ -28,23 +28,17 @@ namespace agi3d {
     std::string _graphName;
     
     float fps = 0.0f;
-    float tmp = 0.0f;
-    
+    float tmp = 0.0f;    
     int nodeThresholdAttrID = 0;
     int edgeThresholdAttrID = 0;
-    
-
     int pickid = -1;
-    
-  
-    
     float _nodethreshold_t = 10000000;
     float _nodethreshold_b = -1;
-    std::map<int, int> labelMap;
-    int node_slider_b_pos = 0;
-    int node_slider_t_pos = 100;
-    int edge_slider_b_pos = 0;
-    int edge_slider_t_pos = 100;
+    std::map<int, int> _labelMap;
+    int _node_slider_b_pos = 0;
+    int _node_slider_t_pos = 100;
+    int _edge_slider_b_pos = 0;
+    int _edge_slider_t_pos = 100;
     int _id = -1;
   };
 }

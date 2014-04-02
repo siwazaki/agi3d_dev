@@ -13,6 +13,7 @@
 #include "wx/wx.h"
 #include "wx/event.h"
 
+#include "Graph.h"
 #include "Configuration.h"
 #include "ControlPanel.h"
 
@@ -24,26 +25,14 @@ namespace agi3d {
     friend class AppDelegete;
     
   public:
+    ConfigurationController(const std::shared_ptr<Configuration>& configuration, const std::shared_ptr<Graph>& graph);
     virtual ~ConfigurationController();
-    ConfigurationController();
-    
-    void changeGraphName(const std::string& graphName);
-    
-    //@TODO remove
-    //リファクタリングのための一時的な実装
-    const std::string& getGraphName(){
-      return _current->graphName();
-    }
-    
     //@TODO remane
     void Init();
-    
-    
-    
-
   private:
-    std::shared_ptr<Configuration> _current;
-    std::shared_ptr<ControlPanel> _controlPanel;
+    std::shared_ptr<Configuration> _configuration;
+    std::shared_ptr<Graph> _graph;
+    ControlPanel *_controlPanel;
     //@TODO move to configuration
     float fps;
     

@@ -11,18 +11,20 @@
 
 #include <memory>
 #include "GraphicPanel.h"
+#include "Graph.h"
 
 namespace agi3d {
   
   class GraphicController
   {
   public:
-    GraphicController();
+    GraphicController(const std::shared_ptr<Graph>& graph);
     virtual ~GraphicController();
-    
-  private:
-    std::shared_ptr<GraphicPanel> _graphicPanel;
         
+  private:
+    GraphicPanel *_graphicPanel;
+    std::shared_ptr<Graph> _graph;
+    
   };
   
 }

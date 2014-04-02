@@ -26,22 +26,20 @@ AppDelegete& AppDelegete::instance()
 AppDelegete::AppDelegete()
 {
   //ビューの作成
-  _frame = std::shared_ptr<Frame>(new Frame(wxT("Active Graph Interface 3D")));
+  _frame = new Frame(wxT("Active Graph Interface 3D"));
   
-  _menuBar = std::shared_ptr<MenuBar>(new MenuBar());
-  _frame->SetMenuBar(_menuBar.get());
+  _menuBar = new MenuBar();
+  _frame->SetMenuBar(_menuBar);
   
-  _base = std::shared_ptr<wxSplitterWindow>(new wxSplitterWindow(_frame.get(), wxID_ANY, wxDefaultPosition, wxDefaultSize, wxSP_LIVE_UPDATE));
+  _base = new wxSplitterWindow(_frame, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxSP_LIVE_UPDATE);
   _base->SetSashGravity(0.80);
   _base->SetMinimumPaneSize(100);
   
   int args[] = {WX_GL_RGBA, WX_GL_DOUBLEBUFFER, WX_GL_DEPTH_SIZE, 16};
-  _graphicPanel = std::shared_ptr<GraphicPanel>(new GraphicPanel(_base.get(), args));
-  _controlPanel = std::shared_ptr<ControlPanel>(new ControlPanel(_base.get()));
-  
-  _base->SplitVertically(_graphicPanel.get(), _controlPanel.get());
-  
-  _appearanceWindow  = std::shared_ptr<AppearanceWindow>(new AppearanceWindow(_controlPanel.get(), wxT("Appearance")));
+  _graphicPanel = new  GraphicPanel(_base, args);
+  _controlPanel = new ControlPanel(_base);
+  _base->SplitVertically(_graphicPanel, _controlPanel);
+  _appearanceWindow  = new AppearanceWindow(_controlPanel, wxT("Appearance"));
 }
 
 AppDelegete::~AppDelegete()
@@ -49,12 +47,22 @@ AppDelegete::~AppDelegete()
   
 }
 
-void AppDelegete::initControllers()
+void AppDelegete::initMVC()
 {
+  //モデルの生成
+  _graph = std::shared_ptr<Graph>(new Graph);
+  _userDefault = std::shared_ptr<UserDefault>(new UserDefault);
+  _configuration = std::shared_ptr<Configuration>(new Configuration);
+  
   //コントローラの作成
-  _userDefaultController = std::shared_ptr<UserDefaultController>(new UserDefaultController());
-  _configurationController = std::shared_ptr<ConfigurationController>(new ConfigurationController());
-  _graphicController = std::shared_ptr<GraphicController>(new GraphicController());
+  _userDefaultController = std::shared_ptr<UserDefaultController>(new UserDefaultController(_userDefault, _graph));
+                                                                  
+  _configurationController = std::shared_ptr<ConfigurationController>(new ConfigurationController(_configuration, _graph));
+                                                                  
+  _graphicController = std::shared_ptr<GraphicController>(new GraphicController(_graph));
+  
+  //ビューにモデルをセット
+  _graphicPanel->init(_graph);
 }
 
 void AppDelegete::run()
@@ -62,31 +70,31 @@ void AppDelegete::run()
   _frame->Show(true);
 }
 
-const std::shared_ptr<MenuBar>& AppDelegete::getMenuBar(){
+MenuBar* AppDelegete::getMenuBar() const {
   return _menuBar;
 }
 
-const std::shared_ptr<Frame>& AppDelegete::getFrame()
+Frame* AppDelegete::getFrame() const
 {
   return _frame;
 }
 
-const std::shared_ptr<wxSplitterWindow>& AppDelegete::getBase()
+wxSplitterWindow* AppDelegete::getBase() const
 {
   return _base;
 }
 
-const std::shared_ptr<GraphicPanel>& AppDelegete::getGraphicPanel()
+GraphicPanel* AppDelegete::getGraphicPanel() const
 {
   return _graphicPanel;
 }
 
-const std::shared_ptr<ControlPanel>& AppDelegete::getControlPanel()
+ControlPanel* AppDelegete::getControlPanel() const
 {
   return _controlPanel;
 }
 
-const std::shared_ptr<AppearanceWindow>& AppDelegete::getAppearanceWindow()
+AppearanceWindow* AppDelegete::getAppearanceWindow() const
 {
   return _appearanceWindow;
 }
@@ -99,3 +107,18 @@ const std::shared_ptr<GraphicController>& AppDelegete::getGraphicController()
 {
   return _graphicController;
 }
+
+const std::shared_ptr<Graph>& AppDelegete::getGraph()
+{
+  return _graph;
+}
+
+const std::shared_ptr<UserDefault>& AppDelegete::getUserDefault()
+{
+  return _userDefault;
+}
+const std::shared_ptr<Configuration>& AppDelegete::getConfiguration()
+{
+  return _configuration;
+}
+

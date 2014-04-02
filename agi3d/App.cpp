@@ -17,7 +17,7 @@ bool App::OnInit() {
   GetCurrentProcess(&PSN);
   TransformProcessType(&PSN, kProcessTransformToForegroundApplication);  
   AppDelegete &delegete = AppDelegete::instance();
-  delegete.initControllers();
+  delegete.initMVC();
   delegete.run();
   return true;
 }

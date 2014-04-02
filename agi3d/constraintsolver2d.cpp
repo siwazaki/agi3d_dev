@@ -2,6 +2,9 @@
 #include <math.h>
 #include <lbfgs.h>
 #include <iostream>
+#include "constraintsolver2d.h"
+
+
 using namespace std;
 
 struct coefficients {

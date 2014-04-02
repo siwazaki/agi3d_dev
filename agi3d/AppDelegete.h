@@ -26,30 +26,39 @@ namespace agi3d {
   public:
     static AppDelegete& instance();
     virtual ~AppDelegete();
-    void initControllers();
+    void initMVC();
     void run();
     
-    const std::shared_ptr<Frame>& getFrame();
-    const std::shared_ptr<wxSplitterWindow>& getBase();
-    const std::shared_ptr<MenuBar>& getMenuBar();
-    const std::shared_ptr<ControlPanel>& getControlPanel();
-    const std::shared_ptr<GraphicPanel>& getGraphicPanel();
-    const std::shared_ptr<AppearanceWindow>& getAppearanceWindow();    
+    Frame* getFrame() const;
+    wxSplitterWindow* getBase() const;
+    MenuBar* getMenuBar() const;
+    ControlPanel* getControlPanel() const;
+    GraphicPanel* getGraphicPanel() const;
+    AppearanceWindow* getAppearanceWindow() const;
+    
     const std::shared_ptr<ConfigurationController>& getConfigurationController();
     const std::shared_ptr<GraphicController>& getGraphicController();
     
+    const std::shared_ptr<Graph>& getGraph();
+    const std::shared_ptr<UserDefault>& getUserDefault();
+    const std::shared_ptr<Configuration>& getConfiguration();
+    
     
   private:
-    std::shared_ptr<Frame> _frame;
-    std::shared_ptr<wxSplitterWindow> _base;
-    std::shared_ptr<MenuBar> _menuBar;
-    std::shared_ptr<GraphicPanel> _graphicPanel;
-    std::shared_ptr<ControlPanel> _controlPanel;
-    std::shared_ptr<AppearanceWindow> _appearanceWindow;
+    Frame *_frame;
+    wxSplitterWindow *_base;
+    MenuBar *_menuBar;
+    GraphicPanel *_graphicPanel;
+    ControlPanel *_controlPanel;
+    AppearanceWindow *_appearanceWindow;
     
     std::shared_ptr<UserDefaultController> _userDefaultController;
     std::shared_ptr<ConfigurationController> _configurationController;
     std::shared_ptr<GraphicController> _graphicController;
+    
+    std::shared_ptr<Graph> _graph;
+    std::shared_ptr<UserDefault> _userDefault;
+    std::shared_ptr<Configuration> _configuration;
   
     
   private:

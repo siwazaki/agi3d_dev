@@ -1,6 +1,6 @@
 PROGNAME := agi3d
 #release or debug
-buildtype := release
+buildtype := debug
 BIN_WXCONFIG :=$(HOME)/homebrew/bin/wx-config	
 CXX := g++
 CPPFLAGS += -std=c++11 -stdlib=libc++ 
@@ -16,7 +16,7 @@ FRAMEWORK = -framework OpenGL
 FRAMEWORK += -framework GLUT
 FRAMEWORK += -framework Accelerate
 
-SRCS = Enums.cpp UserDefault.cpp MenuBar.cpp UserDefaultController.cpp GraphicController.cpp Configuration.cpp ConfigurationController.cpp AppDelegete.cpp GraphicPanel.cpp ControlPanel.cpp Frame.cpp AppearanceWindow.cpp App.cpp calcLayout.cpp constraintsolver3d.cpp constraintsolver2d.cpp
+SRCS = constraintsolver3d.cpp constraintsolver2d.cpp Enums.cpp UserDefault.cpp Graph.cpp Configuration.cpp MenuBar.cpp UserDefaultController.cpp GraphicController.cpp  ConfigurationController.cpp AppDelegete.cpp GraphicPanel.cpp ControlPanel.cpp Frame.cpp AppearanceWindow.cpp App.cpp
 
 CXXFLAGS := -Wall -Wextra
 ifeq ($(buildtype),release)

@@ -21,20 +21,13 @@
 #include "UserDefaultController.h"
 #include "MenuBar.h"
 
-
-//import from calclayout.cpp
-void loadMatrixData_t(const char *, const std::string&);
-void loadLayoutData_t(const char *, const std::string&);
-void loadMatrixData_b(const char *, const std::string&);
-void loadLayoutData_b(const char *, const std::string&);
-
 using namespace agi3d;
 using namespace std;
 
-UserDefaultController::UserDefaultController()
-{
-  
-  this->_current = std::shared_ptr<UserDefault>(new UserDefault());
+UserDefaultController:: UserDefaultController(const std::shared_ptr<UserDefault>& userDefault, const std::shared_ptr<Graph>& graph)
+{  
+  this->_userDefault = userDefault;
+  this->_graph = graph;
   this->_menuBar = AppDelegete::instance().getMenuBar();
   this->_appearanceWindow = AppDelegete::instance().getAppearanceWindow();
   
@@ -71,9 +64,9 @@ UserDefaultController::~UserDefaultController()
 
 
 void UserDefaultController::SetAutoXRotation(wxCommandEvent& event) {
-  _current->_rotation = (E_Rotation)(_current->_rotation ^ E_Rotation::X);
-  std::cout << _current->_rotation << std::endl;
-  _menuBar->renderModel(_current);
+  _userDefault->_rotation = (E_Rotation)(_userDefault->_rotation ^ E_Rotation::X);
+  std::cout << _userDefault->_rotation << std::endl;
+  _menuBar->renderModel(_userDefault);
 
 
   //  if (x_rotation) {
@@ -88,8 +81,8 @@ void UserDefaultController::SetAutoXRotation(wxCommandEvent& event) {
 }
 
 void UserDefaultController::SetAutoYRotation(wxCommandEvent& event) {
-  _current->_rotation = (E_Rotation)(_current->_rotation ^ E_Rotation::Y);
-  _menuBar->renderModel(_current);
+  _userDefault->_rotation = (E_Rotation)(_userDefault->_rotation ^ E_Rotation::Y);
+  _menuBar->renderModel(_userDefault);
   
   //  if (y_rotation) {
   //    left->SetYRotation(false);
@@ -103,55 +96,21 @@ void UserDefaultController::SetAutoYRotation(wxCommandEvent& event) {
 }
 
 void UserDefaultController::StopAutoRotation(wxCommandEvent& event) {
-  _current->_rotation = E_Rotation::None;
-  _menuBar->renderModel(_current);
+  _userDefault->_rotation = E_Rotation::None;
+  _menuBar->renderModel(_userDefault);
 
   //ResetMenuParams();
 }
 
 
 void UserDefaultController::OnOpen(wxCommandEvent& event) {
-  wxFileDialog * openFileDialog = new wxFileDialog(_menuBar.get());
+  wxFileDialog * openFileDialog = new wxFileDialog(_menuBar);
   if (openFileDialog->ShowModal() == wxID_OK) {
-    wxString filePath = openFileDialog->GetPath();
-    string fname = string(filePath.mb_str());
-    int path_i = fname.find_last_of("/");
-    int ext_i = fname.find_last_of(".");
-    string f_ext = fname.substr(ext_i + 1);
-    string filename = fname.substr(path_i + 1);
-    
-    std::string graphName = "unknown";
-    
-    if (f_ext == "txt") {
-      if (filename.find("DisMat") != string::npos) {
-        graphName = fname.substr(path_i + 1, fname.size() - path_i - 11);
-        loadMatrixData_t(filePath.mb_str(), graphName);
-      } else if (filename.find("Data.") != string::npos) {
-        graphName = fname.substr(path_i + 1, fname.size() - path_i - 9);
-        loadLayoutData_t(filePath.mb_str(), graphName);
-      } else if (filename.find("DataAll") != string::npos) {
-        graphName = fname.substr(path_i + 1, fname.size() - path_i - 12);
-        loadLayoutData_t(filePath.mb_str(), graphName);
-      } else {
-        cerr << "This file is not available" << endl;
-      }
-    } else if (f_ext == "bin") {
-      if (filename.find("DisMat") != string::npos) {
-        graphName = fname.substr(path_i + 1, fname.size() - path_i - 11);
-        loadMatrixData_b(filePath.mb_str(), graphName);
-      } else if (filename.find("Data.") != string::npos) {
-        graphName = fname.substr(path_i + 1, fname.size() - path_i - 15);
-        loadLayoutData_b(filePath.mb_str(), graphName);
-      } else if (filename.find("DataAll") != string::npos) {
-        graphName = fname.substr(path_i + 1, fname.size() - path_i - 18);
-        loadLayoutData_b(filePath.mb_str(), graphName);
-      } else {
-        cerr << "This file is not available" << endl;
-      }
-    }
+     wxString filePath = openFileDialog->GetPath();
+    _graph->loadData(std::string(filePath.mb_str()));
     
     auto configurationController = AppDelegete::instance().getConfigurationController();
-    configurationController->changeGraphName(graphName);
+    //configurationController->changeGraphName(graphName);
     
     //should be refactored
     auto graphicPanel = AppDelegete::instance().getGraphicPanel();

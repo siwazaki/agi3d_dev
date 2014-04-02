@@ -2,7 +2,9 @@
 #include <math.h>
 #include <lbfgs.h>
 #include <iostream>
+#include "constraintsolver3d.h"
 using namespace std;
+
 
 struct coefficients {
   lbfgsfloatval_t * _new_pos;

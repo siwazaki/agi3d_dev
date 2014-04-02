@@ -71,6 +71,8 @@
 		506CDC4718E821F400EF8DCA /* ControlPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ControlPanel.h; sourceTree = "<group>"; };
 		508863DF18EAC4B8002BEBDD /* Graph.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Graph.cpp; sourceTree = "<group>"; };
 		508863E018EAC4B8002BEBDD /* Graph.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Graph.h; sourceTree = "<group>"; };
+		508863E318EBED8B002BEBDD /* constraintsolver2d.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = constraintsolver2d.h; sourceTree = "<group>"; };
+		508863E418EBEDA6002BEBDD /* constraintsolver3d.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = constraintsolver3d.h; sourceTree = "<group>"; };
 		50F0D2BE18E8303B0067249A /* MenuBar.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MenuBar.cpp; sourceTree = "<group>"; };
 		50F0D2BF18E8303B0067249A /* MenuBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MenuBar.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -130,6 +132,8 @@
 			isa = PBXGroup;
 			children = (
 				506CDC4018E821F400EF8DCA /* calcLayout.cpp */,
+				508863E318EBED8B002BEBDD /* constraintsolver2d.h */,
+				508863E418EBEDA6002BEBDD /* constraintsolver3d.h */,
 				506CDC4118E821F400EF8DCA /* constraintsolver2d.cpp */,
 				506CDC4218E821F400EF8DCA /* constraintsolver3d.cpp */,
 				504D276B18E949D200F2CA63 /* UserDefault.cpp */,

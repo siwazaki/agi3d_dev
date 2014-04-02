@@ -11,15 +11,15 @@
 #include <sys/time.h>
 #include <Accelerate/Accelerate.h>
 
+#include "constraintsolver2d.h"
+#include "constraintsolver3d.h"
+
 #define dimension 10000
 
 typedef boost::numeric::ublas::vector<float> fvector;
 
 using namespace std;
 
-//import from constarintsolver2d, 3d
-float * solver3D(float *, float *, float, float *);
-float * solver2D(float *, float *, float, float *);
 
 //Params about Graph
 int N;

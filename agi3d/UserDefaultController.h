@@ -13,9 +13,8 @@
 #include "wx/wx.h"
 #include "wx/event.h"
 
+#include "Graph.h"
 #include "UserDefault.h"
-#include "ControlPanel.h"
-#include "GraphicPanel.h"
 #include "MenuBar.h"
 #include "AppearanceWindow.h"
 
@@ -26,13 +25,14 @@ namespace agi3d {
   {
     friend class AppDelegete;
   public:
-    UserDefaultController();
+    UserDefaultController(const std::shared_ptr<UserDefault>& userDefault, const std::shared_ptr<Graph>& graph);
     virtual ~UserDefaultController();
 
   private:
-    std::shared_ptr<UserDefault> _current;
-    std::shared_ptr<MenuBar> _menuBar;
-    std::shared_ptr<AppearanceWindow> _appearanceWindow;
+    std::shared_ptr<UserDefault> _userDefault;
+    std::shared_ptr<Graph> _graph;
+    MenuBar* _menuBar;
+    AppearanceWindow* _appearanceWindow;
 
     void nortifyUpdateNodeSize(wxScrollEvent& event);
     void SetAutoXRotation(wxCommandEvent& event);

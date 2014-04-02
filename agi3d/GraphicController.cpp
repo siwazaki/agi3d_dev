@@ -11,8 +11,9 @@
 
 using namespace agi3d;
 
-GraphicController::GraphicController()
+GraphicController::GraphicController(const std::shared_ptr<Graph>& graph)
 {
+  _graph = graph;
   _graphicPanel = AppDelegete::instance().getGraphicPanel();
 }
 

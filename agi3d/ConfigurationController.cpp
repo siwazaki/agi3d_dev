@@ -20,8 +20,9 @@
 using namespace std;
 using namespace agi3d;
 
-ConfigurationController::ConfigurationController() {
-  _current = std::shared_ptr<Configuration>(new Configuration());
+ConfigurationController::ConfigurationController(const std::shared_ptr<Configuration>& configuration, const std::shared_ptr<Graph>& graph) {
+  _graph = graph;
+  _configuration = configuration;
   _controlPanel = AppDelegete::instance().getControlPanel();
   
   //@TODO
@@ -72,12 +73,6 @@ ConfigurationController::~ConfigurationController() {
   
 }
 
-void ConfigurationController::changeGraphName(const std::string &graphName)
-{
-  _current->_graphName = graphName;
-}
-
-
 void ConfigurationController::SetFPS(float _f) {
   fps = _f;
   wxString str = wxString::Format(wxT("   FPS : %f"), fps);
@@ -90,26 +85,24 @@ void ConfigurationController::Init() {
   
   _controlPanel->nodeThresholdSlider_b->SetValue(0);
   _controlPanel->nodeThresholdSlider_t->SetValue(100);
-  float _nodethreshold_b = -1;
-  float _nodethreshold_t = 10000000;
   
   _controlPanel->edgeThresholdSlider_b->SetValue(0);
   _controlPanel->edgeThresholdSlider_t->SetValue(100);
   
   _controlPanel->nodeAttrsChoice->SetSelection(0);
-  _current->nodeThresholdAttrID = 0;
+  _configuration->nodeThresholdAttrID = 0;
   _controlPanel->edgeAttrsChoice->SetSelection(0);
-  _current->edgeThresholdAttrID = 0;
+  _configuration->edgeThresholdAttrID = 0;
   
-  _current->node_slider_b_pos = 0;
-  _current->node_slider_t_pos = 100;
-  _current->edge_slider_b_pos = 0;
-  _current->edge_slider_t_pos = 100;
+  _configuration->_node_slider_b_pos = 0;
+  _configuration->_node_slider_t_pos = 100;
+  _configuration->_edge_slider_b_pos = 0;
+  _configuration->_edge_slider_t_pos = 100;
   
   _controlPanel->target->SetLabel(wxString());
   _controlPanel->listbox->Clear();
   
-  _current->labelMap.clear();
+  _configuration->_labelMap.clear();
   
   auto dp = AppDelegete::instance().getGraphicPanel();
   
@@ -120,7 +113,7 @@ void ConfigurationController::Init() {
   dp->SetYRotation(false);
   
   //@TODO 一時的な実装
-  wxString _graphlabel = wxString::Format(wxT("   FileName \t %s"), _current->graphName());
+  wxString _graphlabel = wxString::Format(wxT("   FileName \t %s"), _configuration->graphName());
   //@TODO
   //wxString _nodeSize = wxString::Format(wxT("   #Node \t %i"), N);
   //wxString _edgeSize = wxString::Format(wxT("   #Edge   \t %i"), M);
