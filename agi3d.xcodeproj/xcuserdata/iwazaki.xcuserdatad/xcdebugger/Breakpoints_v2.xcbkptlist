@@ -149,13 +149,27 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "agi3d/GraphicPanel.cpp"
-            timestampString = "418132799.310286"
+            filePath = "agi3d/AppDelegete.cpp"
+            timestampString = "418134601.612389"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1154"
-            endingLineNumber = "1154"
-            landmarkName = "GraphicPanel::mouseMoved(wxMouseEvent&amp; event)"
+            startingLineNumber = "92"
+            endingLineNumber = "92">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "agi3d/GraphicController.cpp"
+            timestampString = "418156957.881054"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "55"
+            endingLineNumber = "55"
+            landmarkName = "GraphicController::onIdle(wxEvent&amp;)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

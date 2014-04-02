@@ -6,138 +6,591 @@
 
 #include <iostream>
 #include <string>
-#include <cml/cml.h>
-#include <boost/numeric/ublas/matrix.hpp>
-#include <boost/numeric/ublas/vector.hpp>
-#include <boost/lexical_cast.hpp>
+#include <png.h>
 #include "wx/wx.h"
 #include "wx/sizer.h"
 #include "wx/glcanvas.h"
+
 #include "GraphicPanel.h"
 #include "ControlPanel.h"
-#include <png.h>
-#include "wx/stopwatch.h"
 #include "Frame.h"
 #include "AppDelegete.h"
 
-typedef cml::vector3f vector3;
-typedef cml::vector4f vector4;
-typedef cml::matrix44f_c matrix;
 using namespace std;
 using namespace agi3d;
 
-//Variables
-static float nodethreshold_b = -1.0f;
-static float nodethreshold_t = 100000000000;
-static float edgethreshold_b = -1.0f;
-static float edgethreshold_t = 100000000000;
-
-static bool * isdrawingNodes;
-static bool * isdrawingEdges;
-
-static bool * edgeAttribute;
-static bool * isNeighbor;
-
-//Layout Mode
-static int LayoutMode = 3;
-
-//Node Attributes
-static float * pos_x, * pos_y, * pos_z;
-static vector3 * colors;
-static float radius = 0.015f;
-static float size_rate = 1.0f;
-
-//Line Attribute
-float default_linewidth = 1.0f;
-static float linewidth = 1.0f;
-
-//Light Attribute
-static float light_z = 200.0f;
-
-//Color Attribute
-vector3 blue(0.0f, 0.75f, 1.0f);
-vector3 deepblue(0.0f, 0.40f, 0.8f);
-vector3 green(0.0f, 1.0f, 0.0f);
-vector3 red(1.0f, 0.0f, 0.0f);
-vector3 purple(1.0f, 0.0f, 1.0f);
-static float brightness = 1.0f;
-
-//window
-static int width = 1000;
-static int height = 870;
-
-//Option Flags
-static bool LOAD_FLAG = false;
-static bool DRAW_EDGES = true;
-static bool NODE_MODE = true;
-static bool AUTO_X_ROTATION = false;
-static bool AUTO_Y_ROTATION = false;
-
-//camera
-static float default_v = 10.0f;
-static float v = 10.0f;
-static vector3 eye(0, 0, v);
-static vector3 target(0, 0, 0);
-static vector3 up(0, 1, 0);
-static vector3 _right(1, 0, 0);
-static float phi = 0, theta = 0;
-static float wheel_pos = 50.0;
-
-//Perspective
-static float angle = 55.0f, near = 0.1f, far = 1000.0f;
-
-//Mouse Adaption
-static bool isPicked = false, isDrag = false, isRightPressed = false;
-static int mouse_pos_x = 0;
-static int mouse_pos_y = 0;
-static int id = -1;
-static int highlited_id = -1;
-static float pre_x, pre_y, pre_z;
-
-//Buffer
 #define BUFFER_OFFSET(bytes) ((GLubyte *)NULL + (bytes))
-static GLuint vertexBuf, indexBuf;
-static GLuint points;
-typedef GLfloat Position[3];
-typedef GLuint Face[3];
 
-static int imgnum = 1;
 
-//Timer for FPS
-static wxStopWatch * sw;
-
-//View Matrix?
-static GLdouble mvMatrix[16];
-
-//for FPS
-static int GLframe = 0;
-static long GLtimenow = 0;
-static float fps = 0.0f;
-
-using namespace agi3d;
-
-//wx Macros
-
-BEGIN_EVENT_TABLE(GraphicPanel, wxGLCanvas)
-EVT_MOTION(GraphicPanel::mouseMoved)
-EVT_LEFT_DOWN(GraphicPanel::mouseLeftDown)
-EVT_LEFT_UP(GraphicPanel::mouseLeftReleased)
-EVT_RIGHT_DOWN(GraphicPanel::mouseRightDown)
-EVT_RIGHT_UP(GraphicPanel::mouseRightReleased)
-EVT_SIZE(GraphicPanel::resized)
-EVT_PAINT(GraphicPanel::RenderScene)
-EVT_IDLE(GraphicPanel::OnIdle)
-EVT_MOUSEWHEEL(GraphicPanel::mouseScroll)
-END_EVENT_TABLE()
-
-GraphicPanel::~GraphicPanel() {
-  delete m_context;
+GraphicPanel::GraphicPanel(wxWindow* parent, int* args) :
+wxGLCanvas(parent, wxID_ANY, args, wxDefaultPosition, wxSize(1000, 870), wxFULL_REPAINT_ON_RESIZE),
+width(1000), height(870){
+  
+  m_context = new wxGLContext(this);
+  sw = new wxStopWatch();
+  SetBackgroundStyle(wxBG_STYLE_CUSTOM);
+  
+  //  for (int i = 0; i < N; i++) {
+  //    colors[i] = blue;
+  //  }
+  //
+  wxGLCanvas::SetCurrent(*m_context);
+  
+  //camera setting
+  eye.set(0, 0, v);
+  target.zero();
+  up.set(0.0f, 1.0f, 0.0f);
+  _right.set(1, 0, 0);
+  
+  glutInitDisplayMode(GLUT_MULTISAMPLE | GLUT_DOUBLE | GLUT_RGB);
+  
+  glLineWidth((GLfloat) linewidth);
+  
+  glEnable(GL_NORMALIZE);
+  
+  //culling
+  glEnable(GL_CULL_FACE);
+  glCullFace(GL_BACK);
+  
+  //Back Ground
+  glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+  
+  //Buffer
+  points = setUpVBA(radius, 20, 20);
+  
+  glShadeModel(GL_SMOOTH);
+  
+  glEnable(GL_BLEND);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+  
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  
 }
 
 void GraphicPanel::init(const std::shared_ptr<Graph>& graph)
 {
   _graph = graph;
+  blue = vector3(0.0f,0.75f,1.0f);
+  deepblue = vector3(0.0f, 0.40f, 0.8f);
+  green = vector3(0.0f, 1.0f, 0.0f);
+  red = vector3(1.0f, 0.0f, 0.0f);
+  purple = vector3(1.0f, 0.0f, 1.0f);
+  eye = vector3(0, 0, v);
+  target = vector3(0, 0, 0);
+  up=vector3(0, 1, 0);
+  _right = vector3(1, 0, 0);
 }
+
+GraphicPanel::~GraphicPanel()
+{
+  delete m_context;
+}
+
+void GraphicPanel::refresh()
+{
+  Refresh();
+}
+
+/**
+ * @TODO rename
+ */
+void GraphicPanel::releaseLeft()
+{
+  if (LOAD_FLAG) {
+    isDrag = false;
+    Refresh();
+  }
+}
+
+/**
+ * @TODO rename
+ */
+void GraphicPanel::releaseRight()
+{
+  if (LOAD_FLAG) {
+    isDrag = false;
+    isRightPressed = false;
+    Refresh();
+  }
+}
+
+/**
+ * @TODO rename
+ */
+void GraphicPanel::downRight(int x, int y)
+{
+  if (LOAD_FLAG) {
+    if (!isDrag) isDrag = true;
+    if (!isRightPressed) isRightPressed = true;
+    
+    mouse_pos_x = x;
+    mouse_pos_y = y;
+  }
+}
+
+int GraphicPanel::pick(int x, int y)
+{
+  int N = _graph->getN();
+  int M = _graph->getM();
+  float nodevalue_min = _graph->getMinNodeValue();
+  float nodevalue_max = _graph->getMaxNodeValue();
+  float edgevalue_min = _graph->getMinEdgeValue();
+  float edgevalue_max = _graph->getMaxEdgeValue();
+  float *nodevalues = _graph->getNodeValues();
+  float *edgevalues = _graph->getEdgeValues();
+  const std::vector< std::pair<int, int> >& edges = _graph->getEdges();
+  const std::vector<int>*  edgelist = _graph->getEdgeList();
+  auto neighbor = _graph->getNeighbor();
+  ;
+  if (LOAD_FLAG) {
+    {
+      int p_id = ProcessSelection(x, y);
+      
+      if (p_id >= 0) {
+        //case :: some node is beeing picked
+        if (id >= 0) {
+          colors[id] = blue;
+          for (int i = 0; i < neighbor[id].size(); i++) {
+            int adj = neighbor[id][i];
+            isdrawingNodes[adj] = ((nodevalues[adj] >= nodethreshold_b) && (nodevalues[adj] <= nodethreshold_t));
+            colors[adj] = blue;
+          }
+          for (int i = 0; i < edgelist[id].size(); i++) {
+            int l = edgelist[id][i];
+            isdrawingEdges[l] = ((edgevalues[l] >= edgethreshold_b) && (edgevalues[l] <= edgethreshold_t));
+          }
+        }
+        
+        id = p_id;
+        pre_x = pos_x[id];
+        pre_y = pos_y[id];
+        pre_z = pos_z[id];
+        
+        for (int i = 0; i < N; i++) {
+          isNeighbor[i] = false;
+        }
+        
+        colors[id] = purple;
+        isNeighbor[id] = true;
+        isdrawingNodes[id] = true;
+        
+        for (int i = 0; i < neighbor[id].size(); i++) {
+          int adj = neighbor[id][i];
+          colors[adj] = deepblue;
+          isNeighbor[adj] = true;
+          isdrawingNodes[adj] = ((nodevalues[adj] >= nodethreshold_b) && (nodevalues[adj] <= nodethreshold_t));
+        }
+        
+        isPicked = true;
+        
+        for (int i = 0; i < M; i++) {
+          edgeAttribute[i] = true;
+        }
+        
+        for (int i = 0; i < edgelist[id].size(); i++) {
+          int l = edgelist[id][i];
+          edgeAttribute[l] = false;
+          isdrawingEdges[l] = ((edgevalues[l] >= edgethreshold_b) && (edgevalues[l] <= edgethreshold_t));
+        }
+      }
+      else {
+        //case :: some node is beeing picked
+        if (id >= 0) {
+          for (int i = 0; i < neighbor[id].size(); i++) {
+            int adj = neighbor[id][i];
+            isdrawingNodes[adj] = ((nodevalues[adj] >= nodethreshold_b) && (nodevalues[adj] <= nodethreshold_t));
+          }
+          for (int i = 0; i < edgelist[id].size(); i++) {
+            int l = edgelist[id][i];
+            isdrawingEdges[l] = ((edgevalues[l] >= edgethreshold_b) && (edgevalues[l] <= edgethreshold_t));
+          }
+          for (int i = 0; i < N; i++) {
+            colors[i] = blue;
+            isdrawingNodes[i] = ((nodevalues[i] >= nodethreshold_b) && (nodevalues[i] <= nodethreshold_t));
+          }
+          
+          for (int i = 0; i < N; i++) {
+            if (isdrawingNodes[i]) {
+              bool f = false;
+              for (int j = 0; j < neighbor[i].size(); j++) {
+                f |= isdrawingNodes[neighbor[i][j]];
+                if (f) break;
+              }
+              if (!f) isdrawingNodes[i] = false;
+            }
+          }
+          
+          id = -1;
+        }
+        
+        isPicked = false;
+        highlited_id = -1;
+      }
+      
+      if (!isDrag) isDrag = true;
+      
+      mouse_pos_x = x;
+      mouse_pos_y = y;
+      return id;
+    }
+  }
+  
+}
+
+void GraphicPanel::moveTo(int x, int y)
+{
+  auto neighbor = _graph->getNeighbor();
+  
+  if (LOAD_FLAG) {
+    int dx = x - mouse_pos_x;
+    int dy = y - mouse_pos_y;
+    if (LayoutMode == 3) {
+      if (isRightPressed && isDrag) {
+        vector3 vec = target - eye;
+        _right = cml::cross(up, vec);
+        _right.normalize();
+        target += (dx * _right + dy * up)*0.008;
+      } else if ((isDrag && !isPicked)) {
+        theta -= 0.005 * dy;
+        phi += 0.005 * dx;
+      } else if (isDrag && isPicked) {
+        vector3 pos(pos_x[id], pos_y[id], pos_z[id]);
+        vector3 vec = target - eye;
+        vector3 eye2pos = pos - eye;
+        float dot = cml::dot(vec, eye2pos);
+        _right = cml::cross(up, vec);
+        _right.normalize();
+        float dist = dot / vec.length();
+        
+        //Proper Rate is ???
+        float rate_x = (float) -dx * dist / ((float) width * 0.90);
+        float rate_y = (float) -dy * dist / ((float) height * 0.90);
+        
+        vector3 delta = rate_x * _right + rate_y * up;
+        
+        float new_x = pos_x[id] + delta[0];
+        float new_y = pos_y[id] + delta[1];
+        float new_z = pos_z[id] + delta[2];
+        
+        mouse_pos_x = x;
+        mouse_pos_y = y;
+        int a = _graph->getNew3DLayout(id, pre_x, pre_y, pre_z, new_x, new_y, new_z);
+        
+        if (a == 1) {
+          relayout3D();
+          pre_x = pos_x[id];
+          pre_y = pos_y[id];
+          pre_z = pos_z[id];
+          pos_x[id] = new_x;
+          pos_y[id] = new_y;
+          pos_z[id] = new_z;
+        }
+      }
+      Refresh();
+    } else if (LayoutMode == 2) {
+      if (isRightPressed && isDrag) {
+        vector3 vec = target - eye;
+        _right = cml::cross(up, vec);
+        _right.normalize();
+        target += (dx * _right + dy * up)*0.008;
+      } else if (isDrag && isPicked) {
+        vector3 pos(pos_x[id], pos_y[id], pos_z[id]);
+        vector3 vec = target - eye;
+        vector3 eye2pos = pos - eye;
+        float dot = cml::dot(vec, eye2pos);
+        _right = cml::cross(up, vec);
+        _right.normalize();
+        float dist = dot / vec.length();
+        
+        //Proper Rate is ???
+        float rate_x = (float) -dx * dist / ((float) width * 0.90);
+        float rate_y = (float) -dy * dist / ((float) height * 0.90);
+        
+        vector3 delta = rate_x * _right + rate_y * up;
+        
+        float new_x = pos_x[id] + delta[0];
+        float new_y = pos_y[id] + delta[1];
+        
+        int a = _graph->getNew2DLayout(id, pre_x, pre_y, new_x, new_y);
+        
+        if (a == 1) {
+          relayout2D();
+          pre_x = pos_x[id];
+          pre_y = pos_y[id];
+          pos_x[id] = new_x;
+          pos_y[id] = new_y;
+          pos_z[id] = radius;
+          for (size_t i = 0; i < neighbor[id].size(); i++) {
+            pos_z[neighbor[id][i]] = radius;
+          }
+        }
+      }
+      Refresh();
+    }
+    mouse_pos_x = x;
+    mouse_pos_y = y;
+  }
+}
+
+void GraphicPanel::resize()
+{
+  int topleft_x = 0, topleft_y = 0, bottomrigth_x = getWidth(), bottomrigth_y = getHeight();
+  
+  glClearColor(1.0f, 1.0f, 1.0f, 1.0f); //white i
+  glClearDepth(1.0f);
+  
+  glViewport(topleft_x, topleft_y, bottomrigth_x - topleft_x, bottomrigth_y - topleft_y);
+  glMatrixMode(GL_PROJECTION);
+  glLoadIdentity();
+  
+  GLfloat fAspect = (float) (bottomrigth_x - topleft_x) / (float) (bottomrigth_y - topleft_y);
+  gluPerspective(angle, fAspect, near, far);
+  glMatrixMode(GL_MODELVIEW);
+  glLoadIdentity();
+  GLfloat light_specular[] = {1.0f, 1.0f, 1.0f, 1.0f};
+  GLfloat light_ambient[] = {0.2f, 0.2f, 0.2f, 1.0f};
+  GLfloat light_diffuse[] = {0.7f, 0.7f, 0.7f, 1.0f};
+  GLfloat light_position[] = {0.0f, 0.0f, light_z, 1.0f};
+  glLightfv(GL_LIGHT0, GL_SPECULAR, light_specular);
+  glLightfv(GL_LIGHT0, GL_AMBIENT, light_ambient);
+  glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse);
+  glLightfv(GL_LIGHT0, GL_POSITION, light_position);
+  glEnable(GL_LIGHTING);
+  glEnable(GL_LIGHT0);
+  
+  width = bottomrigth_x - topleft_x;
+  height = bottomrigth_y - topleft_y;
+  
+  Refresh();
+}
+
+void GraphicPanel::moveEye(int delta)
+{
+  wheel_pos -= (float) delta / 4.0;
+  if (wheel_pos > 200) wheel_pos = min(wheel_pos, 200.0f);
+  wheel_pos = max(wheel_pos, 5.0f);
+  float z = wheel_pos / 50.0;
+  v = default_v*z;
+  eye.set(eye[0] * v, eye[1] * v, eye[2] * v);
+  Refresh();
+}
+
+void GraphicPanel::renderScene()
+{
+  int N = _graph->getN();
+  int M = _graph->getM();
+  float nodevalue_max = _graph->getMaxNodeValue();
+  float edgevalue_max = _graph->getMaxEdgeValue();
+  float *nodevalues = _graph->getNodeValues();
+  float *edgevalues = _graph->getEdgeValues();
+  const std::vector< std::pair<int, int> >& edges = _graph->getEdges();
+  const std::vector<int>*  edgelist = _graph->getEdgeList();
+  
+  auto sbp = AppDelegete::instance().getControlPanel();
+  wxGLCanvas::SetCurrent(*m_context);
+  wxPaintDC(this);
+  
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  glEnable(GL_DEPTH_TEST);
+  if (LayoutMode == 3) {
+    glEnable(GL_LIGHTING);
+  } else if (LayoutMode == 2) {
+    glDisable(GL_LIGHTING);
+  }
+  
+  //ModelView
+  glMatrixMode(GL_MODELVIEW);
+  glPushMatrix();
+  
+  //Set View
+  {
+    matrix xRot, yRot, zRot, view;
+    if (LayoutMode == 3) {
+      if (AUTO_X_ROTATION) {
+        theta += 0.01f;
+        if (theta > 3.141593f * 2) theta = 0;
+      }
+      if (AUTO_Y_ROTATION) {
+        phi += 0.01f;
+        if (phi > 3.141593f * 2) phi = 0;
+      }
+      
+      cml::matrix_rotation_world_x(xRot, -theta);
+      cml::matrix_rotation_world_y(yRot, phi);
+      up.set(0.0f, 1.0f, 0.0f);
+      vector4 _up(up[0], up[1], up[2], 1);
+      _up = yRot * xRot*_up;
+      up.set(_up[0], _up[1], _up[2]);
+      up.normalize();
+      
+      float camera_y = v * (float) sin(theta);
+      float camera_xz = v * (float) cos(theta);
+      float camera_x = camera_xz * (float) sin(phi);
+      float camera_z = camera_xz * (float) cos(phi);
+      eye.set(camera_x, camera_y, camera_z);
+      
+      cml::matrix_look_at_RH(view, eye, target, up);
+      glLoadMatrixf(view.data());
+      
+      if (id != -1 && brightness >= 0.5f) {
+        brightness -= 0.02f;
+      }
+      
+      if (id == -1 && brightness <= 1.0f) {
+        brightness += 0.02f;
+      }
+      
+    }
+    if (LayoutMode == 2) {
+      cml::matrix_rotation_world_z(zRot, 0.0f);
+      up.set(0.0f, 1.0f, 0.0f);
+      vector4 _up(up[0], up[1], up[2], 1);
+      _up = zRot*_up;
+      up.set(_up[0], _up[1], _up[2]);
+      up.normalize();
+      
+      eye.set(0, 0, v);
+      
+      cml::matrix_look_at_RH(view, eye, target, up);
+      glLoadMatrixf(view.data());
+      brightness = 1.0;
+    }
+  }
+  
+  glGetDoublev(GL_MODELVIEW_MATRIX, mvMatrix);
+  
+  glHint(GL_POINT_SMOOTH_HINT, GL_NICEST);
+  glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
+  glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST);
+  
+  glEnable(GL_POINT_SMOOTH);
+  glEnable(GL_LINE_SMOOTH);
+  glEnable(GL_POLYGON_SMOOTH);
+  glEnable(GL_MULTISAMPLE);
+  
+  // Initialize the names stack
+  glInitNames();
+  glPushName(N);
+  
+  //Draw Nodes
+  {
+    
+    glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);
+    glEnable(GL_COLOR_MATERIAL);
+    
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuf);
+    glEnableClientState(GL_VERTEX_ARRAY);
+    glEnableClientState(GL_NORMAL_ARRAY);
+    
+    GLsizei stride = sizeof (Position)*2;
+    glBindBuffer(GL_ARRAY_BUFFER, vertexBuf);
+    glVertexPointer(3, GL_FLOAT, stride, NULL);
+    glNormalPointer(GL_FLOAT, stride, BUFFER_OFFSET(sizeof (Position)));
+    
+    for (int i = 0; i < N; i++) {
+      glPushMatrix();
+      if (isdrawingNodes[i]) {
+        if (isNeighbor[i]) {
+          glColor4f((GLfloat) colors[i][0], (GLfloat) colors[i][1], (GLfloat) colors[i][2], 1.0f);
+        } else {
+          glColor4f((GLfloat) colors[i][0], (GLfloat) colors[i][1], (GLfloat) colors[i][2], brightness);
+        }
+        
+        glTranslatef((GLfloat) pos_x[i], (GLfloat) pos_y[i], (GLfloat) pos_z[i]);
+        
+        if (NODE_MODE) {
+          float cb = (float) 3.0 * pow((double) nodevalues[i] / nodevalue_max, 1.0 / 3.0);
+          glScalef((GLfloat) cb*size_rate, (GLfloat) cb*size_rate, (GLfloat) cb * size_rate);
+        } else {
+          glScalef((GLfloat) size_rate, (GLfloat) size_rate, (GLfloat) size_rate);
+        }
+        
+        glLoadName(i);
+        //Using GPU Vertex
+        glDrawElements(GL_TRIANGLES, points, GL_UNSIGNED_INT, BUFFER_OFFSET(0));
+        //Not Using GPU Vertex
+        //glutSolidSphere(radius,15,15);
+      }
+      glPopMatrix();
+    }
+  }
+  
+  glDisable(GL_LIGHTING);
+  
+  //Draw Edges
+  {
+    if (DRAW_EDGES) {
+      if (id != -1) {
+        for (int i = 0; i < M; i++) {
+          int from = edges[i].first, to = edges[i].second;
+          if (isdrawingEdges[i] && isdrawingNodes[from] && isdrawingNodes[to]) {
+            if (edgeAttribute[i]) {
+              glColor4f(0.5f, 0.5f, 0.5f, brightness * 0.7f);
+              glLineWidth((GLfloat) linewidth * edgevalues[i] / edgevalue_max);
+            } else {
+              glColor4f(0.1f, 0.1f, 0.1f, 0.7f);
+              glLineWidth((GLfloat) linewidth * 2 * edgevalues[i] / edgevalue_max);
+            }
+            glBegin(GL_LINES);
+            glVertex3f(pos_x[from], pos_y[from], pos_z[from]);
+            glVertex3f(pos_x[to], pos_y[to], pos_z[to]);
+            glEnd();
+          }
+        }
+      } else {
+        glColor4f(0.5f, 0.5f, 0.5f, brightness * 0.7f);
+        for (int i = 0; i < M; i++) {
+          int from = edges[i].first, to = edges[i].second;
+          if (isdrawingEdges[i] && isdrawingNodes[from] && isdrawingNodes[to]) {
+            glLineWidth((GLfloat) linewidth * edgevalues[i] / edgevalue_max);
+            glBegin(GL_LINES);
+            glVertex3f(pos_x[from], pos_y[from], pos_z[from]);
+            glVertex3f(pos_x[to], pos_y[to], pos_z[to]);
+            glEnd();
+          }
+        }
+      }
+      
+    } else {
+      if (id != -1) {
+        glColor4f(0.1f, 0.1f, 0.1f, 0.7f);
+        for (int i = 0; i < edgelist[id].size(); i++) {
+          int from = edges[edgelist[id][i]].first, to = edges[edgelist[id][i]].second;
+          glLineWidth((GLfloat) linewidth * 2 * edgevalues[i] / edgevalue_max);
+          glBegin(GL_LINES);
+          glVertex3f(pos_x[from], pos_y[from], pos_z[from]);
+          glVertex3f(pos_x[to], pos_y[to], pos_z[to]);
+          glEnd();
+        }
+      }
+    }
+  }
+  glPopMatrix();
+  
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+  glBindBuffer(GL_ARRAY_BUFFER, 0);
+  glDisableClientState(GL_VERTEX_ARRAY);
+  glDisableClientState(GL_NORMAL_ARRAY);
+  
+  GLframe++;
+  GLtimenow = sw->Time();
+  if ((GLtimenow > 1000) && LOAD_FLAG) {
+    float _fps = GLframe * 1000.0 / GLtimenow;
+    //@TODO
+    //sbp->SetFPS(_fps);
+    sw->Start(0);
+    GLframe = 0;
+  }
+  
+  SwapBuffers();
+  
+  glDisable(GL_POINT_SMOOTH);
+  glDisable(GL_LINE_SMOOTH);
+  glDisable(GL_POLYGON_SMOOTH);
+  
+  glDisable(GL_DEPTH_TEST);
+}
+
 
 GLuint GraphicPanel::setUpVBA(float radius, int slices, int stacks) {
   glGenBuffers(1, &vertexBuf);
@@ -373,332 +826,12 @@ void GraphicPanel::ResetLayout() {
   Refresh();
 }
 
-GraphicPanel::GraphicPanel(wxWindow* parent, int* args) :
-wxGLCanvas(parent, wxID_ANY, args, wxDefaultPosition, wxSize(width, height), wxFULL_REPAINT_ON_RESIZE) {
-  
-  m_context = new wxGLContext(this);
-  sw = new wxStopWatch();
-  SetBackgroundStyle(wxBG_STYLE_CUSTOM);
-  
-//  for (int i = 0; i < N; i++) {
-//    colors[i] = blue;
-//  }
-//  
-  wxGLCanvas::SetCurrent(*m_context);
-  
-  //camera setting
-  eye.set(0, 0, v);
-  target.zero();
-  up.set(0.0f, 1.0f, 0.0f);
-  _right.set(1, 0, 0);
-  
-  glutInitDisplayMode(GLUT_MULTISAMPLE | GLUT_DOUBLE | GLUT_RGB);
-  
-  glLineWidth((GLfloat) linewidth);
-  
-  glEnable(GL_NORMALIZE);
-  
-  //culling
-  glEnable(GL_CULL_FACE);
-  glCullFace(GL_BACK);
-  
-  //Back Ground
-  glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-  
-  //Buffer
-  points = setUpVBA(radius, 20, 20);
-  
-  glShadeModel(GL_SMOOTH);
-  
-  glEnable(GL_BLEND);
-  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-  
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  
-}
-
-void GraphicPanel::resized(wxSizeEvent& evt) {
-  int topleft_x = 0, topleft_y = 0, bottomrigth_x = getWidth(), bottomrigth_y = getHeight();
-  
-  glClearColor(1.0f, 1.0f, 1.0f, 1.0f); //white Background
-  glClearDepth(1.0f);
-  
-  glViewport(topleft_x, topleft_y, bottomrigth_x - topleft_x, bottomrigth_y - topleft_y);
-  glMatrixMode(GL_PROJECTION);
-  glLoadIdentity();
-  
-  GLfloat fAspect = (float) (bottomrigth_x - topleft_x) / (float) (bottomrigth_y - topleft_y);
-  gluPerspective(angle, fAspect, near, far);
-  glMatrixMode(GL_MODELVIEW);
-  glLoadIdentity();
-  GLfloat light_specular[] = {1.0f, 1.0f, 1.0f, 1.0f};
-  GLfloat light_ambient[] = {0.2f, 0.2f, 0.2f, 1.0f};
-  GLfloat light_diffuse[] = {0.7f, 0.7f, 0.7f, 1.0f};
-  GLfloat light_position[] = {0.0f, 0.0f, light_z, 1.0f};
-  glLightfv(GL_LIGHT0, GL_SPECULAR, light_specular);
-  glLightfv(GL_LIGHT0, GL_AMBIENT, light_ambient);
-  glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse);
-  glLightfv(GL_LIGHT0, GL_POSITION, light_position);
-  glEnable(GL_LIGHTING);
-  glEnable(GL_LIGHT0);
-  
-  width = bottomrigth_x - topleft_x;
-  height = bottomrigth_y - topleft_y;
-  Refresh();
-}
-
-void GraphicPanel::resize() {
-  int topleft_x = 0, topleft_y = 0, bottomrigth_x = getWidth(), bottomrigth_y = getHeight();
-  
-  glClearColor(1.0f, 1.0f, 1.0f, 1.0f); //white i
-  glClearDepth(1.0f);
-  
-  glViewport(topleft_x, topleft_y, bottomrigth_x - topleft_x, bottomrigth_y - topleft_y);
-  glMatrixMode(GL_PROJECTION);
-  glLoadIdentity();
-  
-  GLfloat fAspect = (float) (bottomrigth_x - topleft_x) / (float) (bottomrigth_y - topleft_y);
-  gluPerspective(angle, fAspect, near, far);
-  glMatrixMode(GL_MODELVIEW);
-  glLoadIdentity();
-  GLfloat light_specular[] = {1.0f, 1.0f, 1.0f, 1.0f};
-  GLfloat light_ambient[] = {0.2f, 0.2f, 0.2f, 1.0f};
-  GLfloat light_diffuse[] = {0.7f, 0.7f, 0.7f, 1.0f};
-  GLfloat light_position[] = {0.0f, 0.0f, light_z, 1.0f};
-  glLightfv(GL_LIGHT0, GL_SPECULAR, light_specular);
-  glLightfv(GL_LIGHT0, GL_AMBIENT, light_ambient);
-  glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse);
-  glLightfv(GL_LIGHT0, GL_POSITION, light_position);
-  glEnable(GL_LIGHTING);
-  glEnable(GL_LIGHT0);
-  
-  width = bottomrigth_x - topleft_x;
-  height = bottomrigth_y - topleft_y;
-  
-  Refresh();
-}
-
 int GraphicPanel::getWidth() {
   return GetSize().x;
 }
 
 int GraphicPanel::getHeight() {
   return GetSize().y;
-}
-
-void GraphicPanel::RenderScene(wxPaintEvent& evt) {
-  int N = _graph->getN();
-  int M = _graph->getM();
-  float nodevalue_max = _graph->getMaxNodeValue();
-  float edgevalue_max = _graph->getMaxEdgeValue();
-  float *nodevalues = _graph->getNodeValues();
-  float *edgevalues = _graph->getEdgeValues();
-  const std::vector< std::pair<int, int> >& edges = _graph->getEdges();
-  const std::vector<int>*  edgelist = _graph->getEdgeList();
-  
-  auto sbp = AppDelegete::instance().getControlPanel();
-  wxGLCanvas::SetCurrent(*m_context);
-  wxPaintDC(this);
-  
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  glEnable(GL_DEPTH_TEST);
-  if (LayoutMode == 3) {
-    glEnable(GL_LIGHTING);
-  } else if (LayoutMode == 2) {
-    glDisable(GL_LIGHTING);
-  }
-  
-  //ModelView
-  glMatrixMode(GL_MODELVIEW);
-  glPushMatrix();
-  
-  //Set View
-  {
-    matrix xRot, yRot, zRot, view;
-    if (LayoutMode == 3) {
-      if (AUTO_X_ROTATION) {
-        theta += 0.01f;
-        if (theta > 3.141593f * 2) theta = 0;
-      }
-      if (AUTO_Y_ROTATION) {
-        phi += 0.01f;
-        if (phi > 3.141593f * 2) phi = 0;
-      }
-      
-      cml::matrix_rotation_world_x(xRot, -theta);
-      cml::matrix_rotation_world_y(yRot, phi);
-      up.set(0.0f, 1.0f, 0.0f);
-      vector4 _up(up[0], up[1], up[2], 1);
-      _up = yRot * xRot*_up;
-      up.set(_up[0], _up[1], _up[2]);
-      up.normalize();
-      
-      float camera_y = v * (float) sin(theta);
-      float camera_xz = v * (float) cos(theta);
-      float camera_x = camera_xz * (float) sin(phi);
-      float camera_z = camera_xz * (float) cos(phi);
-      eye.set(camera_x, camera_y, camera_z);
-      
-      cml::matrix_look_at_RH(view, eye, target, up);
-      glLoadMatrixf(view.data());
-      
-      if (id != -1 && brightness >= 0.5f) {
-        brightness -= 0.02f;
-      }
-      
-      if (id == -1 && brightness <= 1.0f) {
-        brightness += 0.02f;
-      }
-      
-    }
-    if (LayoutMode == 2) {
-      cml::matrix_rotation_world_z(zRot, 0.0f);
-      up.set(0.0f, 1.0f, 0.0f);
-      vector4 _up(up[0], up[1], up[2], 1);
-      _up = zRot*_up;
-      up.set(_up[0], _up[1], _up[2]);
-      up.normalize();
-      
-      eye.set(0, 0, v);
-      
-      cml::matrix_look_at_RH(view, eye, target, up);
-      glLoadMatrixf(view.data());
-      brightness = 1.0;
-    }
-  }
-  
-  glGetDoublev(GL_MODELVIEW_MATRIX, mvMatrix);
-  
-  glHint(GL_POINT_SMOOTH_HINT, GL_NICEST);
-  glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
-  glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST);
-  
-  glEnable(GL_POINT_SMOOTH);
-  glEnable(GL_LINE_SMOOTH);
-  glEnable(GL_POLYGON_SMOOTH);
-  glEnable(GL_MULTISAMPLE);
-  
-  // Initialize the names stack
-  glInitNames();
-  glPushName(N);
- 
-  //Draw Nodes
-  {
-
-    glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);
-    glEnable(GL_COLOR_MATERIAL);
-    
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuf);
-    glEnableClientState(GL_VERTEX_ARRAY);
-    glEnableClientState(GL_NORMAL_ARRAY);
-    
-    GLsizei stride = sizeof (Position)*2;
-    glBindBuffer(GL_ARRAY_BUFFER, vertexBuf);
-    glVertexPointer(3, GL_FLOAT, stride, NULL);
-    glNormalPointer(GL_FLOAT, stride, BUFFER_OFFSET(sizeof (Position)));
-    
-    for (int i = 0; i < N; i++) {
-      glPushMatrix();
-      if (isdrawingNodes[i]) {
-        if (isNeighbor[i]) {
-          glColor4f((GLfloat) colors[i][0], (GLfloat) colors[i][1], (GLfloat) colors[i][2], 1.0f);
-        } else {
-          glColor4f((GLfloat) colors[i][0], (GLfloat) colors[i][1], (GLfloat) colors[i][2], brightness);
-        }
-        
-        glTranslatef((GLfloat) pos_x[i], (GLfloat) pos_y[i], (GLfloat) pos_z[i]);
-        
-        if (NODE_MODE) {
-          float cb = (float) 3.0 * pow((double) nodevalues[i] / nodevalue_max, 1.0 / 3.0);
-          glScalef((GLfloat) cb*size_rate, (GLfloat) cb*size_rate, (GLfloat) cb * size_rate);
-        } else {
-          glScalef((GLfloat) size_rate, (GLfloat) size_rate, (GLfloat) size_rate);
-        }
-        
-        glLoadName(i);
-        //Using GPU Vertex
-        glDrawElements(GL_TRIANGLES, points, GL_UNSIGNED_INT, BUFFER_OFFSET(0));
-        //Not Using GPU Vertex
-        //glutSolidSphere(radius,15,15);
-      }
-      glPopMatrix();
-    }
-  }
-  
-  glDisable(GL_LIGHTING);
-  
-  //Draw Edges
-  {
-    if (DRAW_EDGES) {
-      if (id != -1) {
-        for (int i = 0; i < M; i++) {
-          int from = edges[i].first, to = edges[i].second;
-          if (isdrawingEdges[i] && isdrawingNodes[from] && isdrawingNodes[to]) {
-            if (edgeAttribute[i]) {
-              glColor4f(0.5f, 0.5f, 0.5f, brightness * 0.7f);
-              glLineWidth((GLfloat) linewidth * edgevalues[i] / edgevalue_max);
-            } else {
-              glColor4f(0.1f, 0.1f, 0.1f, 0.7f);
-              glLineWidth((GLfloat) linewidth * 2 * edgevalues[i] / edgevalue_max);
-            }
-            glBegin(GL_LINES);
-            glVertex3f(pos_x[from], pos_y[from], pos_z[from]);
-            glVertex3f(pos_x[to], pos_y[to], pos_z[to]);
-            glEnd();
-          }
-        }
-      } else {
-        glColor4f(0.5f, 0.5f, 0.5f, brightness * 0.7f);
-        for (int i = 0; i < M; i++) {
-          int from = edges[i].first, to = edges[i].second;
-          if (isdrawingEdges[i] && isdrawingNodes[from] && isdrawingNodes[to]) {
-            glLineWidth((GLfloat) linewidth * edgevalues[i] / edgevalue_max);
-            glBegin(GL_LINES);
-            glVertex3f(pos_x[from], pos_y[from], pos_z[from]);
-            glVertex3f(pos_x[to], pos_y[to], pos_z[to]);
-            glEnd();
-          }
-        }
-      }
-      
-    } else {
-      if (id != -1) {
-        glColor4f(0.1f, 0.1f, 0.1f, 0.7f);
-        for (int i = 0; i < edgelist[id].size(); i++) {
-          int from = edges[edgelist[id][i]].first, to = edges[edgelist[id][i]].second;
-          glLineWidth((GLfloat) linewidth * 2 * edgevalues[i] / edgevalue_max);
-          glBegin(GL_LINES);
-          glVertex3f(pos_x[from], pos_y[from], pos_z[from]);
-          glVertex3f(pos_x[to], pos_y[to], pos_z[to]);
-          glEnd();
-        }
-      }
-    }
-  }
-  glPopMatrix();
-  
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-  glBindBuffer(GL_ARRAY_BUFFER, 0);
-  glDisableClientState(GL_VERTEX_ARRAY);
-  glDisableClientState(GL_NORMAL_ARRAY);
-  
-  GLframe++;
-  GLtimenow = sw->Time();
-  if ((GLtimenow > 1000) && LOAD_FLAG) {
-    float _fps = GLframe * 1000.0 / GLtimenow;
-    //@TODO
-    //sbp->SetFPS(_fps);
-    sw->Start(0);
-    GLframe = 0;
-  }
-  
-  SwapBuffers();
-  
-  glDisable(GL_POINT_SMOOTH);
-  glDisable(GL_LINE_SMOOTH);
-  glDisable(GL_POLYGON_SMOOTH);
-  
-  glDisable(GL_DEPTH_TEST);
 }
 
 void GraphicPanel::Render(float x, float y, float z) {
@@ -859,7 +992,7 @@ float GraphicPanel::UpdateNodeThreshold_b(float t, int attrID) {
   const std::vector< std::pair<int, int> >& edges = _graph->getEdges();
   const std::vector<int>*  edgelist = _graph->getEdgeList();
   auto neighbor = _graph->getNeighbor();
-
+  
   nodethreshold_b = (1.0 - t * t)*(nodevalue_min) + (t * t)*(nodevalue_max);
   for (int i = 0; i < N; i++) {
     isdrawingNodes[i] = ((nodevalues[i] >= nodethreshold_b) && (nodevalues[i] <= nodethreshold_t));
@@ -890,7 +1023,7 @@ float GraphicPanel::UpdateNodeThreshold_t(float t, int attrID) {
   const std::vector< std::pair<int, int> >& edges = _graph->getEdges();
   const std::vector<int>*  edgelist = _graph->getEdgeList();
   auto neighbor = _graph->getNeighbor();
-
+  
   nodethreshold_t = (1.0 - t * t)*(nodevalue_min) + (t * t)*(nodevalue_max);
   for (int i = 0; i < N; i++) {
     isdrawingNodes[i] = ((nodevalues[i] >= nodethreshold_b) && (nodevalues[i] <= nodethreshold_t));
@@ -941,7 +1074,7 @@ void GraphicPanel::UpdateEdgeThreshold_t(float t, int attrID) {
   const std::vector< std::pair<int, int> >& edges = _graph->getEdges();
   const std::vector<int>*  edgelist = _graph->getEdgeList();
   auto neighbor = _graph->getNeighbor();
-
+  
   edgethreshold_t = (1 - t * t)*(edgevalue_min) + t * t * (edgevalue_max);
   for (int i = 0; i < M; i++) {
     isdrawingEdges[i] = ((edgevalues[i] >= edgethreshold_b) && (edgevalues[i] <= edgethreshold_t));
@@ -1052,7 +1185,7 @@ float getDepth(int x, int y) {
   return z;
 }
 
-void CalculateWorldCo(int x, int y, float depth, double &wx, double &wy, double &wz) {
+void GraphicPanel::CalculateWorldCo(int x, int y, float depth, double &wx, double &wy, double &wz) {
   GLdouble pjMatrix[16];
   GLint viewport[4];
   glGetIntegerv(GL_VIEWPORT, viewport);
@@ -1105,266 +1238,4 @@ int GraphicPanel::ProcessSelection(int xPos, int yPos) {
   glMatrixMode(GL_MODELVIEW);
   
   return res;
-}
-
-void GraphicPanel::OnIdle(wxIdleEvent&) {
-  Refresh();
-}
-
-void GraphicPanel::mouseMoved(wxMouseEvent& event) {
-  int N = _graph->getN();
-  int M = _graph->getM();
-  float nodevalue_min = _graph->getMinNodeValue();
-  float nodevalue_max = _graph->getMaxNodeValue();
-  float edgevalue_min = _graph->getMinEdgeValue();
-  float edgevalue_max = _graph->getMaxEdgeValue();
-  float *nodevalues = _graph->getNodeValues();
-  float *edgevalues = _graph->getEdgeValues();
-  const std::vector< std::pair<int, int> >& edges = _graph->getEdges();
-  const std::vector<int>*  edgelist = _graph->getEdgeList();
-  auto neighbor = _graph->getNeighbor();
-
-  if (LOAD_FLAG) {
-    int x = event.GetX(), y = event.GetY();
-    int dx = x - mouse_pos_x;
-    int dy = y - mouse_pos_y;
-    if (LayoutMode == 3) {
-      if (isRightPressed && isDrag) {
-        vector3 vec = target - eye;
-        _right = cml::cross(up, vec);
-        _right.normalize();
-        target += (dx * _right + dy * up)*0.008;
-      } else if ((isDrag && !isPicked)) {
-        theta -= 0.005 * dy;
-        phi += 0.005 * dx;
-      } else if (isDrag && isPicked) {
-        vector3 pos(pos_x[id], pos_y[id], pos_z[id]);
-        vector3 vec = target - eye;
-        vector3 eye2pos = pos - eye;
-        float dot = cml::dot(vec, eye2pos);
-        _right = cml::cross(up, vec);
-        _right.normalize();
-        float dist = dot / vec.length();
-        
-        //Proper Rate is ???
-        float rate_x = (float) -dx * dist / ((float) width * 0.90);
-        float rate_y = (float) -dy * dist / ((float) height * 0.90);
-        
-        vector3 delta = rate_x * _right + rate_y * up;
-        
-        float new_x = pos_x[id] + delta[0];
-        float new_y = pos_y[id] + delta[1];
-        float new_z = pos_z[id] + delta[2];
-        
-        mouse_pos_x = x;
-        mouse_pos_y = y;
-        int a = _graph->getNew3DLayout(id, pre_x, pre_y, pre_z, new_x, new_y, new_z);
-        
-        if (a == 1) {
-          relayout3D();
-          pre_x = pos_x[id];
-          pre_y = pos_y[id];
-          pre_z = pos_z[id];
-          pos_x[id] = new_x;
-          pos_y[id] = new_y;
-          pos_z[id] = new_z;
-        }
-      }
-      Refresh();
-    } else if (LayoutMode == 2) {
-      if (isRightPressed && isDrag) {
-        vector3 vec = target - eye;
-        _right = cml::cross(up, vec);
-        _right.normalize();
-        target += (dx * _right + dy * up)*0.008;
-      } else if (isDrag && isPicked) {
-        vector3 pos(pos_x[id], pos_y[id], pos_z[id]);
-        vector3 vec = target - eye;
-        vector3 eye2pos = pos - eye;
-        float dot = cml::dot(vec, eye2pos);
-        _right = cml::cross(up, vec);
-        _right.normalize();
-        float dist = dot / vec.length();
-        
-        //Proper Rate is ???
-        float rate_x = (float) -dx * dist / ((float) width * 0.90);
-        float rate_y = (float) -dy * dist / ((float) height * 0.90);
-        
-        vector3 delta = rate_x * _right + rate_y * up;
-        
-        float new_x = pos_x[id] + delta[0];
-        float new_y = pos_y[id] + delta[1];
-        
-        int a = _graph->getNew2DLayout(id, pre_x, pre_y, new_x, new_y);
-        
-        if (a == 1) {
-          relayout2D();
-          pre_x = pos_x[id];
-          pre_y = pos_y[id];
-          pos_x[id] = new_x;
-          pos_y[id] = new_y;
-          pos_z[id] = radius;
-          for (int i = 0; i < neighbor[id].size(); i++) {
-            pos_z[neighbor[id][i]] = radius;
-          }
-        }
-      }
-      Refresh();
-    }
-    mouse_pos_x = x;
-    mouse_pos_y = y;
-  }
-}
-
-void GraphicPanel::mouseLeftDown(wxMouseEvent& event) {
-  int N = _graph->getN();
-  int M = _graph->getM();
-  float nodevalue_min = _graph->getMinNodeValue();
-  float nodevalue_max = _graph->getMaxNodeValue();
-  float edgevalue_min = _graph->getMinEdgeValue();
-  float edgevalue_max = _graph->getMaxEdgeValue();
-  float *nodevalues = _graph->getNodeValues();
-  float *edgevalues = _graph->getEdgeValues();
-  const std::vector< std::pair<int, int> >& edges = _graph->getEdges();
-  const std::vector<int>*  edgelist = _graph->getEdgeList();
-  auto neighbor = _graph->getNeighbor();
-
-  auto sbp = AppDelegete::instance().getControlPanel();
-  if (LOAD_FLAG) {
-    int x = event.GetX(), y = event.GetY();
-    {
-      int p_id = ProcessSelection(x, y);
-      
-      if (p_id >= 0) {
-        //case :: some node is beeing picked
-        if (id >= 0) {
-          colors[id] = blue;
-          for (int i = 0; i < neighbor[id].size(); i++) {
-            int adj = neighbor[id][i];
-            isdrawingNodes[adj] = ((nodevalues[adj] >= nodethreshold_b) && (nodevalues[adj] <= nodethreshold_t));
-            colors[adj] = blue;
-          }
-          for (int i = 0; i < edgelist[id].size(); i++) {
-            int l = edgelist[id][i];
-            isdrawingEdges[l] = ((edgevalues[l] >= edgethreshold_b) && (edgevalues[l] <= edgethreshold_t));
-          }
-        }
-        
-        id = p_id;
-        pre_x = pos_x[id];
-        pre_y = pos_y[id];
-        pre_z = pos_z[id];
-        
-        for (int i = 0; i < N; i++) {
-          isNeighbor[i] = false;
-        }
-        
-        colors[id] = purple;
-        isNeighbor[id] = true;
-        isdrawingNodes[id] = true;
-        
-        for (int i = 0; i < neighbor[id].size(); i++) {
-          int adj = neighbor[id][i];
-          colors[adj] = deepblue;
-          isNeighbor[adj] = true;
-          isdrawingNodes[adj] = ((nodevalues[adj] >= nodethreshold_b) && (nodevalues[adj] <= nodethreshold_t));
-        }
-        
-        isPicked = true;
-        
-        for (int i = 0; i < M; i++) {
-          edgeAttribute[i] = true;
-        }
-        
-        for (int i = 0; i < edgelist[id].size(); i++) {
-          int l = edgelist[id][i];
-          edgeAttribute[l] = false;
-          isdrawingEdges[l] = ((edgevalues[l] >= edgethreshold_b) && (edgevalues[l] <= edgethreshold_t));
-        }
-        auto sbp = AppDelegete::instance().getControlPanel();
-        //        @TODO
-        //        sbp->setTarget(id);
-      }
-      else {
-        //case :: some node is beeing picked
-        if (id >= 0) {
-          for (int i = 0; i < neighbor[id].size(); i++) {
-            int adj = neighbor[id][i];
-            isdrawingNodes[adj] = ((nodevalues[adj] >= nodethreshold_b) && (nodevalues[adj] <= nodethreshold_t));
-          }
-          for (int i = 0; i < edgelist[id].size(); i++) {
-            int l = edgelist[id][i];
-            isdrawingEdges[l] = ((edgevalues[l] >= edgethreshold_b) && (edgevalues[l] <= edgethreshold_t));
-          }
-          for (int i = 0; i < N; i++) {
-            colors[i] = blue;
-            isdrawingNodes[i] = ((nodevalues[i] >= nodethreshold_b) && (nodevalues[i] <= nodethreshold_t));
-          }
-          
-          for (int i = 0; i < N; i++) {
-            if (isdrawingNodes[i]) {
-              bool f = false;
-              for (int j = 0; j < neighbor[i].size(); j++) {
-                f |= isdrawingNodes[neighbor[i][j]];
-                if (f) break;
-              }
-              if (!f) isdrawingNodes[i] = false;
-            }
-          }
-          
-          id = -1;
-          //@TODO
-          //sbp->setTarget(id);
-        }
-        
-        isPicked = false;
-        highlited_id = -1;
-      }
-      
-      if (!isDrag) isDrag = true;
-      
-      mouse_pos_x = x;
-      mouse_pos_y = y;
-    }
-  }
-}
-
-void GraphicPanel::mouseLeftReleased(wxMouseEvent& event) {
-  if (LOAD_FLAG) {
-    isDrag = false;
-    Refresh();
-  }
-}
-
-void GraphicPanel::mouseRightDown(wxMouseEvent& event) {
-  if (LOAD_FLAG) {
-    int x = event.GetX(), y = event.GetY();
-    
-    if (!isDrag) isDrag = true;
-    if (!isRightPressed) isRightPressed = true;
-    
-    mouse_pos_x = x;
-    mouse_pos_y = y;
-  }
-}
-
-void GraphicPanel::mouseRightReleased(wxMouseEvent& event) {
-  if (LOAD_FLAG) {
-    isDrag = false;
-    isRightPressed = false;
-    Refresh();
-  }
-}
-
-void GraphicPanel::mouseScroll(wxMouseEvent& event) {
-  int delta = event.GetWheelRotation();
-  if (delta != 0) {
-    wheel_pos -= (float) delta / 4.0;
-    if (wheel_pos > 200) wheel_pos = min(wheel_pos, 200.0f);
-    wheel_pos = max(wheel_pos, 5.0f);
-    float z = wheel_pos / 50.0;
-    v = default_v*z;
-    eye.set(eye[0] * v, eye[1] * v, eye[2] * v);
-    Refresh();
-  }
 }

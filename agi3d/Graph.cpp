@@ -79,11 +79,6 @@ bool Graph::loadData(const std::string &filePath)
   return true;
 }
 
-
-
-
-
-
 //Params about Graph
 
 double Graph::getETime() {

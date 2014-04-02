@@ -24,7 +24,17 @@ namespace agi3d {
   private:
     GraphicPanel *_graphicPanel;
     std::shared_ptr<Graph> _graph;
+
+    void mouseMoved(wxMouseEvent& event);
+    void mouseLeftDown(wxMouseEvent& event);
+    void mouseLeftReleased(wxMouseEvent& event);
+    void mouseRightDown(wxMouseEvent& event);
+    void mouseRightReleased(wxMouseEvent& event);
+    void mouseScroll(wxMouseEvent& event);
     
+    void resized(wxSizeEvent& evt);
+    void renderScene(wxPaintEvent& evt);
+    void onIdle(wxEvent& evt);    
   };
   
 }

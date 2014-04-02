@@ -7,25 +7,8 @@
 #include "ControlPanel.h"
 #include "AppDelegete.h"
 
-typedef cml::vector4f vector4;
 using namespace std;
 using namespace agi3d;
-
-
-extern vector<int> * neighbor;
-extern vector<string> labels;
-extern float * nodevalues;
-extern float nodevalue_max;
-extern float nodevalue_min;
-extern string filename;
-extern int N;
-extern int M;
-
-
-
-//import function from calclayout.cpp
-void loadNodeAttrData(int, const std::string& graphName);
-void loadEdgeAttrData(int, const std::string& graphName);
 
 //wx Macros
 

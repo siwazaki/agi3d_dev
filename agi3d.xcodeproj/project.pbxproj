@@ -17,7 +17,6 @@
 		506CDC4818E821F400EF8DCA /* App.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 506CDC3818E821F400EF8DCA /* App.cpp */; };
 		506CDC4A18E821F400EF8DCA /* Frame.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 506CDC3C18E821F400EF8DCA /* Frame.cpp */; };
 		506CDC4B18E821F400EF8DCA /* AppearanceWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 506CDC3E18E821F400EF8DCA /* AppearanceWindow.cpp */; };
-		506CDC4C18E821F400EF8DCA /* calcLayout.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 506CDC4018E821F400EF8DCA /* calcLayout.cpp */; };
 		506CDC4D18E821F400EF8DCA /* constraintsolver2d.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 506CDC4118E821F400EF8DCA /* constraintsolver2d.cpp */; };
 		506CDC4E18E821F400EF8DCA /* constraintsolver3d.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 506CDC4218E821F400EF8DCA /* constraintsolver3d.cpp */; };
 		506CDC4F18E821F400EF8DCA /* GraphicPanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 506CDC4318E821F400EF8DCA /* GraphicPanel.cpp */; };
@@ -61,7 +60,6 @@
 		506CDC3D18E821F400EF8DCA /* Frame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Frame.h; sourceTree = "<group>"; };
 		506CDC3E18E821F400EF8DCA /* AppearanceWindow.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AppearanceWindow.cpp; sourceTree = "<group>"; };
 		506CDC3F18E821F400EF8DCA /* AppearanceWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppearanceWindow.h; sourceTree = "<group>"; };
-		506CDC4018E821F400EF8DCA /* calcLayout.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = calcLayout.cpp; sourceTree = "<group>"; };
 		506CDC4118E821F400EF8DCA /* constraintsolver2d.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = constraintsolver2d.cpp; sourceTree = "<group>"; };
 		506CDC4218E821F400EF8DCA /* constraintsolver3d.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = constraintsolver3d.cpp; sourceTree = "<group>"; };
 		506CDC4318E821F400EF8DCA /* GraphicPanel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GraphicPanel.cpp; sourceTree = "<group>"; };
@@ -131,7 +129,6 @@
 		50F0D2BC18E82C5F0067249A /* models */ = {
 			isa = PBXGroup;
 			children = (
-				506CDC4018E821F400EF8DCA /* calcLayout.cpp */,
 				508863E318EBED8B002BEBDD /* constraintsolver2d.h */,
 				508863E418EBEDA6002BEBDD /* constraintsolver3d.h */,
 				506CDC4118E821F400EF8DCA /* constraintsolver2d.cpp */,
@@ -239,7 +236,6 @@
 				506CDC4E18E821F400EF8DCA /* constraintsolver3d.cpp in Sources */,
 				504D277918E9BF6400F2CA63 /* Configuration.cpp in Sources */,
 				504D277C18E9BFB400F2CA63 /* ConfigurationController.cpp in Sources */,
-				506CDC4C18E821F400EF8DCA /* calcLayout.cpp in Sources */,
 				508863E118EAC4B8002BEBDD /* Graph.cpp in Sources */,
 				506CDC4F18E821F400EF8DCA /* GraphicPanel.cpp in Sources */,
 				506CDC4818E821F400EF8DCA /* App.cpp in Sources */,
