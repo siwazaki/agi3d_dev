@@ -155,10 +155,9 @@ void UserDefaultController::OnOpen(wxCommandEvent& event) {
     
     //should be refactored
     auto graphicPanel = AppDelegete::instance().getGraphicPanel();
-    auto configurationPanel = AppDelegete::instance().getControlPanel();
     auto appearanceWindow = AppDelegete::instance().getAppearanceWindow();
     graphicPanel->SetupPanel();
-    configurationPanel->Init();
+    configurationController->Init();
     appearanceWindow->Init();
   }
 }

@@ -696,7 +696,8 @@ void GraphicPanel::RenderScene(wxPaintEvent& evt) {
   GLtimenow = sw->Time();
   if ((GLtimenow > 1000) && LOAD_FLAG) {
     float _fps = GLframe * 1000.0 / GLtimenow;
-    sbp->SetFPS(_fps);
+    //@TODO
+    //sbp->SetFPS(_fps);
     sw->Start(0);
     GLframe = 0;
   }
@@ -1209,7 +1210,8 @@ void GraphicPanel::mouseLeftDown(wxMouseEvent& event) {
           isdrawingEdges[l] = ((edgevalues[l] >= edgethreshold_b) && (edgevalues[l] <= edgethreshold_t));
         }
         auto sbp = AppDelegete::instance().getControlPanel();
-        sbp->setTarget(id);
+//        @TODO
+//        sbp->setTarget(id);
       }
       else {
         //case :: some node is beeing picked
@@ -1239,7 +1241,8 @@ void GraphicPanel::mouseLeftDown(wxMouseEvent& event) {
           }
 
           id = -1;
-          sbp->setTarget(id);
+          //@TODO
+          //sbp->setTarget(id);
         }
 
         isPicked = false;

@@ -10,6 +10,9 @@
 #define __agi3d__ConfigurationController__
 
 #include <memory>
+#include "wx/wx.h"
+#include "wx/event.h"
+
 #include "Configuration.h"
 #include "ControlPanel.h"
 
@@ -26,16 +29,50 @@ namespace agi3d {
     
     void changeGraphName(const std::string& graphName);
     
-    //@TODO remove this
+    //@TODO remove
     //リファクタリングのための一時的な実装
     const std::string& getGraphName(){
       return _current->graphName();
     }
+    
+    //@TODO remane
+    void Init();
+    
+    
+    
 
   private:
     std::shared_ptr<Configuration> _current;
     std::shared_ptr<ControlPanel> _controlPanel;
+    //@TODO move to configuration
+    float fps;
     
+    void SetFPS(float);
+    
+    void handleButton1Event(wxCommandEvent& event);
+    void handleButton2Event(wxCommandEvent& event);
+    
+    void handleListEvent(wxCommandEvent& event);
+    
+        void NortifyUpdateNodeSize(wxCommandEvent& event);
+    void NortifyUpdateEdgeThickness(wxCommandEvent& event);
+    void NortifyUpdateDelta(wxCommandEvent& event);
+    void NortifyUpdateScale(wxCommandEvent& event);
+    void NortifyUpdateDimension(wxCommandEvent& event);
+    
+    void UpdateEdgeValueThreshold_t(wxCommandEvent& event);
+    void UpdateEdgeValueThreshold_b(wxCommandEvent& event);
+    
+    void UpdateNodeValueThreshold_t(wxCommandEvent& event);
+    void UpdateNodeValueThreshold_b(wxCommandEvent& event);
+    
+    void OnToggleEdge(wxCommandEvent& event);
+    void OnToggleNodeSize(wxCommandEvent& event);
+    
+    void SelectNodeAttr(wxCommandEvent& event);
+    void SelectEdgeAttr(wxCommandEvent& event);
+    
+    void setTarget(int id);
     
   };
 }
