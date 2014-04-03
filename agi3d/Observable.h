@@ -14,8 +14,10 @@
 #include "Observer.h"
 
 namespace agi3d {
+  
   class Observable {
-  public:
+    
+  public:    
     Observable(){};
     virtual ~Observable(){}
     virtual void notify(E_ObserveType observeType);
@@ -23,6 +25,7 @@ namespace agi3d {
     
   private:
     std::vector<Observer*> _observers;
+    
   };
   
   inline void Observable::addObserver(Observer* observer)

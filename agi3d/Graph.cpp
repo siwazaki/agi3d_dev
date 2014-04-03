@@ -22,12 +22,10 @@
 
 #include "constraintsolver2d.h"
 #include "constraintsolver3d.h"
-
 #include "Graph.h"
 
 using namespace std;
 using namespace agi3d;
-
 
 Graph::Graph() : _name("unknown"){
   
@@ -42,10 +40,16 @@ Graph::~Graph()
 //      ファイルを開いたら、古いモデルはdestroyして、新しいモデルをnewする
 void Graph::reset()
 {
-  if(isLoaded()) {
+  if(isNeighbor) {
     delete[] isNeighbor;
+  }
+  if(isdrawingNodes) {
     delete[] isdrawingNodes;
+  }
+  if(edgeAttribute) {
     delete[] edgeAttribute;
+  }
+  if(isdrawingEdges) {
     delete[] isdrawingEdges;
   }
   
@@ -64,99 +68,48 @@ void Graph::reset()
     edgeAttribute[i] = true;
     isdrawingEdges[i] = true;
   }
-  
 }
-
 
 
 void Graph::changeProjectionFactor(float f, E_Layout layout) {
   if(!this->isLoaded()) { return; }
   switch (layout) {
     case E_Layout::D2:
-      this->UpdateProjection2D(f);
+      this->updateProjection2D(f);
       this->notify(E_ObserveType::NeedReLayout);
       break;
     case E_Layout::D3:
-      this->UpdateProjection3D(f);
+      this->updateProjection3D(f);
       this->notify(E_ObserveType::NeedReLayout);
-      break;
-      
+      break;      
     default:
       throw invalid_argument("unkown layout type found.");
   }
 }
 
-void Graph::changeNodeThreshold_b(float t, int attrID) {
-  //
-  //
-  //  nodethreshold_b = (1.0 - t * t)*(nodevalue_min) + (t * t)*(nodevalue_max);
-  //  for (int i = 0; i < N; i++) {
-  //    isdrawingNodes[i] = ((nodevalues[i] >= nodethreshold_b) && (nodevalues[i] <= nodethreshold_t));
-  //  }
-  //  for (int i = 0; i < N; i++) {
-  //    if (isdrawingNodes[i]) {
-  //      bool f = false;
-  //      for (int j = 0; j < neighbor[i].size(); j++) {
-  //        f |= isdrawingNodes[neighbor[i][j]];
-  //        if (f) break;
-  //      }
-  //      if (!f) isdrawingNodes[i] = false;
-  //    }
-  //  }
-  //  Refresh();
-  //  return nodethreshold_b;
+void Graph::changeNodeThreshold(float b, float t) {
+   for (int i = 0; i < N; i++) {
+      isdrawingNodes[i] = ((nodevalues[i] >= b) && (nodevalues[i] <= t));
+    }
+    for (int i = 0; i < N; i++) {
+      if (isdrawingNodes[i]) {
+        bool f = false;
+        for (size_t j = 0; j < neighbor[i].size(); j++) {
+          f |= isdrawingNodes[neighbor[i][j]];
+          if (f) break;
+        }
+        if (!f) isdrawingNodes[i] = false;
+      }
+    }
+  this->notify(E_ObserveType::RefreshOnly);
 }
-//
-//float Graph::changeNodeThreshold_t(float t, int attrID) {
-//
-//
-//  nodethreshold_t = (1.0 - t * t)*(nodevalue_min) + (t * t)*(nodevalue_max);
-//  for (int i = 0; i < N; i++) {
-//    isdrawingNodes[i] = ((nodevalues[i] >= nodethreshold_b) && (nodevalues[i] <= nodethreshold_t));
-//  }
-//  for (int i = 0; i < N; i++) {
-//    if (isdrawingNodes[i]) {
-//      bool f = false;
-//      for (size_t j = 0; j < neighbor[i].size(); j++) {
-//        f |= isdrawingNodes[neighbor[i][j]];
-//        if (f) break;
-//      }
-//      if (!f) isdrawingNodes[i] = false;
-//    }
-//  }
-//  Refresh();
-//  return nodethreshold_t;
-//}
-//
-//void Graph::changeEdgeThreshold_b(float t, int attrID) {
-//  int N = _graph->getN();
-//  int M = _graph->getM();
-//  float nodevalue_min = _graph->getMinNodeValue();
-//  float nodevalue_max = _graph->getMaxNodeValue();
-//  float edgevalue_min = _graph->getMinEdgeValue();
-//  float edgevalue_max = _graph->getMaxEdgeValue();
-//  float *nodevalues = _graph->getNodeValues();
-//  float *edgevalues = _graph->getEdgeValues();
-//  const std::vector< std::pair<int, int> >& edges = _graph->getEdges();
-//  const std::vector<int>*  edgelist = _graph->getEdgeList();
-//  auto neighbor = _graph->getNeighbor();
-//
-//  edgethreshold_b = (1 - t * t)*(edgevalue_min) + t * t * (edgevalue_max);
-//  for (int i = 0; i < M; i++) {
-//    isdrawingEdges[i] = ((edgevalues[i] >= edgethreshold_b) && (edgevalues[i] <= edgethreshold_t));
-//  }
-//  Refresh();
-//}
-//
-//void Graph::changeEdgeThreshold_t(float t, int attrID) {
-//
-//
-//  edgethreshold_t = (1 - t * t)*(edgevalue_min) + t * t * (edgevalue_max);
-//  for (int i = 0; i < M; i++) {
-//    isdrawingEdges[i] = ((edgevalues[i] >= edgethreshold_b) && (edgevalues[i] <= edgethreshold_t));
-//  }
-//  Refresh();
-//}
+
+void Graph::changeEdgeThreshold(float b, float t) {
+  for (int i = 0; i < M; i++) {
+    isdrawingEdges[i] = ((edgevalues[i] >= b) && (edgevalues[i] <= t));
+  }
+  this->notify(E_ObserveType::RefreshOnly);
+}
 
 
 bool Graph::loadData(const std::string &filePath)
@@ -406,7 +359,7 @@ void Graph::calcmdsLayout() {
   delete U;
 }
 
-void Graph::UpdateScale3D(float r) {
+void Graph::updateScale3D(float r) {
   scale = r;
   delete[] Layout3D;
   Layout3D = new float[N * 3];
@@ -414,7 +367,7 @@ void Graph::UpdateScale3D(float r) {
               N, 3, dim, scale, P, N, E_3D, dim, 0.0, Layout3D, N);
 }
 
-void Graph::UpdateScale2D(float r) {
+void Graph::updateScale2D(float r) {
   scale = r;
   delete[] Layout2D;
   Layout2D = new float[N * 2];
@@ -422,7 +375,7 @@ void Graph::UpdateScale2D(float r) {
               N, 2, dim, scale, P, N, E_2D, dim, 0.0, Layout2D, N);
 }
 
-void Graph::UpdateProjection3D(float r) {
+void Graph::updateProjection3D(float r) {
   delta = r;
   fvector e_3d[3];
   for (int i = 0; i < 3; i++) {
@@ -447,7 +400,7 @@ void Graph::UpdateProjection3D(float r) {
               N, 3, dim, scale, P, N, E_3D, dim, 0.0, Layout3D, N);
 }
 
-void Graph::UpdateProjection2D(float r) {
+void Graph::updateProjection2D(float r) {
   delta = r;
   fvector e_2d[2];
   for (int i = 0; i < 2; i++) {
@@ -471,7 +424,7 @@ void Graph::UpdateProjection2D(float r) {
               N, 2, dim, scale, P, N, E_2D, dim, 0.0, Layout2D, N);
 }
 
-void Graph::UpdateDimension3D(float r) {
+void Graph::updateDimension3D(float r) {
   int _dim = (int) (r * dim);
   if (_dim < 3) _dim = 3;
   
@@ -499,7 +452,7 @@ void Graph::UpdateDimension3D(float r) {
               N, 3, dim, scale, P, N, E_3D, dim, 0.0, Layout3D, N);
 }
 
-void Graph::UpdateDimension2D(float r) {
+void Graph::updateDimension2D(float r) {
   int _dim = (int) (r * dim);
   if (_dim < 2) _dim = 2;
   

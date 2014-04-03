@@ -108,13 +108,15 @@ void UserDefaultController::OnOpen(wxCommandEvent& event) {
     _graph->loadData(std::string(filePath.mb_str()));
     
     auto configurationController = AppDelegete::instance().getConfigurationController();
+    
+    //TODO:
     //configurationController->changeGraphName(graphName);
     
-    //should be refactored
+    //TODO:should be refactored
     auto graphicPanel = AppDelegete::instance().getGraphicPanel();
     auto appearanceWindow = AppDelegete::instance().getAppearanceWindow();
     graphicPanel->setupPanel();
-    configurationController->Init();
+    configurationController->init();
     appearanceWindow->Init();
   }
 }

@@ -231,7 +231,7 @@ int GraphicPanel::pick(int x, int y) {
             int l = edgelist[id][i];
             isdrawingEdges[l] = ((edgevalues[l] >= edgethreshold_b) && (edgevalues[l] <= edgethreshold_t));
           }
-          for (size_t i = 0; i < N; i++) {
+          for (int i = 0; i < N; i++) {
             colors[i] = blue;
             isdrawingNodes[i] = ((nodevalues[i] >= nodethreshold_b) && (nodevalues[i] <= nodethreshold_t));
           }
@@ -703,10 +703,16 @@ void GraphicPanel::setupPanel() {
   _graph->reset();
   //Free Memory
   {
+    if(pos_x) {
       delete[] pos_x;
+    }
+    if(pos_y) {
       delete[] pos_y;
+    }
+    if(pos_z) {
       delete[] pos_z;
     }
+  }
   
   linewidth = default_linewidth;
   
@@ -718,7 +724,6 @@ void GraphicPanel::setupPanel() {
   id = -1;
   
   int N = _graph->getN();
-  int M = _graph->getM();
   pos_x = new float[N];
   pos_y = new float[N];
   pos_z = new float[N];
@@ -988,8 +993,6 @@ void GraphicPanel::ResetIsDrawingNodes() {
 
 void GraphicPanel::ResetIsDrawingEdges() {
   int M = _graph->getM();
-  float edgevalue_min = _graph->getMinEdgeValue();
-  float edgevalue_max = _graph->getMaxEdgeValue();
   bool* isdrawingEdges = _graph->getIsDrawingEdges();
   //TODO: コメントアウトしてるので、実装すること
 //  edgethreshold_b = edgevalue_min;
@@ -1001,10 +1004,10 @@ void GraphicPanel::ResetIsDrawingEdges() {
 
 void GraphicPanel::ScaleLayout(float f) {
   if (LayoutMode == 3) {
-    _graph->UpdateScale3D(f);
+    _graph->updateScale3D(f);
     relayout3D();
   } else if (LayoutMode == 2) {
-    _graph->UpdateScale2D(f);
+    _graph->updateScale2D(f);
     relayout2D();
   }
   Refresh();
@@ -1012,10 +1015,10 @@ void GraphicPanel::ScaleLayout(float f) {
 
 void GraphicPanel::ChangeDimension(float f) {
   if (LayoutMode == 3) {
-    _graph->UpdateDimension3D(f);
+    _graph->updateDimension3D(f);
     relayout3D();
   } else if (LayoutMode == 2) {
-    _graph->UpdateDimension2D(f);
+    _graph->updateDimension2D(f);
     relayout2D();
   }
 }

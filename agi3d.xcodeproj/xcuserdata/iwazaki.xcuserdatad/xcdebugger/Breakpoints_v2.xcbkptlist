@@ -104,11 +104,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "agi3d/UserDefaultController.cpp"
-            timestampString = "418157600.747299"
+            timestampString = "418242839.722994"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "162"
-            endingLineNumber = "162"
+            startingLineNumber = "164"
+            endingLineNumber = "164"
             landmarkName = "UserDefaultController::OpenAppearanceWindow(wxCommandEvent&amp; event)"
             landmarkType = "5">
          </BreakpointContent>
@@ -180,11 +180,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "agi3d/ConfigurationController.cpp"
-            timestampString = "418237907.906574"
+            timestampString = "418242329.01818"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "168"
-            endingLineNumber = "168">
+            startingLineNumber = "164"
+            endingLineNumber = "164">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -194,12 +194,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "agi3d/ConfigurationController.cpp"
-            timestampString = "418237907.906574"
+            timestampString = "418242329.01818"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "180"
-            endingLineNumber = "180"
-            landmarkName = "ConfigurationController::NortifyUpdateScale(wxCommandEvent&amp; event)"
+            startingLineNumber = "176"
+            endingLineNumber = "176"
+            landmarkName = "ConfigurationController::notifyUpdateScale(wxCommandEvent&amp; event)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -210,12 +210,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "agi3d/ConfigurationController.cpp"
-            timestampString = "418237907.906574"
+            timestampString = "418242329.01818"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "175"
-            endingLineNumber = "175"
-            landmarkName = "ConfigurationController::NortifyUpdateDelta(wxCommandEvent&amp; event)"
+            startingLineNumber = "171"
+            endingLineNumber = "171"
+            landmarkName = "ConfigurationController::notifyUpdateDelta(wxCommandEvent&amp;)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -226,12 +226,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "agi3d/ConfigurationController.cpp"
-            timestampString = "418237907.906574"
+            timestampString = "418242329.01818"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "186"
-            endingLineNumber = "186"
-            landmarkName = "ConfigurationController::NortifyUpdateDimension(wxCommandEvent&amp; event)"
+            startingLineNumber = "182"
+            endingLineNumber = "182"
+            landmarkName = "ConfigurationController::notifyUpdateDimension(wxCommandEvent&amp; event)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -242,74 +242,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "agi3d/ConfigurationController.cpp"
-            timestampString = "418237907.906574"
+            timestampString = "418242329.01818"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "211"
-            endingLineNumber = "211"
-            landmarkName = "ConfigurationController::UpdateNodeValueThreshold_b(wxCommandEvent&amp; event)"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "agi3d/ConfigurationController.cpp"
-            timestampString = "418237907.906574"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "217"
-            endingLineNumber = "217">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "agi3d/ConfigurationController.cpp"
-            timestampString = "418237907.906574"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "218"
-            endingLineNumber = "218"
-            landmarkName = "ConfigurationController::UpdateNodeValueThreshold_t(wxCommandEvent&amp; event)"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "agi3d/ConfigurationController.cpp"
-            timestampString = "418237907.906574"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "231"
-            endingLineNumber = "231"
-            landmarkName = "ConfigurationController::UpdateEdgeValueThreshold_b(wxCommandEvent&amp; event)"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "agi3d/ConfigurationController.cpp"
-            timestampString = "418237907.906574"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "244"
-            endingLineNumber = "244"
-            landmarkName = "ConfigurationController::UpdateEdgeValueThreshold_t(wxCommandEvent&amp; event)"
+            startingLineNumber = "209"
+            endingLineNumber = "209"
+            landmarkName = "ConfigurationController::updateEdgeValueThreshold(wxCommandEvent&amp; event)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -438,6 +376,86 @@
             startingLineNumber = "154"
             endingLineNumber = "154"
             landmarkName = "GraphicPanel::pick(int x, int y)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "agi3d/Graph.cpp"
+            timestampString = "418241453.741438"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "45"
+            endingLineNumber = "45"
+            landmarkName = "Graph::reset()"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "agi3d/GraphicPanel.cpp"
+            timestampString = "418241494.329765"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "706"
+            endingLineNumber = "706"
+            landmarkName = "GraphicPanel::setupPanel()"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "agi3d/ConfigurationController.cpp"
+            timestampString = "418242329.01818"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "188"
+            endingLineNumber = "188"
+            landmarkName = "ConfigurationController::updateNodeValueThreshold(wxCommandEvent&amp; event)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "agi3d/UserDefaultController.cpp"
+            timestampString = "418242936.439705"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "116"
+            endingLineNumber = "116"
+            landmarkName = "UserDefaultController::OnOpen(wxCommandEvent&amp; event)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "agi3d/UserDefaultController.cpp"
+            timestampString = "418242940.782183"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "108"
+            endingLineNumber = "108"
+            landmarkName = "UserDefaultController::OnOpen(wxCommandEvent&amp; event)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

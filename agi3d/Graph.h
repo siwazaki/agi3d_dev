@@ -19,27 +19,49 @@
 
 namespace agi3d
 {
+  
   class GraphicController;
   typedef boost::numeric::ublas::vector<float> fvector;
+  
   class Graph : public Observable
   {
+    
     friend class GraphicController;
+    
   public:
     Graph();
     virtual ~Graph();
     
+    //gtters
+    const std::string& getName() const;
+    int getN() const;
+    int getM() const;
+    float* getNodeValues() const;
+    float* getEdgeValues() const;
+    float getMaxNodeValue() const;
+    float getMinNodeValue() const;
+    float getMaxEdgeValue() const;
+    float getMinEdgeValue() const;
+    int** getD() const;
+    const std::vector<int>* getNeighbor() const;
+    const std::vector< std::pair<int, int> >&  getEdges() const;
+    const std::vector<std::string>& getLabels() const;
+    const std::vector<int>* getEdgeList() const;
+    bool * getIsDrawingNodes() const;
+    bool * getIsDrawingEdges() const;
+    bool * getEdgeAttribute() const ;
+    bool * getIsNeighbor() const;
+        
     //notify observers
     void changeProjectionFactor(float f, E_Layout layout);
-    void changeNodeThreshold_b(float, int);
-    void changeNodeThreshold_t(float, int);
-    void changeEdgeThreshold_b(float, int);
-    void changeEdgeThreshold_t(float, int);
+    void changeNodeThreshold(float b, float t);
+    void changeEdgeThreshold(float b, float t);
     
     //calcuation functions
     float calcNodeThreshold(float t) const;
     float calcEdgeThreshold(float t) const;
 
-    //others
+    //initialization
     bool isLoaded() const;
     //FIXME:この関数は消すこと
     void reset();
@@ -47,20 +69,20 @@ namespace agi3d
     
     int getNew3DLayout(int, float, float, float, float, float, float);
     void resetLayout3D();
-    void UpdateProjection3D(float);
-    void UpdateScale3D(float);
-    void UpdateDimension3D(float);
+    void updateProjection3D(float);
+    void updateScale3D(float);
+    void updateDimension3D(float);
     
     int getNew2DLayout(int, float, float, float, float);
     void resetLayout2D();
-    void UpdateProjection2D(float);
-    void UpdateScale2D(float);
-    void UpdateDimension2D(float);
+    void updateProjection2D(float);
+    void updateScale2D(float);
+    void updateDimension2D(float);
     
+    //データ取込
     void loadNodeAttrData(int n, const std::string& graphName);
     void loadEdgeAttrData(int n, const std::string& graphName);
     void loadLabelData(const std::string& graphName);
-    void setNodeEdgeValue();
     void loadMatrixData_t(const char * data, const std::string& graphName);
     void loadMatrixData_b(const char * data, const std::string& graphName);
     void loadLayoutData_b(const char * data, const std::string& graphName);
@@ -78,39 +100,13 @@ namespace agi3d
     float posY3D(int i) const;
     float posZ3D(int i) const;
     
-    //getters
-    int getN() const;
-    int getM() const;
-    
-    float getMaxNodeValue() const;
-    float getMinNodeValue() const;
-    float getMaxEdgeValue() const;
-    float getMinEdgeValue() const;
-    
-    float* getNodeValues() const;
-    float* getEdgeValues() const;
-    
-    int** getD() const;
-    const std::vector<int>* getNeighbor() const;
-    const std::vector< std::pair<int, int> >&  getEdges() const;
-    const std::vector<std::string>& getLabels() const;
-    
-    const std::vector<int>* getEdgeList() const;
-    
-    const std::string& getName() const;
-    
-    bool * getIsDrawingNodes() const;
-    bool * getIsDrawingEdges() const;
-    bool * getEdgeAttribute() const ;
-    bool * getIsNeighbor() const;
-    
   private:
+    //graph properties
     bool _isLoaded;
     std::string _name;
     int N;
     int M;
     int ** D;
-    
     std::vector<int> * neighbor;
     std::vector< std::pair<int, int> > edges;        
     std::vector<int> * edgelist;
@@ -119,14 +115,12 @@ namespace agi3d
     float * edgevalues;
     float nodevalue_max, nodevalue_min;
     float edgevalue_min, edgevalue_max;
-    
     bool * isdrawingNodes;
     bool * isdrawingEdges;
     bool * edgeAttribute;
     bool * isNeighbor;
-
     
-    //Graph Layouts
+    //layout properties
     int maxDimension = 10000;
     int dim;
     float * lambdas;
@@ -145,6 +139,10 @@ namespace agi3d
     float memory_status = false;
     int strToInt(const std::string &str);
     std::string IntToString(int num);
+    
+    //private functions
+    void setNodeEdgeValue();
+    
   };
   
   inline bool Graph::isLoaded() const

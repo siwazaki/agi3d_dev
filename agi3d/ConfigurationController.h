@@ -29,7 +29,7 @@ namespace agi3d {
     ConfigurationController(const std::shared_ptr<Configuration>& configuration, const std::shared_ptr<UserDefault>& userDefault, const std::shared_ptr<Graph>& graph);
     virtual ~ConfigurationController();
     //TODO: remane
-    void Init();
+    void init();
   private:
     std::shared_ptr<Configuration> _configuration;
     std::shared_ptr<UserDefault> _userDefault;
@@ -38,27 +38,21 @@ namespace agi3d {
     
     //TODO: move to configuration
     float fps;
-    void SetFPS(float);
+    void setFPS(float);
     
     void handleListEvent(wxCommandEvent& event);
     
-    void NortifyUpdateNodeSize(wxCommandEvent& event);
-    void NortifyUpdateEdgeThickness(wxCommandEvent& event);
-    void NortifyUpdateDelta(wxCommandEvent& event);
-    void NortifyUpdateScale(wxCommandEvent& event);
-    void NortifyUpdateDimension(wxCommandEvent& event);
-    
-    void UpdateEdgeValueThreshold_t(wxCommandEvent& event);
-    void UpdateEdgeValueThreshold_b(wxCommandEvent& event);
-    
-    void UpdateNodeValueThreshold_t(wxCommandEvent& event);
-    void UpdateNodeValueThreshold_b(wxCommandEvent& event);
-    
-    void OnToggleEdge(wxCommandEvent& event);
-    void OnToggleNodeSize(wxCommandEvent& event);
-    
-    void SelectNodeAttr(wxCommandEvent& event);
-    void SelectEdgeAttr(wxCommandEvent& event);
+    void notifyUpdateNodeSize(wxCommandEvent& event);
+    void notifyUpdateEdgeThickness(wxCommandEvent& event);
+    void notifyUpdateDelta(wxCommandEvent& event);
+    void notifyUpdateScale(wxCommandEvent& event);
+    void notifyUpdateDimension(wxCommandEvent& event);
+    void updateNodeValueThreshold(wxCommandEvent& event);
+    void updateEdgeValueThreshold(wxCommandEvent& event);
+    void onToggleEdge(wxCommandEvent& event);
+    void onToggleNodeSize(wxCommandEvent& event);
+    void selectNodeAttr(wxCommandEvent& event);
+    void selectEdgeAttr(wxCommandEvent& event);
     
     void setTarget(int id);
     

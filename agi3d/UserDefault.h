@@ -22,6 +22,7 @@ namespace agi3d {
    */
   class UserDefault
   {
+    
     friend class UserDefaultController;
     
   public:
@@ -47,7 +48,6 @@ namespace agi3d {
     int _dimention;
     bool _isDrawNode;
     bool _isDrawEdge;
-    
     
   };
 }

@@ -23,11 +23,13 @@ namespace agi3d {
    */
   class Configuration : public Observable
   {
+    
     friend class ConfigurationController;
+    
   public:
     Configuration();
     virtual ~Configuration();
-    const std::string& graphName();
+    const std::string& graphName() const;
     int getNodeThreshHold_t() const;
     int getNodeThreshHold_b() const;
     int getEdgeThreshHold_t() const;
@@ -35,22 +37,25 @@ namespace agi3d {
     
   private:
     std::string _graphName;
-    
+    std::map<int, int> _labelMap;
     float fps = 0.0f;
     float tmp = 0.0f;    
     int nodeThresholdAttrID = 0;
     int edgeThresholdAttrID = 0;
     int pickid = -1;
+    int _id = -1;
     
     float _nodethreshold_t;
     float _nodethreshold_b;
     float _edgethreshold_t;
     float _edgethreshold_b;
     
-    std::map<int, int> _labelMap;
-   
-    int _id = -1;
   };
+  
+  inline const std::string& Configuration::graphName() const
+  {
+    return _graphName;
+  }
   
   inline int Configuration::getNodeThreshHold_t() const
   {

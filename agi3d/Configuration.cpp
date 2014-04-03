@@ -19,8 +19,3 @@ Configuration::~Configuration()
 {
   
 }
-
-const std::string& Configuration::graphName()
-{
-  return _graphName;
-}
