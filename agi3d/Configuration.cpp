@@ -10,12 +10,13 @@
 
 using namespace agi3d;
 
-Configuration::Configuration() : _nodethreshold_t(10000.0f), _nodethreshold_b(-1.0f), _edgethreshold_t(10000.0f), _edgethreshold_b(-1.0f)
-{
+Configuration::Configuration() : _nodethreshold_t(10000.0f),
+_nodethreshold_b(-1.0f),
+_edgethreshold_t(10000.0f),
+_edgethreshold_b(-1.0f) {
   
 }
 
-Configuration::~Configuration()
-{
+Configuration::~Configuration() {
   
 }

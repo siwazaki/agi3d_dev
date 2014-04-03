@@ -10,7 +10,9 @@
 
 
 namespace agi3d {
+  
   class ControlPanel : public wxPanel {
+    
   public:
     ControlPanel(wxWindow* parent);
     

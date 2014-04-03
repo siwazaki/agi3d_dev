@@ -7,19 +7,16 @@
 #include "wx/panel.h"
 
 namespace agi3d {
-  /**
-   *
-   * メインのフレームを表すクラス。
-   */
+
   class Frame : public wxFrame {
+    
   public:
     Frame(const wxString& title);
-    //@TODO: should be removed
-    void initload();
     
   private:
     void OnQuit(wxCommandEvent& event);
   };
+  
 }
 
 #endif

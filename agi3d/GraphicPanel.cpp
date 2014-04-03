@@ -116,7 +116,6 @@ void GraphicPanel::update(const agi3d::Observable &observable, E_ObserveType obs
   }
 }
 
-
 void GraphicPanel::refresh() {
   Refresh();
 }

@@ -31,15 +31,13 @@ Graph::Graph() : _name("unknown"){
   
 }
 
-Graph::~Graph()
-{
+Graph::~Graph() {
   
 }
 
 //FIXME:ファイルを開く度にモデルを使いまわすのを止めたい
 //      ファイルを開いたら、古いモデルはdestroyして、新しいモデルをnewする
-void Graph::reset()
-{
+void Graph::reset() {
   if(isNeighbor) {
     delete[] isNeighbor;
   }
@@ -69,7 +67,6 @@ void Graph::reset()
     isdrawingEdges[i] = true;
   }
 }
-
 
 void Graph::changeProjectionFactor(float f, E_Layout layout) {
   if(!this->isLoaded()) { return; }
@@ -111,9 +108,7 @@ void Graph::changeEdgeThreshold(float b, float t) {
   this->notify(E_ObserveType::RefreshOnly);
 }
 
-
-bool Graph::loadData(const std::string &filePath)
-{
+bool Graph::loadData(const std::string &filePath)　{
   
   string fname = string(filePath);
   int path_i = fname.find_last_of("/");
@@ -1293,6 +1288,5 @@ int Graph::getNew2DLayout(int id,
     return 0;
   }
 }
-
 
 
