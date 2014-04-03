@@ -10,7 +10,10 @@
 #include <boost/numeric/ublas/vector.hpp>
 #include <boost/lexical_cast.hpp>
 
+#include "UserDefault.h"
+#include "Configuration.h"
 #include "Graph.h"
+#include "Observer.h"
 
 namespace agi3d {
   
@@ -20,14 +23,14 @@ namespace agi3d {
   typedef GLfloat Position[3];
   typedef GLuint Face[3];
   
-  class GraphicPanel : public wxGLCanvas {
+  class GraphicPanel : public wxGLCanvas, public Observer {
     wxGLContext* m_context;
     
   public:
     GraphicPanel(wxWindow* parent, int* args);
     virtual ~GraphicPanel();
     
-    void init(const std::shared_ptr<Graph>& graph);
+    void init(const std::shared_ptr<Graph>& graph, const std::shared_ptr<UserDefault>& userDefault, const std::shared_ptr<Configuration>& configuration);
     
     void moveTo(int x, int y);
     void refresh();
@@ -38,62 +41,47 @@ namespace agi3d {
     void downRight(int x, int y);
     void moveEye(int delta);
     void renderScene();
+    void setupPanel();
+    virtual void update(const Observable& observable, E_ObserveType observeType);
     
-    
-    GLuint setUpVBA(float radius, int slices, int stacks);
-    
-    void Render(float x, float y, float z);
-    int ProcessSelection(int, int);
-    void SetupPanel();
-    
-    void ResetLayout();
-    void changeColor(int);
-    
-    void UpdateEye(float);
-    void UpdateSize(float);
+    //TODO:下のAPIは整理が必要
+    //モデルの内容を書き換えて、Refresh呼ぶだけなので、
+    //Observerパターンでよい。
+    //そんで、前処理はGraphに持っていく
     void UpdateThickness(float);
-    
-    void ChangeLayoutMode(int);
-    
-    void ResetIsDrawingNodes();
-    void ResetIsDrawingEdges();
-    
-    float UpdateNodeThreshold_b(float, int);
-    float UpdateNodeThreshold_t(float, int);
-    
-    void UpdateEdgeThreshold_b(float, int);
-    void UpdateEdgeThreshold_t(float, int);
-    
-    void ModifyDelta(float);
-    void ScaleLayout(float);
-    void ChangeDimension(float);
-    
-    void SavePixelData();
-    
-    void DrawEdge();
-    void NodeModeChange();
     void SetXRotation(bool);
     void SetYRotation(bool);
+    void NodeModeChange();
+    void SavePixelData();
+    void DrawEdge();
+    void ScaleLayout(float);
+    void Render(float x, float y, float z);
+    void changeColor(int);
+    void ChangeLayoutMode(int);
+    void ResetIsDrawingNodes();
+    void ResetIsDrawingEdges();
+    void ChangeDimension(float);
+    void UpdateSize(float);  
     
+  private:
+    /**
+     * @TODO: remove this
+     */
+    void UpdateEye(float);
+    GLuint setUpVBA(float radius, int slices, int stacks);
+    int ProcessSelection(int, int);
+    void ResetLayout();
+    void relayout();
     void relayout3D();
     void relayout2D();
-    
     void CalculateWorldCo(int x, int y, float depth, double &wx, double &wy, double &wz);
     
   private:
     std::shared_ptr<Graph> _graph;
-    
-    //Variables
-    float nodethreshold_b = -1.0f;
-    float nodethreshold_t = 100000000000;
-    float edgethreshold_b = -1.0f;
-    float edgethreshold_t = 100000000000;
-    bool * isdrawingNodes;
-    bool * isdrawingEdges;
-    
-    bool * edgeAttribute;
-    bool * isNeighbor;
-    
+    std::shared_ptr<Configuration> _configuration;
+    std::shared_ptr<UserDefault> _userDefault;
+
+           
     //Layout Mode
     int LayoutMode = 3;
     

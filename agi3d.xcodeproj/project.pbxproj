@@ -23,6 +23,8 @@
 		506CDC5018E821F400EF8DCA /* Makefile in Sources */ = {isa = PBXBuildFile; fileRef = 506CDC4518E821F400EF8DCA /* Makefile */; };
 		506CDC5118E821F400EF8DCA /* ControlPanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 506CDC4618E821F400EF8DCA /* ControlPanel.cpp */; };
 		508863E118EAC4B8002BEBDD /* Graph.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 508863DF18EAC4B8002BEBDD /* Graph.cpp */; };
+		508863EA18EC97FA002BEBDD /* Observable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 508863E818EC97FA002BEBDD /* Observable.cpp */; };
+		508863ED18EC99BF002BEBDD /* Observer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 508863EB18EC99BF002BEBDD /* Observer.cpp */; };
 		50F0D2C018E8303B0067249A /* MenuBar.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50F0D2BE18E8303B0067249A /* MenuBar.cpp */; };
 /* End PBXBuildFile section */
 
@@ -71,6 +73,10 @@
 		508863E018EAC4B8002BEBDD /* Graph.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Graph.h; sourceTree = "<group>"; };
 		508863E318EBED8B002BEBDD /* constraintsolver2d.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = constraintsolver2d.h; sourceTree = "<group>"; };
 		508863E418EBEDA6002BEBDD /* constraintsolver3d.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = constraintsolver3d.h; sourceTree = "<group>"; };
+		508863E818EC97FA002BEBDD /* Observable.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Observable.cpp; sourceTree = "<group>"; };
+		508863E918EC97FA002BEBDD /* Observable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Observable.h; sourceTree = "<group>"; };
+		508863EB18EC99BF002BEBDD /* Observer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Observer.cpp; sourceTree = "<group>"; };
+		508863EC18EC99BF002BEBDD /* Observer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Observer.h; sourceTree = "<group>"; };
 		50F0D2BE18E8303B0067249A /* MenuBar.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MenuBar.cpp; sourceTree = "<group>"; };
 		50F0D2BF18E8303B0067249A /* MenuBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MenuBar.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -129,10 +135,8 @@
 		50F0D2BC18E82C5F0067249A /* models */ = {
 			isa = PBXGroup;
 			children = (
-				508863E318EBED8B002BEBDD /* constraintsolver2d.h */,
-				508863E418EBEDA6002BEBDD /* constraintsolver3d.h */,
-				506CDC4118E821F400EF8DCA /* constraintsolver2d.cpp */,
-				506CDC4218E821F400EF8DCA /* constraintsolver3d.cpp */,
+				508863E818EC97FA002BEBDD /* Observable.cpp */,
+				508863E918EC97FA002BEBDD /* Observable.h */,
 				504D276B18E949D200F2CA63 /* UserDefault.cpp */,
 				504D276C18E949D200F2CA63 /* UserDefault.h */,
 				504D276E18E9B1D700F2CA63 /* Enums.cpp */,
@@ -141,6 +145,10 @@
 				504D277818E9BF6400F2CA63 /* Configuration.h */,
 				508863DF18EAC4B8002BEBDD /* Graph.cpp */,
 				508863E018EAC4B8002BEBDD /* Graph.h */,
+				508863E318EBED8B002BEBDD /* constraintsolver2d.h */,
+				508863E418EBEDA6002BEBDD /* constraintsolver3d.h */,
+				506CDC4118E821F400EF8DCA /* constraintsolver2d.cpp */,
+				506CDC4218E821F400EF8DCA /* constraintsolver3d.cpp */,
 			);
 			name = models;
 			sourceTree = "<group>";
@@ -154,6 +162,8 @@
 				504D277A18E9BFB400F2CA63 /* ConfigurationController.cpp */,
 				504D277E18E9C25700F2CA63 /* GraphicController.h */,
 				504D277D18E9C25700F2CA63 /* GraphicController.cpp */,
+				508863EB18EC99BF002BEBDD /* Observer.cpp */,
+				508863EC18EC99BF002BEBDD /* Observer.h */,
 			);
 			name = controllers;
 			sourceTree = "<group>";
@@ -239,10 +249,12 @@
 				508863E118EAC4B8002BEBDD /* Graph.cpp in Sources */,
 				506CDC4F18E821F400EF8DCA /* GraphicPanel.cpp in Sources */,
 				506CDC4818E821F400EF8DCA /* App.cpp in Sources */,
+				508863ED18EC99BF002BEBDD /* Observer.cpp in Sources */,
 				506CDC4D18E821F400EF8DCA /* constraintsolver2d.cpp in Sources */,
 				504D278218E9C59E00F2CA63 /* AppDelegete.cpp in Sources */,
 				504D277F18E9C25700F2CA63 /* GraphicController.cpp in Sources */,
 				506CDC5118E821F400EF8DCA /* ControlPanel.cpp in Sources */,
+				508863EA18EC97FA002BEBDD /* Observable.cpp in Sources */,
 				504D276D18E949D200F2CA63 /* UserDefault.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

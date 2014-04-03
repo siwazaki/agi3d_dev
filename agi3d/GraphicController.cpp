@@ -84,5 +84,7 @@ void GraphicController::mouseScroll(wxMouseEvent& event) {
 }
 
 void GraphicController::renderScene(wxPaintEvent& evt) {
-  _graphicPanel->renderScene();
+  if(_graph->isLoaded()) {
+    _graphicPanel->renderScene();
+  }
 }

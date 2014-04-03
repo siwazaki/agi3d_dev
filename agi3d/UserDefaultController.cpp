@@ -61,8 +61,6 @@ UserDefaultController::~UserDefaultController()
   
 }
 
-
-
 void UserDefaultController::SetAutoXRotation(wxCommandEvent& event) {
   _userDefault->_rotation = (E_Rotation)(_userDefault->_rotation ^ E_Rotation::X);
   std::cout << _userDefault->_rotation << std::endl;
@@ -115,7 +113,7 @@ void UserDefaultController::OnOpen(wxCommandEvent& event) {
     //should be refactored
     auto graphicPanel = AppDelegete::instance().getGraphicPanel();
     auto appearanceWindow = AppDelegete::instance().getAppearanceWindow();
-    graphicPanel->SetupPanel();
+    graphicPanel->setupPanel();
     configurationController->Init();
     appearanceWindow->Init();
   }

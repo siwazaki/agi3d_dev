@@ -12,6 +12,8 @@
 #include <string>
 #include <map>
 
+#include "Observable.h"
+
 namespace agi3d {
 
   class ConfigurationController;
@@ -19,11 +21,18 @@ namespace agi3d {
    * ControlPanelで変更可能なデータを保持するモデル。
    * @TODO: Jsonにシリアライズ
    */
-  class Configuration
+  class Configuration : public Observable
   {
     friend class ConfigurationController;
-    
+  public:
+    Configuration();
+    virtual ~Configuration();
     const std::string& graphName();
+    int getNodeThreshHold_t() const;
+    int getNodeThreshHold_b() const;
+    int getEdgeThreshHold_t() const;
+    int getEdgeThreshHold_b() const;
+    
   private:
     std::string _graphName;
     
@@ -32,15 +41,37 @@ namespace agi3d {
     int nodeThresholdAttrID = 0;
     int edgeThresholdAttrID = 0;
     int pickid = -1;
-    float _nodethreshold_t = 10000000;
-    float _nodethreshold_b = -1;
+    
+    float _nodethreshold_t;
+    float _nodethreshold_b;
+    float _edgethreshold_t;
+    float _edgethreshold_b;
+    
     std::map<int, int> _labelMap;
-    int _node_slider_b_pos = 0;
-    int _node_slider_t_pos = 100;
-    int _edge_slider_b_pos = 0;
-    int _edge_slider_t_pos = 100;
+   
     int _id = -1;
   };
+  
+  inline int Configuration::getNodeThreshHold_t() const
+  {
+    return _nodethreshold_t;
+  }
+  
+  inline int Configuration::getNodeThreshHold_b() const
+  {
+    return _nodethreshold_b;
+  }
+  
+  inline int Configuration::getEdgeThreshHold_t() const
+  {
+    return _edgethreshold_t;
+  }
+  
+  inline int Configuration::getEdgeThreshHold_b() const
+  {
+    return _edgethreshold_b;
+  }
+
 }
 
 #endif /* defined(__agi3d__Configuration__) */

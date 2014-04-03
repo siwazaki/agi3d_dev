@@ -35,7 +35,6 @@ namespace agi3d {
     wxStaticText * nodeSizeLabel;
     wxStaticText * edgeSizeLabel;
     
-    DECLARE_EVENT_TABLE()
   };
 }
 

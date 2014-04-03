@@ -15,6 +15,7 @@
 
 #include "Graph.h"
 #include "Configuration.h"
+#include "UserDefault.h"
 #include "ControlPanel.h"
 
 namespace agi3d {
@@ -25,25 +26,23 @@ namespace agi3d {
     friend class AppDelegete;
     
   public:
-    ConfigurationController(const std::shared_ptr<Configuration>& configuration, const std::shared_ptr<Graph>& graph);
+    ConfigurationController(const std::shared_ptr<Configuration>& configuration, const std::shared_ptr<UserDefault>& userDefault, const std::shared_ptr<Graph>& graph);
     virtual ~ConfigurationController();
-    //@TODO remane
+    //TODO: remane
     void Init();
   private:
     std::shared_ptr<Configuration> _configuration;
+    std::shared_ptr<UserDefault> _userDefault;
     std::shared_ptr<Graph> _graph;
     ControlPanel *_controlPanel;
-    //@TODO move to configuration
+    
+    //TODO: move to configuration
     float fps;
-    
     void SetFPS(float);
-    
-    void handleButton1Event(wxCommandEvent& event);
-    void handleButton2Event(wxCommandEvent& event);
     
     void handleListEvent(wxCommandEvent& event);
     
-        void NortifyUpdateNodeSize(wxCommandEvent& event);
+    void NortifyUpdateNodeSize(wxCommandEvent& event);
     void NortifyUpdateEdgeThickness(wxCommandEvent& event);
     void NortifyUpdateDelta(wxCommandEvent& event);
     void NortifyUpdateScale(wxCommandEvent& event);

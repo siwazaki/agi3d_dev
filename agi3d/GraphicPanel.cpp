@@ -21,10 +21,17 @@ using namespace agi3d;
 
 #define BUFFER_OFFSET(bytes) ((GLubyte *)NULL + (bytes))
 
+float getDepth(int x, int y) {
+  float z;
+  GLint viewport[4];
+  glGetIntegerv(GL_VIEWPORT, viewport);
+  glReadPixels(x, viewport[3] - y, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &z);
+  return z;
+}
 
 GraphicPanel::GraphicPanel(wxWindow* parent, int* args) :
 wxGLCanvas(parent, wxID_ANY, args, wxDefaultPosition, wxSize(1000, 870), wxFULL_REPAINT_ON_RESIZE),
-width(1000), height(870){
+width(1000), height(870) {
   
   m_context = new wxGLContext(this);
   sw = new wxStopWatch();
@@ -67,9 +74,15 @@ width(1000), height(870){
   
 }
 
-void GraphicPanel::init(const std::shared_ptr<Graph>& graph)
+GraphicPanel::~GraphicPanel() {
+  delete m_context;
+}
+
+void GraphicPanel::init(const std::shared_ptr<Graph>& graph, const std::shared_ptr<UserDefault>& userDefault, const std::shared_ptr<Configuration>& configuration)
 {
   _graph = graph;
+  _userDefault = userDefault;
+  _configuration = configuration;
   blue = vector3(0.0f,0.75f,1.0f);
   deepblue = vector3(0.0f, 0.40f, 0.8f);
   green = vector3(0.0f, 1.0f, 0.0f);
@@ -81,32 +94,43 @@ void GraphicPanel::init(const std::shared_ptr<Graph>& graph)
   _right = vector3(1, 0, 0);
 }
 
-GraphicPanel::~GraphicPanel()
+void GraphicPanel::update(const agi3d::Observable &observable, E_ObserveType observeType)
 {
-  delete m_context;
+  
+  
+  switch (observeType) {
+    case E_ObserveType::NeedReLayout:
+    {
+      relayout();
+      Refresh();
+      break;
+    }
+    case E_ObserveType::RefreshOnly:
+    {
+      Refresh();
+      break;
+    }
+      
+    default:
+      break;
+  }
 }
 
-void GraphicPanel::refresh()
-{
+
+void GraphicPanel::refresh() {
   Refresh();
 }
 
-/**
- * @TODO rename
- */
-void GraphicPanel::releaseLeft()
-{
+//:TODO rename
+void GraphicPanel::releaseLeft() {
   if (LOAD_FLAG) {
     isDrag = false;
     Refresh();
   }
 }
 
-/**
- * @TODO rename
- */
-void GraphicPanel::releaseRight()
-{
+//:TODO rename
+void GraphicPanel::releaseRight() {
   if (LOAD_FLAG) {
     isDrag = false;
     isRightPressed = false;
@@ -114,11 +138,8 @@ void GraphicPanel::releaseRight()
   }
 }
 
-/**
- * @TODO rename
- */
-void GraphicPanel::downRight(int x, int y)
-{
+//TODO: rename
+void GraphicPanel::downRight(int x, int y) {
   if (LOAD_FLAG) {
     if (!isDrag) isDrag = true;
     if (!isRightPressed) isRightPressed = true;
@@ -128,20 +149,26 @@ void GraphicPanel::downRight(int x, int y)
   }
 }
 
-int GraphicPanel::pick(int x, int y)
-{
+//FIXME: Graphモデルのプロパティを書き換えている部分を、Graphに委譲する
+int GraphicPanel::pick(int x, int y) {
   int N = _graph->getN();
   int M = _graph->getM();
-  float nodevalue_min = _graph->getMinNodeValue();
-  float nodevalue_max = _graph->getMaxNodeValue();
-  float edgevalue_min = _graph->getMinEdgeValue();
-  float edgevalue_max = _graph->getMaxEdgeValue();
   float *nodevalues = _graph->getNodeValues();
   float *edgevalues = _graph->getEdgeValues();
-  const std::vector< std::pair<int, int> >& edges = _graph->getEdges();
   const std::vector<int>*  edgelist = _graph->getEdgeList();
   auto neighbor = _graph->getNeighbor();
-  ;
+  
+  float nodethreshold_b = _configuration->getNodeThreshHold_b();
+  float nodethreshold_t = _configuration->getNodeThreshHold_t();
+  
+  float edgethreshold_b = _configuration->getEdgeThreshHold_b();
+  float edgethreshold_t = _configuration->getEdgeThreshHold_t();
+  
+  bool* isdrawingNodes = _graph->getIsDrawingNodes();
+  bool* isdrawingEdges = _graph->getIsDrawingEdges();
+  bool* isNeighbor = _graph->getIsNeighbor();
+  bool* edgeAttribute = _graph->getEdgeAttribute();
+  
   if (LOAD_FLAG) {
     {
       int p_id = ProcessSelection(x, y);
@@ -150,12 +177,12 @@ int GraphicPanel::pick(int x, int y)
         //case :: some node is beeing picked
         if (id >= 0) {
           colors[id] = blue;
-          for (int i = 0; i < neighbor[id].size(); i++) {
+          for (size_t i = 0; i < neighbor[id].size(); i++) {
             int adj = neighbor[id][i];
             isdrawingNodes[adj] = ((nodevalues[adj] >= nodethreshold_b) && (nodevalues[adj] <= nodethreshold_t));
             colors[adj] = blue;
           }
-          for (int i = 0; i < edgelist[id].size(); i++) {
+          for (size_t i = 0; i < edgelist[id].size(); i++) {
             int l = edgelist[id][i];
             isdrawingEdges[l] = ((edgevalues[l] >= edgethreshold_b) && (edgevalues[l] <= edgethreshold_t));
           }
@@ -174,7 +201,7 @@ int GraphicPanel::pick(int x, int y)
         isNeighbor[id] = true;
         isdrawingNodes[id] = true;
         
-        for (int i = 0; i < neighbor[id].size(); i++) {
+        for (size_t i = 0; i < neighbor[id].size(); i++) {
           int adj = neighbor[id][i];
           colors[adj] = deepblue;
           isNeighbor[adj] = true;
@@ -187,7 +214,7 @@ int GraphicPanel::pick(int x, int y)
           edgeAttribute[i] = true;
         }
         
-        for (int i = 0; i < edgelist[id].size(); i++) {
+        for (size_t i = 0; i < edgelist[id].size(); i++) {
           int l = edgelist[id][i];
           edgeAttribute[l] = false;
           isdrawingEdges[l] = ((edgevalues[l] >= edgethreshold_b) && (edgevalues[l] <= edgethreshold_t));
@@ -196,15 +223,15 @@ int GraphicPanel::pick(int x, int y)
       else {
         //case :: some node is beeing picked
         if (id >= 0) {
-          for (int i = 0; i < neighbor[id].size(); i++) {
+          for (size_t i = 0; i < neighbor[id].size(); i++) {
             int adj = neighbor[id][i];
             isdrawingNodes[adj] = ((nodevalues[adj] >= nodethreshold_b) && (nodevalues[adj] <= nodethreshold_t));
           }
-          for (int i = 0; i < edgelist[id].size(); i++) {
+          for (size_t i = 0; i < edgelist[id].size(); i++) {
             int l = edgelist[id][i];
             isdrawingEdges[l] = ((edgevalues[l] >= edgethreshold_b) && (edgevalues[l] <= edgethreshold_t));
           }
-          for (int i = 0; i < N; i++) {
+          for (size_t i = 0; i < N; i++) {
             colors[i] = blue;
             isdrawingNodes[i] = ((nodevalues[i] >= nodethreshold_b) && (nodevalues[i] <= nodethreshold_t));
           }
@@ -212,7 +239,7 @@ int GraphicPanel::pick(int x, int y)
           for (int i = 0; i < N; i++) {
             if (isdrawingNodes[i]) {
               bool f = false;
-              for (int j = 0; j < neighbor[i].size(); j++) {
+              for (size_t j = 0; j < neighbor[i].size(); j++) {
                 f |= isdrawingNodes[neighbor[i][j]];
                 if (f) break;
               }
@@ -237,8 +264,7 @@ int GraphicPanel::pick(int x, int y)
   
 }
 
-void GraphicPanel::moveTo(int x, int y)
-{
+void GraphicPanel::moveTo(int x, int y) {
   auto neighbor = _graph->getNeighbor();
   
   if (LOAD_FLAG) {
@@ -332,8 +358,7 @@ void GraphicPanel::moveTo(int x, int y)
   }
 }
 
-void GraphicPanel::resize()
-{
+void GraphicPanel::resize() {
   int topleft_x = 0, topleft_y = 0, bottomrigth_x = getWidth(), bottomrigth_y = getHeight();
   
   glClearColor(1.0f, 1.0f, 1.0f, 1.0f); //white i
@@ -364,8 +389,7 @@ void GraphicPanel::resize()
   Refresh();
 }
 
-void GraphicPanel::moveEye(int delta)
-{
+void GraphicPanel::moveEye(int delta) {
   wheel_pos -= (float) delta / 4.0;
   if (wheel_pos > 200) wheel_pos = min(wheel_pos, 200.0f);
   wheel_pos = max(wheel_pos, 5.0f);
@@ -375,8 +399,7 @@ void GraphicPanel::moveEye(int delta)
   Refresh();
 }
 
-void GraphicPanel::renderScene()
-{
+void GraphicPanel::renderScene() {
   int N = _graph->getN();
   int M = _graph->getM();
   float nodevalue_max = _graph->getMaxNodeValue();
@@ -385,6 +408,10 @@ void GraphicPanel::renderScene()
   float *edgevalues = _graph->getEdgeValues();
   const std::vector< std::pair<int, int> >& edges = _graph->getEdges();
   const std::vector<int>*  edgelist = _graph->getEdgeList();
+  bool* isdrawingNodes = _graph->getIsDrawingNodes();
+  bool* isdrawingEdges = _graph->getIsDrawingEdges();
+  bool* isNeighbor = _graph->getIsNeighbor();
+  bool* edgeAttribute = _graph->getEdgeAttribute();
   
   auto sbp = AppDelegete::instance().getControlPanel();
   wxGLCanvas::SetCurrent(*m_context);
@@ -591,7 +618,6 @@ void GraphicPanel::renderScene()
   glDisable(GL_DEPTH_TEST);
 }
 
-
 GLuint GraphicPanel::setUpVBA(float radius, int slices, int stacks) {
   glGenBuffers(1, &vertexBuf);
   glGenBuffers(1, &indexBuf);
@@ -645,6 +671,15 @@ GLuint GraphicPanel::setUpVBA(float radius, int slices, int stacks) {
   return faces * 3;
 }
 
+void GraphicPanel::relayout() {
+  if(_userDefault->layout() == E_Layout::D2)
+  {
+    relayout2D();
+  }else {
+    relayout3D();
+  }
+}
+
 void GraphicPanel::relayout3D() {
   int N = _graph->getN();
   for (int i = 0; i < N; i++) {
@@ -664,17 +699,14 @@ void GraphicPanel::relayout2D() {
   }
 }
 
-void GraphicPanel::SetupPanel() {
+void GraphicPanel::setupPanel() {
+  _graph->reset();
   //Free Memory
   {
-    delete[] pos_x;
-    delete[] pos_y;
-    delete[] pos_z;
-    delete[] isNeighbor;
-    delete[] isdrawingNodes;
-    delete[] edgeAttribute;
-    delete[] isdrawingEdges;
-  }
+      delete[] pos_x;
+      delete[] pos_y;
+      delete[] pos_z;
+    }
   
   linewidth = default_linewidth;
   
@@ -691,18 +723,6 @@ void GraphicPanel::SetupPanel() {
   pos_y = new float[N];
   pos_z = new float[N];
   colors = new vector3[N];
-  
-  isNeighbor = new bool[N];
-  isdrawingNodes = new bool[N];
-  
-  edgeAttribute = new bool[M];
-  isdrawingEdges = new bool[M];
-  
-  for (int i = 0; i < M; i++) {
-    edgeAttribute[i] = true;
-    isdrawingEdges[i] = true;
-  }
-  
   float end = 0;
   
   if (LayoutMode == 3) {
@@ -711,8 +731,6 @@ void GraphicPanel::SetupPanel() {
       pos_y[i] = _graph->posY3D(i);
       pos_z[i] = _graph->posZ3D(i);
       colors[i] = blue;
-      isNeighbor[i] = false;
-      isdrawingNodes[i] = true;
       end = max(end, sqrt(pos_x[i] * pos_x[i] + pos_y[i] * pos_y[i] + pos_z[i] * pos_z[i]));
     }
     angle = 55;
@@ -722,8 +740,6 @@ void GraphicPanel::SetupPanel() {
       pos_y[i] = _graph->posY2D(i);
       pos_z[i] = 0;
       colors[i] = blue;
-      isNeighbor[i] = false;
-      isdrawingNodes[i] = true;
       end = max(end, sqrt(pos_x[i] * pos_x[i] + pos_y[i] * pos_y[i] + pos_z[i] * pos_z[i]));
     }
     angle = 45;
@@ -764,17 +780,14 @@ void GraphicPanel::ResetLayout() {
   mouse_pos_x = 0;
   mouse_pos_y = 0;
   
-  nodethreshold_b = -1;
-  edgethreshold_b = -1;
-  
-  nodethreshold_t = 100000000000;
-  edgethreshold_t = 100000000000;
-  
   float end = 0;
   
   int N = _graph->getN();
   int M = _graph->getM();
-  
+  bool* isdrawingNodes = _graph->getIsDrawingNodes();
+  bool* isdrawingEdges = _graph->getIsDrawingEdges();
+  bool* isNeighbor = _graph->getIsNeighbor();
+  bool* edgeAttribute = _graph->getEdgeAttribute();
   
   if (LayoutMode == 3) {
     _graph->resetLayout3D();
@@ -838,6 +851,7 @@ void GraphicPanel::Render(float x, float y, float z) {
   int N = _graph->getN();
   float nodevalue_max = _graph->getMaxNodeValue();
   float *nodevalues = _graph->getNodeValues();
+  bool* isdrawingNodes = _graph->getIsDrawingNodes();
   wxGLCanvas::SetCurrent(*m_context);
   wxPaintDC(this);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -961,9 +975,12 @@ void GraphicPanel::ChangeLayoutMode(int mode) {
 void GraphicPanel::ResetIsDrawingNodes() {
   float nodevalue_min = _graph->getMinNodeValue();
   float nodevalue_max = _graph->getMaxNodeValue();
+  bool* isdrawingNodes = _graph->getIsDrawingNodes();
   int N = _graph->getN();
-  nodethreshold_b = nodevalue_min;
-  nodethreshold_t = nodevalue_max;
+
+  //TODO: コメントアウトしてるので、実装すること
+  //nodethreshold_b = nodevalue_min;
+  //nodethreshold_t = nodevalue_max;
   for (int i = 0; i < N; i++) {
     isdrawingNodes[i] = true;
   }
@@ -973,113 +990,13 @@ void GraphicPanel::ResetIsDrawingEdges() {
   int M = _graph->getM();
   float edgevalue_min = _graph->getMinEdgeValue();
   float edgevalue_max = _graph->getMaxEdgeValue();
-  edgethreshold_b = edgevalue_min;
-  edgethreshold_t = edgevalue_max;
+  bool* isdrawingEdges = _graph->getIsDrawingEdges();
+  //TODO: コメントアウトしてるので、実装すること
+//  edgethreshold_b = edgevalue_min;
+//  edgethreshold_t = edgevalue_max;
   for (int i = 0; i < M; i++) {
     isdrawingEdges[i] = true;
   }
-}
-
-float GraphicPanel::UpdateNodeThreshold_b(float t, int attrID) {
-  int N = _graph->getN();
-  int M = _graph->getM();
-  float nodevalue_min = _graph->getMinNodeValue();
-  float nodevalue_max = _graph->getMaxNodeValue();
-  float edgevalue_min = _graph->getMinEdgeValue();
-  float edgevalue_max = _graph->getMaxEdgeValue();
-  float *nodevalues = _graph->getNodeValues();
-  float *edgevalues = _graph->getEdgeValues();
-  const std::vector< std::pair<int, int> >& edges = _graph->getEdges();
-  const std::vector<int>*  edgelist = _graph->getEdgeList();
-  auto neighbor = _graph->getNeighbor();
-  
-  nodethreshold_b = (1.0 - t * t)*(nodevalue_min) + (t * t)*(nodevalue_max);
-  for (int i = 0; i < N; i++) {
-    isdrawingNodes[i] = ((nodevalues[i] >= nodethreshold_b) && (nodevalues[i] <= nodethreshold_t));
-  }
-  for (int i = 0; i < N; i++) {
-    if (isdrawingNodes[i]) {
-      bool f = false;
-      for (int j = 0; j < neighbor[i].size(); j++) {
-        f |= isdrawingNodes[neighbor[i][j]];
-        if (f) break;
-      }
-      if (!f) isdrawingNodes[i] = false;
-    }
-  }
-  Refresh();
-  return nodethreshold_b;
-}
-
-float GraphicPanel::UpdateNodeThreshold_t(float t, int attrID) {
-  int N = _graph->getN();
-  int M = _graph->getM();
-  float nodevalue_min = _graph->getMinNodeValue();
-  float nodevalue_max = _graph->getMaxNodeValue();
-  float edgevalue_min = _graph->getMinEdgeValue();
-  float edgevalue_max = _graph->getMaxEdgeValue();
-  float *nodevalues = _graph->getNodeValues();
-  float *edgevalues = _graph->getEdgeValues();
-  const std::vector< std::pair<int, int> >& edges = _graph->getEdges();
-  const std::vector<int>*  edgelist = _graph->getEdgeList();
-  auto neighbor = _graph->getNeighbor();
-  
-  nodethreshold_t = (1.0 - t * t)*(nodevalue_min) + (t * t)*(nodevalue_max);
-  for (int i = 0; i < N; i++) {
-    isdrawingNodes[i] = ((nodevalues[i] >= nodethreshold_b) && (nodevalues[i] <= nodethreshold_t));
-  }
-  for (int i = 0; i < N; i++) {
-    if (isdrawingNodes[i]) {
-      bool f = false;
-      for (size_t j = 0; j < neighbor[i].size(); j++) {
-        f |= isdrawingNodes[neighbor[i][j]];
-        if (f) break;
-      }
-      if (!f) isdrawingNodes[i] = false;
-    }
-  }
-  Refresh();
-  return nodethreshold_t;
-}
-
-void GraphicPanel::UpdateEdgeThreshold_b(float t, int attrID) {
-  int N = _graph->getN();
-  int M = _graph->getM();
-  float nodevalue_min = _graph->getMinNodeValue();
-  float nodevalue_max = _graph->getMaxNodeValue();
-  float edgevalue_min = _graph->getMinEdgeValue();
-  float edgevalue_max = _graph->getMaxEdgeValue();
-  float *nodevalues = _graph->getNodeValues();
-  float *edgevalues = _graph->getEdgeValues();
-  const std::vector< std::pair<int, int> >& edges = _graph->getEdges();
-  const std::vector<int>*  edgelist = _graph->getEdgeList();
-  auto neighbor = _graph->getNeighbor();
-  
-  edgethreshold_b = (1 - t * t)*(edgevalue_min) + t * t * (edgevalue_max);
-  for (int i = 0; i < M; i++) {
-    isdrawingEdges[i] = ((edgevalues[i] >= edgethreshold_b) && (edgevalues[i] <= edgethreshold_t));
-  }
-  Refresh();
-}
-
-void GraphicPanel::UpdateEdgeThreshold_t(float t, int attrID) {
-  int N = _graph->getN();
-  int M = _graph->getM();
-  float nodevalue_min = _graph->getMinNodeValue();
-  float nodevalue_max = _graph->getMaxNodeValue();
-  float edgevalue_min = _graph->getMinEdgeValue();
-  float edgevalue_max = _graph->getMaxEdgeValue();
-  float *nodevalues = _graph->getNodeValues();
-  float *edgevalues = _graph->getEdgeValues();
-  const std::vector< std::pair<int, int> >& edges = _graph->getEdges();
-  const std::vector<int>*  edgelist = _graph->getEdgeList();
-  auto neighbor = _graph->getNeighbor();
-  
-  edgethreshold_t = (1 - t * t)*(edgevalue_min) + t * t * (edgevalue_max);
-  for (int i = 0; i < M; i++) {
-    isdrawingEdges[i] = ((edgevalues[i] >= edgethreshold_b) && (edgevalues[i] <= edgethreshold_t));
-  }
-  Refresh();
 }
 
 void GraphicPanel::ScaleLayout(float f) {
@@ -1088,17 +1005,6 @@ void GraphicPanel::ScaleLayout(float f) {
     relayout3D();
   } else if (LayoutMode == 2) {
     _graph->UpdateScale2D(f);
-    relayout2D();
-  }
-  Refresh();
-}
-
-void GraphicPanel::ModifyDelta(float f) {
-  if (LayoutMode == 3) {
-    _graph->UpdateProjection3D(f);
-    relayout3D();
-  } else if (LayoutMode == 2) {
-    _graph->UpdateProjection2D(f);
     relayout2D();
   }
   Refresh();
@@ -1175,14 +1081,6 @@ void GraphicPanel::SavePixelData() {
   
   png_destroy_write_struct(&pp, &ip);
   fclose(fp);
-}
-
-float getDepth(int x, int y) {
-  float z;
-  GLint viewport[4];
-  glGetIntegerv(GL_VIEWPORT, viewport);
-  glReadPixels(x, viewport[3] - y, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &z);
-  return z;
 }
 
 void GraphicPanel::CalculateWorldCo(int x, int y, float depth, double &wx, double &wy, double &wz) {

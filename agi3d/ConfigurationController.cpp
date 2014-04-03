@@ -20,9 +20,12 @@
 using namespace std;
 using namespace agi3d;
 
-ConfigurationController::ConfigurationController(const std::shared_ptr<Configuration>& configuration, const std::shared_ptr<Graph>& graph) {
-  _graph = graph;
+//TODO: Use Builder or Factory
+ConfigurationController::ConfigurationController(const std::shared_ptr<Configuration>& configuration, const std::shared_ptr<UserDefault>& userDefault, const std::shared_ptr<Graph>& graph) {
   _configuration = configuration;
+  _userDefault = userDefault;
+  _graph = graph;
+  
   _controlPanel = AppDelegete::instance().getControlPanel();
   
   //@TODO
@@ -65,7 +68,11 @@ ConfigurationController::ConfigurationController(const std::shared_ptr<Configura
   this->_controlPanel->Bind(wxEVT_COMMAND_CHECKBOX_CLICKED, onToggleEdgeHandler, 200);
   
   auto onToggleNodeSizeHandler(bind(&ConfigurationController::OnToggleNodeSize, this, placeholders::_1 ));
-  this->_controlPanel->Bind(wxEVT_COMMAND_CHECKBOX_CLICKED, onToggleNodeSizeHandler, 201);  
+  this->_controlPanel->Bind(wxEVT_COMMAND_CHECKBOX_CLICKED, onToggleNodeSizeHandler, 201);
+  
+  auto handleListHandler(bind(&ConfigurationController::handleListEvent, this, placeholders::_1 ));
+  this->_controlPanel->Bind(wxEVT_LISTBOX, handleListHandler, 555);
+  
   
 }
 
@@ -94,10 +101,6 @@ void ConfigurationController::Init() {
   _controlPanel->edgeAttrsChoice->SetSelection(0);
   _configuration->edgeThresholdAttrID = 0;
   
-  _configuration->_node_slider_b_pos = 0;
-  _configuration->_node_slider_t_pos = 100;
-  _configuration->_edge_slider_b_pos = 0;
-  _configuration->_edge_slider_t_pos = 100;
   
   _controlPanel->target->SetLabel(wxString());
   _controlPanel->listbox->Clear();
@@ -169,12 +172,10 @@ void ConfigurationController::NortifyUpdateEdgeThickness(wxCommandEvent& event) 
 }
 
 void ConfigurationController::NortifyUpdateDelta(wxCommandEvent& event) {
-  //@TODO
-  //  float rate = (float) (DeltaSlider->GetValue()) / 100.0f;
-  //  auto dp = AppDelegete::instance().getGraphicPanel();
-  //  dp->ModifyDelta(rate);
+  float rate = (float) (_controlPanel->DeltaSlider->GetValue()) / 100.0f;
+  _graph->changeProjectionFactor(rate, _userDefault->layout());
+  
 }
-
 void ConfigurationController::NortifyUpdateScale(wxCommandEvent& event) {
   float rate = (float) (event.GetInt()) / 20.0f;
   auto dp = AppDelegete::instance().getGraphicPanel();
@@ -188,17 +189,29 @@ void ConfigurationController::NortifyUpdateDimension(wxCommandEvent& event) {
 }
 
 void ConfigurationController::UpdateNodeValueThreshold_b(wxCommandEvent& event) {
+  
+  auto node_slider_b_pos = _controlPanel->nodeThresholdSlider_b->GetValue();
+  
+  auto node_slider_t_pos = _controlPanel->nodeThresholdSlider_t->GetValue();
+  
+    if (node_slider_b_pos <= node_slider_t_pos) {
+      float z = (float) (node_slider_b_pos) / 100.0f;
+      float nodethreshold_b = _graph->calcNodeThreshold(z);
+      
+      
+//      dp->UpdateNodeThreshold_b(z, nodeThresholdAttrID);
+    } else {
+//      nodeThresholdSlider_b->SetValue(node_slider_t_pos - 1);
+  //    float nodethreshold_b = _nodethreshold_t * 0.99;
+    }
+ 
+
+  
+  
   //@TODO
   //
   //  auto dp = AppDelegete::instance().getGraphicPanel();
-  //  node_slider_b_pos = nodeThresholdSlider_b->GetValue();
-  //  if (node_slider_b_pos <= node_slider_t_pos) {
-  //    float z = (float) (node_slider_b_pos) / 100.0f;
-  //    _nodethreshold_b = dp->UpdateNodeThreshold_b(z, nodeThresholdAttrID);
-  //  } else {
-  //    nodeThresholdSlider_b->SetValue(node_slider_t_pos - 1);
-  //    _nodethreshold_b = _nodethreshold_t * 0.99;
-  //  }
+  //
 }
 
 void ConfigurationController::UpdateNodeValueThreshold_t(wxCommandEvent& event) {

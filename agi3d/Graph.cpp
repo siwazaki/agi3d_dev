@@ -12,11 +12,12 @@
 #include <string>
 #include <sstream>
 #include <fstream>
+#include <sys/time.h>
+#include <exception>
 #include <boost/algorithm/string.hpp>
 #include <boost/numeric/ublas/matrix.hpp>
 #include <boost/numeric/ublas/vector.hpp>
 #include <boost/numeric/ublas/io.hpp>
-#include <sys/time.h>
 #include <Accelerate/Accelerate.h>
 
 #include "constraintsolver2d.h"
@@ -37,9 +38,130 @@ Graph::~Graph()
   
 }
 
+//FIXME:ファイルを開く度にモデルを使いまわすのを止めたい
+//      ファイルを開いたら、古いモデルはdestroyして、新しいモデルをnewする
+void Graph::reset()
+{
+  if(isLoaded()) {
+    delete[] isNeighbor;
+    delete[] isdrawingNodes;
+    delete[] edgeAttribute;
+    delete[] isdrawingEdges;
+  }
+  
+  isNeighbor = new bool[N];
+  isdrawingNodes = new bool[N];
+  
+  edgeAttribute = new bool[M];
+  isdrawingEdges = new bool[M];
+  
+  for (int i = 0; i < N; i++) {
+    isNeighbor[i] = false;
+    isdrawingNodes[i] = true;
+  }
+  
+  for (int i = 0; i < M; i++) {
+    edgeAttribute[i] = true;
+    isdrawingEdges[i] = true;
+  }
+  
+}
+
+
+
+void Graph::changeProjectionFactor(float f, E_Layout layout) {
+  if(!this->isLoaded()) { return; }
+  switch (layout) {
+    case E_Layout::D2:
+      this->UpdateProjection2D(f);
+      this->notify(E_ObserveType::NeedReLayout);
+      break;
+    case E_Layout::D3:
+      this->UpdateProjection3D(f);
+      this->notify(E_ObserveType::NeedReLayout);
+      break;
+      
+    default:
+      throw invalid_argument("unkown layout type found.");
+  }
+}
+
+void Graph::changeNodeThreshold_b(float t, int attrID) {
+  //
+  //
+  //  nodethreshold_b = (1.0 - t * t)*(nodevalue_min) + (t * t)*(nodevalue_max);
+  //  for (int i = 0; i < N; i++) {
+  //    isdrawingNodes[i] = ((nodevalues[i] >= nodethreshold_b) && (nodevalues[i] <= nodethreshold_t));
+  //  }
+  //  for (int i = 0; i < N; i++) {
+  //    if (isdrawingNodes[i]) {
+  //      bool f = false;
+  //      for (int j = 0; j < neighbor[i].size(); j++) {
+  //        f |= isdrawingNodes[neighbor[i][j]];
+  //        if (f) break;
+  //      }
+  //      if (!f) isdrawingNodes[i] = false;
+  //    }
+  //  }
+  //  Refresh();
+  //  return nodethreshold_b;
+}
+//
+//float Graph::changeNodeThreshold_t(float t, int attrID) {
+//
+//
+//  nodethreshold_t = (1.0 - t * t)*(nodevalue_min) + (t * t)*(nodevalue_max);
+//  for (int i = 0; i < N; i++) {
+//    isdrawingNodes[i] = ((nodevalues[i] >= nodethreshold_b) && (nodevalues[i] <= nodethreshold_t));
+//  }
+//  for (int i = 0; i < N; i++) {
+//    if (isdrawingNodes[i]) {
+//      bool f = false;
+//      for (size_t j = 0; j < neighbor[i].size(); j++) {
+//        f |= isdrawingNodes[neighbor[i][j]];
+//        if (f) break;
+//      }
+//      if (!f) isdrawingNodes[i] = false;
+//    }
+//  }
+//  Refresh();
+//  return nodethreshold_t;
+//}
+//
+//void Graph::changeEdgeThreshold_b(float t, int attrID) {
+//  int N = _graph->getN();
+//  int M = _graph->getM();
+//  float nodevalue_min = _graph->getMinNodeValue();
+//  float nodevalue_max = _graph->getMaxNodeValue();
+//  float edgevalue_min = _graph->getMinEdgeValue();
+//  float edgevalue_max = _graph->getMaxEdgeValue();
+//  float *nodevalues = _graph->getNodeValues();
+//  float *edgevalues = _graph->getEdgeValues();
+//  const std::vector< std::pair<int, int> >& edges = _graph->getEdges();
+//  const std::vector<int>*  edgelist = _graph->getEdgeList();
+//  auto neighbor = _graph->getNeighbor();
+//
+//  edgethreshold_b = (1 - t * t)*(edgevalue_min) + t * t * (edgevalue_max);
+//  for (int i = 0; i < M; i++) {
+//    isdrawingEdges[i] = ((edgevalues[i] >= edgethreshold_b) && (edgevalues[i] <= edgethreshold_t));
+//  }
+//  Refresh();
+//}
+//
+//void Graph::changeEdgeThreshold_t(float t, int attrID) {
+//
+//
+//  edgethreshold_t = (1 - t * t)*(edgevalue_min) + t * t * (edgevalue_max);
+//  for (int i = 0; i < M; i++) {
+//    isdrawingEdges[i] = ((edgevalues[i] >= edgethreshold_b) && (edgevalues[i] <= edgethreshold_t));
+//  }
+//  Refresh();
+//}
+
+
 bool Graph::loadData(const std::string &filePath)
 {
-
+  
   string fname = string(filePath);
   int path_i = fname.find_last_of("/");
   int ext_i = fname.find_last_of(".");
@@ -76,6 +198,7 @@ bool Graph::loadData(const std::string &filePath)
       return false;
     }
   }
+  _isLoaded = true;
   return true;
 }
 
@@ -170,9 +293,11 @@ void Graph::resetLayout2D() {
 }
 
 void Graph::calcmdsLayout() {
-  delete[] lambdas;
-  delete[] P_norms;
-  delete[] P;
+  if(this->isLoaded()) {
+    delete[] lambdas;
+    delete[] P_norms;
+    delete[] P;
+  }
   
   float * D2 = new float[N * N];
   for (int i = 0; i < N; i++) {
@@ -422,7 +547,9 @@ void Graph::calc3DLayout() {
     }
   }
   
-  delete[] Layout3D;
+  if(this->isLoaded()) {
+    delete[] Layout3D;
+  }
   Layout3D = new float[N * 3];
   cblas_sgemm(CblasColMajor, CblasNoTrans, CblasNoTrans,
               N, 3, dim, 1.0, P, N, E_3D, dim, 0.0, Layout3D, N);
@@ -466,7 +593,9 @@ void Graph::calc2DLayout() {
     }
   }
   
-  delete[] Layout2D;
+  if(this->isLoaded()) {
+    delete[] Layout2D;
+  }
   Layout2D = new float[N * 2];
   cblas_sgemm(CblasColMajor, CblasNoTrans, CblasNoTrans,
               N, 2, dim, scale, P, N, E_2D, dim, 0.0, Layout2D, N);
@@ -650,7 +779,10 @@ void Graph::loadLabelData(const std::string& graphName) {
 //Set Default Node & Edge value
 
 void Graph::setNodeEdgeValue() {
-  delete[] nodevalues;
+  if(isLoaded()) {
+    delete[] nodevalues;
+    delete[] edgevalues;
+  }
   nodevalues = new float[N];
   for (int i = 0; i < N; i++) {
     nodevalues[i] = 1.0f;
@@ -658,7 +790,7 @@ void Graph::setNodeEdgeValue() {
   nodevalue_max = 5;
   nodevalue_min = 0;
   
-  delete[] edgevalues;
+
   edgevalues = new float[M];
   for (int i = 0; i < M; i++) {
     edgevalues[i] = 1.0f;
@@ -742,22 +874,25 @@ void Graph::loadMatrixData_t(const char * data, const std::string& graphName) {
 }
 
 void Graph::loadMatrixData_b(const char * data, const std::string& graphName) {
-  //Free Memory
-  {
-    if (memory_status) {
-      for (int i = 0; i < N; i++) {
-        delete[] D[i];
+  if(this->isLoaded()) {
+    //Free Memory
+    {
+      if (memory_status) {
+        for (int i = 0; i < N; i++) {
+          delete[] D[i];
+        }
+        delete[] D;
+        memory_status = false;
       }
-      delete[] D;
-      memory_status = false;
+      for (int i = 0; i < N; i++) {
+        vector<int>().swap(neighbor[i]);
+        vector<int>().swap(edgelist[i]);
+      }
+      vector< pair<int, int> >().swap(edges);
+      vector<string>().swap(labels);
     }
-    for (int i = 0; i < N; i++) {
-      vector<int>().swap(neighbor[i]);
-      vector<int>().swap(edgelist[i]);
-    }
-    vector< pair<int, int> >().swap(edges);
-    vector<string>().swap(labels);
   }
+  
   
   {
     ifstream ifs(data, ios::out | ios::binary);
@@ -1007,8 +1142,8 @@ void Graph::loadLayoutData_b(const char * data, const std::string& graphName) {
 }
 
 int Graph::getNew3DLayout(int id,
-                   float pre_x, float pre_y, float pre_z,
-                   float new_x, float new_y, float new_z) {
+                          float pre_x, float pre_y, float pre_z,
+                          float new_x, float new_y, float new_z) {
   
   float _pre[3];
   float _new[3];
@@ -1114,8 +1249,8 @@ int Graph::getNew3DLayout(int id,
 }
 
 int Graph::getNew2DLayout(int id,
-                   float pre_x, float pre_y,
-                   float new_x, float new_y) {
+                          float pre_x, float pre_y,
+                          float new_x, float new_y) {
   
   float _pre[2];
   float _new[2];

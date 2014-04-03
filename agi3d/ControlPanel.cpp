@@ -12,9 +12,6 @@ using namespace agi3d;
 
 //wx Macros
 
-BEGIN_EVENT_TABLE(ControlPanel, wxPanel)
-//EVT_LISTBOX(555, ControlPanel::handleListEvent)
-END_EVENT_TABLE()
 
 using namespace agi3d;
 

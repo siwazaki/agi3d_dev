@@ -23,6 +23,11 @@ namespace agi3d {
     XY = 3,
   } E_Rotation;
   
+  typedef enum {
+    RefreshOnly = 0,
+    NeedReLayout = 2,
+    
+  } E_ObserveType;
 }
 
 #endif /* defined(__agi3d__Enums__) */

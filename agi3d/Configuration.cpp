@@ -10,6 +10,16 @@
 
 using namespace agi3d;
 
+Configuration::Configuration() : _nodethreshold_t(10000.0f), _nodethreshold_b(-1.0f), _edgethreshold_t(10000.0f), _edgethreshold_b(-1.0f)
+{
+  
+}
+
+Configuration::~Configuration()
+{
+  
+}
+
 const std::string& Configuration::graphName()
 {
   return _graphName;

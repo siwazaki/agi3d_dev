@@ -14,17 +14,35 @@
 #include <vector>
 #include <boost/numeric/ublas/vector.hpp>
 
+#include "Enums.h"
+#include "Observable.h"
+
 namespace agi3d
 {
   class GraphicController;
   typedef boost::numeric::ublas::vector<float> fvector;
-  class Graph
+  class Graph : public Observable
   {
     friend class GraphicController;
   public:
     Graph();
     virtual ~Graph();
     
+    //notify observers
+    void changeProjectionFactor(float f, E_Layout layout);
+    void changeNodeThreshold_b(float, int);
+    void changeNodeThreshold_t(float, int);
+    void changeEdgeThreshold_b(float, int);
+    void changeEdgeThreshold_t(float, int);
+    
+    //calcuation functions
+    float calcNodeThreshold(float t) const;
+    float calcEdgeThreshold(float t) const;
+
+    //others
+    bool isLoaded() const;
+    //FIXME:この関数は消すこと
+    void reset();
     bool loadData(const std::string& filePath);
     
     int getNew3DLayout(int, float, float, float, float, float, float);
@@ -60,6 +78,7 @@ namespace agi3d
     float posY3D(int i) const;
     float posZ3D(int i) const;
     
+    //getters
     int getN() const;
     int getM() const;
     
@@ -80,7 +99,13 @@ namespace agi3d
     
     const std::string& getName() const;
     
+    bool * getIsDrawingNodes() const;
+    bool * getIsDrawingEdges() const;
+    bool * getEdgeAttribute() const ;
+    bool * getIsNeighbor() const;
+    
   private:
+    bool _isLoaded;
     std::string _name;
     int N;
     int M;
@@ -94,6 +119,12 @@ namespace agi3d
     float * edgevalues;
     float nodevalue_max, nodevalue_min;
     float edgevalue_min, edgevalue_max;
+    
+    bool * isdrawingNodes;
+    bool * isdrawingEdges;
+    bool * edgeAttribute;
+    bool * isNeighbor;
+
     
     //Graph Layouts
     int maxDimension = 10000;
@@ -115,6 +146,11 @@ namespace agi3d
     int strToInt(const std::string &str);
     std::string IntToString(int num);
   };
+  
+  inline bool Graph::isLoaded() const
+  {
+    return _isLoaded;
+  }
   
   inline float Graph::posX2D(int i) const
   {
@@ -210,6 +246,35 @@ namespace agi3d
     return _name;
   }
   
+  inline float Graph::calcNodeThreshold(float t) const
+  {
+    return (1.0 - t * t)*(nodevalue_min) + (t * t)*(nodevalue_max);
+  }
+
+  inline float Graph::calcEdgeThreshold(float t) const
+  {
+    return (1 - t * t)*(edgevalue_min) + t * t * (edgevalue_max);
+  }
+  
+  inline bool* Graph::getIsDrawingNodes() const
+  {
+    return isdrawingNodes;
+  }
+  
+  inline bool* Graph::getIsDrawingEdges() const
+  {
+    return isdrawingEdges;
+  }
+  
+  inline bool* Graph::getEdgeAttribute() const
+  {
+    return edgeAttribute;
+  }
+  
+  inline bool* Graph::getIsNeighbor() const
+  {
+    return isNeighbor;
+  }
   
 }
 
