@@ -24,13 +24,18 @@ namespace agi3d {
   typedef GLuint Face[3];
   
   class GraphicPanel : public wxGLCanvas, public Observer {
+    
     wxGLContext* m_context;
     
-  public:
+  public:    
     GraphicPanel(wxWindow* parent, int* args);
     virtual ~GraphicPanel();
     
-    void init(const std::shared_ptr<Graph>& graph, const std::shared_ptr<UserDefault>& userDefault, const std::shared_ptr<Configuration>& configuration);
+    virtual void update(const Observable& observable, E_ObserveType observeType);
+    
+    void init(const std::shared_ptr<Graph>& graph,
+              const std::shared_ptr<UserDefault>& userDefault,
+              const std::shared_ptr<Configuration>& configuration);
     
     void moveTo(int x, int y);
     void refresh();
@@ -42,7 +47,6 @@ namespace agi3d {
     void moveEye(int delta);
     void renderScene();
     void setupPanel();
-    virtual void update(const Observable& observable, E_ObserveType observeType);
     
     //TODO:下のAPIは整理が必要
     //モデルの内容を書き換えて、Refresh呼ぶだけなので、
@@ -80,7 +84,6 @@ namespace agi3d {
     std::shared_ptr<Graph> _graph;
     std::shared_ptr<Configuration> _configuration;
     std::shared_ptr<UserDefault> _userDefault;
-
            
     //Layout Mode
     int LayoutMode = 3;

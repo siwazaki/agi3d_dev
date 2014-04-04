@@ -3,6 +3,7 @@
 
 #include <wx/wx.h>
 #include "wx/slider.h"
+
 /**
   Hogeクラスの詳細説明です
     - リスト表記です1
@@ -16,6 +17,7 @@
     @endcode  
  */
 class AppearanceWindow : public wxFrame {
+  
 public:
   AppearanceWindow(wxWindow * parent, const wxString& title);
 
@@ -41,6 +43,7 @@ public:
 
   void OnToggleShowEdge(wxCommandEvent& event);
   void OnToggleNodeSize(wxCommandEvent& event);
+  
 };
 
 #endif

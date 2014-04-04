@@ -72,3 +72,24 @@ ControlPanel::ControlPanel(wxWindow* parent)
   listbox = new wxListBox(myPanel, 555, wxPoint(5, 270), wxSize(260, 460));
  
 }
+
+ControlPanel::~ControlPanel() {
+  
+}
+
+void ControlPanel::update(const agi3d::Observable &observable, E_ObserveType observeType)
+{
+  switch (observeType) {
+    default:
+      break;
+  }
+}
+
+void ControlPanel::init(const std::shared_ptr<Graph>& graph,
+                        const std::shared_ptr<UserDefault>& userDefault,
+                        const std::shared_ptr<Configuration>& configuration) {
+  _graph = graph;
+  _userDefault = userDefault;
+  _configuration = configuration;
+  
+}

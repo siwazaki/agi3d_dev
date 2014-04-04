@@ -26,6 +26,7 @@ namespace agi3d {
     MenuBar();
     virtual ~MenuBar(){}
     void renderModel(const std::shared_ptr<UserDefault>& userDefault);
+    
   private:
     wxMenuItem *quit;
     wxMenu *file;

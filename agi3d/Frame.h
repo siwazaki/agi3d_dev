@@ -15,6 +15,7 @@ namespace agi3d {
     
   private:
     void OnQuit(wxCommandEvent& event);
+    
   };
   
 }

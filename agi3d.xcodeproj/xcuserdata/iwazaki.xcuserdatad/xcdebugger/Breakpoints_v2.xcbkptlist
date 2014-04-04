@@ -246,9 +246,7 @@
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "209"
-            endingLineNumber = "209"
-            landmarkName = "ConfigurationController::updateEdgeValueThreshold(wxCommandEvent&amp; event)"
-            landmarkType = "5">
+            endingLineNumber = "209">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy

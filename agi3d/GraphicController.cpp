@@ -56,7 +56,7 @@ void GraphicController::onIdle(wxEvent&) {
 }
 
 void GraphicController::mouseLeftDown(wxMouseEvent& event) {
-  int id = _graphicPanel->pick(event.GetX(), event.GetY());
+  int id = _graphicPanel->pick(event.GetX(), event.GetY());  
   auto sbp = AppDelegete::instance().getControlPanel();
   //@TODO
   //sbp->setTarget(id);

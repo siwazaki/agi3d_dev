@@ -15,10 +15,12 @@ namespace agi3d {
   class Observable;
   
   class Observer {
+    
   public:
     Observer(){}
     virtual ~Observer(){};
     virtual void update(const Observable& observable, E_ObserveType observeType) = 0;
+    
   };
   
 }

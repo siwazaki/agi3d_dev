@@ -17,6 +17,7 @@ namespace agi3d {
   
   class GraphicController
   {
+    
   public:
     GraphicController(const std::shared_ptr<Graph>& graph);
     virtual ~GraphicController();
@@ -34,7 +35,8 @@ namespace agi3d {
     
     void resized(wxSizeEvent& evt);
     void renderScene(wxPaintEvent& evt);
-    void onIdle(wxEvent& evt);    
+    void onIdle(wxEvent& evt);
+    
   };
   
 }

@@ -28,13 +28,11 @@ namespace agi3d {
     
   };
   
-  inline void Observable::addObserver(Observer* observer)
-  {
+  inline void Observable::addObserver(Observer* observer) {
     _observers.push_back(observer);
   }
   
-  inline void Observable::notify(E_ObserveType observeType)
-  {
+  inline void Observable::notify(E_ObserveType observeType) {
     typedef std::vector<Observer*>::iterator vi;
     for(vi itr = _observers.begin(), end = _observers.end(); itr != end; ++itr){
       (*itr)->update(*this, observeType);

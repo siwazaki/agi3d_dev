@@ -21,7 +21,9 @@ using namespace std;
 using namespace agi3d;
 
 //TODO: Use Builder or Factory
-ConfigurationController::ConfigurationController(const std::shared_ptr<Configuration>& configuration, const std::shared_ptr<UserDefault>& userDefault, const std::shared_ptr<Graph>& graph) {
+ConfigurationController::ConfigurationController(const std::shared_ptr<Configuration>& configuration
+                                                 , const std::shared_ptr<UserDefault>& userDefault
+                                                 , const std::shared_ptr<Graph>& graph) {
   _configuration = configuration;
   _userDefault = userDefault;
   _graph = graph;
@@ -69,7 +71,6 @@ ConfigurationController::ConfigurationController(const std::shared_ptr<Configura
   auto handleListHandler(bind(&ConfigurationController::handleListEvent, this, placeholders::_1 ));
   this->_controlPanel->Bind(wxEVT_LISTBOX, handleListHandler, 555);
   
-  
 }
 
 ConfigurationController::~ConfigurationController() {
@@ -96,7 +97,6 @@ void ConfigurationController::init() {
   _configuration->nodeThresholdAttrID = 0;
   _controlPanel->edgeAttrsChoice->SetSelection(0);
   _configuration->edgeThresholdAttrID = 0;
-  
   
   _controlPanel->target->SetLabel(wxString());
   _controlPanel->listbox->Clear();
@@ -149,36 +149,40 @@ void ConfigurationController::setTarget(int id) {
 void ConfigurationController::handleListEvent(wxCommandEvent& event) {
   int m = event.GetInt();
   auto dp = AppDelegete::instance().getGraphicPanel();
-  //@TODO
+  //TODO:
   //dp->changeColor(labelMap[m]);
 }
 
 void ConfigurationController::notifyUpdateNodeSize(wxCommandEvent& event) {
-  std::cout << "notifyUpdateNodeSize" << std::endl;
-  
+  //TODO:
   float rate = (float) (event.GetInt()) / 100.0f;
   auto dp = AppDelegete::instance().getGraphicPanel();
   dp->UpdateSize(rate);
 }
 
 void ConfigurationController::notifyUpdateEdgeThickness(wxCommandEvent& event) {
+  //TODO:
   float rate = (float) (event.GetInt()) / 50.0f;
   auto dp = AppDelegete::instance().getGraphicPanel();
   dp->UpdateThickness(rate);
 }
 
 void ConfigurationController::notifyUpdateDelta(wxCommandEvent&) {
+  //TODO:
   float rate = (float) (_controlPanel->DeltaSlider->GetValue()) / 100.0f;
   _graph->changeProjectionFactor(rate, _userDefault->layout());
   
 }
+
 void ConfigurationController::notifyUpdateScale(wxCommandEvent& event) {
+  //TODO:
   float rate = (float) (event.GetInt()) / 20.0f;
   auto dp = AppDelegete::instance().getGraphicPanel();
   dp->ScaleLayout(rate);
 }
 
 void ConfigurationController::notifyUpdateDimension(wxCommandEvent& event) {
+  //TODO:
   //  float rate = (float) (event.GetInt()) / 1000.0f;
   //  auto dp = AppDelegete::instance().getGraphicPanel();
   //  dp->ChangeDimension(rate);
@@ -205,8 +209,7 @@ void ConfigurationController::updateNodeValueThreshold(wxCommandEvent& event) {
     }
 }
 
-void ConfigurationController::updateEdgeValueThreshold(wxCommandEvent& event) {
-  //@TODO
+void ConfigurationController::updateEdgeValueThreshold(wxCommandEvent&) {
   auto edge_slider_b_pos = _controlPanel->edgeThresholdSlider_b->GetValue();
   auto edge_slider_t_pos = _controlPanel->edgeThresholdSlider_t->GetValue();
     if (edge_slider_b_pos < edge_slider_t_pos) {
@@ -223,18 +226,18 @@ void ConfigurationController::updateEdgeValueThreshold(wxCommandEvent& event) {
     }
 }
 
-void ConfigurationController::onToggleEdge(wxCommandEvent& event) {
+void ConfigurationController::onToggleEdge(wxCommandEvent&) {
   auto dp = AppDelegete::instance().getGraphicPanel();
   dp->DrawEdge();
 }
 
-void ConfigurationController::onToggleNodeSize(wxCommandEvent& event) {
+void ConfigurationController::onToggleNodeSize(wxCommandEvent&) {
   auto dp = AppDelegete::instance().getGraphicPanel();
   dp->NodeModeChange();
 }
 
-void ConfigurationController::selectNodeAttr(wxCommandEvent& event) {
-  //  @TODO
+void ConfigurationController::selectNodeAttr(wxCommandEvent&) {
+  //TODO:
   //  auto dp = AppDelegete::instance().getGraphicPanel();
   //  wxString label = nodeAttrsChoice->GetStringSelection();
   //  int n = nodeAttrsChoice->GetSelection();
@@ -251,8 +254,8 @@ void ConfigurationController::selectNodeAttr(wxCommandEvent& event) {
   //  dp->ResetIsDrawingNodes();
 }
 
-void ConfigurationController::selectEdgeAttr(wxCommandEvent& event) {
-  //  @TODO
+void ConfigurationController::selectEdgeAttr(wxCommandEvent&) {
+  //TODO:
   //  auto dp = AppDelegete::instance().getGraphicPanel();
   //  wxString label = edgeAttrsChoice->GetStringSelection();
   //  int n = edgeAttrsChoice->GetSelection();

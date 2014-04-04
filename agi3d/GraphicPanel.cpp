@@ -78,8 +78,9 @@ GraphicPanel::~GraphicPanel() {
   delete m_context;
 }
 
-void GraphicPanel::init(const std::shared_ptr<Graph>& graph, const std::shared_ptr<UserDefault>& userDefault, const std::shared_ptr<Configuration>& configuration)
-{
+void GraphicPanel::init(const std::shared_ptr<Graph>& graph,
+                        const std::shared_ptr<UserDefault>& userDefault,
+                        const std::shared_ptr<Configuration>& configuration) {
   _graph = graph;
   _userDefault = userDefault;
   _configuration = configuration;
@@ -96,8 +97,6 @@ void GraphicPanel::init(const std::shared_ptr<Graph>& graph, const std::shared_p
 
 void GraphicPanel::update(const agi3d::Observable &observable, E_ObserveType observeType)
 {
-  
-  
   switch (observeType) {
     case E_ObserveType::NeedReLayout:
     {
@@ -693,7 +692,6 @@ void GraphicPanel::relayout2D() {
   for (int i = 0; i < N; i++) {
     pos_x[i] = _graph->posX2D(i);
     pos_y[i] = _graph->posY2D(i);
-    
     pos_z[i] = 0;
   }
 }

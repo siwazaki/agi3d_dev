@@ -20,7 +20,8 @@
 
 namespace agi3d {
   
-  class AppDelegete;  
+  class AppDelegete;
+  
   class ConfigurationController
   {
     friend class AppDelegete;

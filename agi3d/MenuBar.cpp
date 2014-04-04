@@ -16,8 +16,7 @@
 
 using namespace agi3d;
 
-MenuBar::MenuBar()
-{
+MenuBar::MenuBar() {
   file = new wxMenu();
   file->Append(wxID_OPEN, wxT("Open"));
   file->AppendSeparator();
@@ -53,8 +52,7 @@ MenuBar::MenuBar()
   this->Append(edit, wxT("&Edit"));
 }
 
-void MenuBar::renderModel(const std::shared_ptr<UserDefault> &userDefault)
-{
+void MenuBar::renderModel(const std::shared_ptr<UserDefault> &userDefault) {
   switch(userDefault->rotation()) {
     case E_Rotation::X: {
       rotationMenu->SetLabel(13, wxT(" X Rotation  ✓"));
