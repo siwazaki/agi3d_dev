@@ -12,6 +12,7 @@
 #include <memory>
 #include "GraphicPanel.h"
 #include "Graph.h"
+#include "Configuration.h"
 
 namespace agi3d {
   
@@ -19,12 +20,14 @@ namespace agi3d {
   {
     
   public:
-    GraphicController(const std::shared_ptr<Graph>& graph);
+    GraphicController(const std::shared_ptr<Graph>& graph,
+                      const std::shared_ptr<Configuration>& configuration);
     virtual ~GraphicController();
         
   private:
     GraphicPanel *_graphicPanel;
     std::shared_ptr<Graph> _graph;
+    std::shared_ptr<Configuration> _configuration;
 
     void mouseMoved(wxMouseEvent& event);
     void mouseLeftDown(wxMouseEvent& event);

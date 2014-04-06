@@ -59,6 +59,8 @@ namespace agi3d {
     wxStaticText * nodeSizeLabel;
     wxStaticText * edgeSizeLabel;
     
+    void refresh();
+    
   };
   
 }

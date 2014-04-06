@@ -51,7 +51,7 @@ namespace agi3d
     bool * getIsDrawingEdges() const;
     bool * getEdgeAttribute() const ;
     bool * getIsNeighbor() const;
-        
+    
     //notify observers
     void changeProjectionFactor(float f, E_Layout layout);
     void changeNodeThreshold(float b, float t);
@@ -60,7 +60,7 @@ namespace agi3d
     //calcuation functions
     float calcNodeThreshold(float t) const;
     float calcEdgeThreshold(float t) const;
-
+    
     //initialization
     bool isLoaded() const;
     //FIXME:この関数は消すこと
@@ -100,6 +100,9 @@ namespace agi3d
     float posY3D(int i) const;
     float posZ3D(int i) const;
     
+    const std::string& getNodeLabel(int id) const;
+    std::vector<int> getNeiborIds(int id, float nodethreshold_b, float nodethreshold_t) const;
+    
   private:
     //graph properties
     bool _isLoaded;
@@ -108,7 +111,7 @@ namespace agi3d
     int M;
     int ** D;
     std::vector<int> * neighbor;
-    std::vector< std::pair<int, int> > edges;        
+    std::vector< std::pair<int, int> > edges;
     std::vector<int> * edgelist;
     std::vector<std::string> labels;
     float * nodevalues;
@@ -248,7 +251,7 @@ namespace agi3d
   {
     return (1.0 - t * t)*(nodevalue_min) + (t * t)*(nodevalue_max);
   }
-
+  
   inline float Graph::calcEdgeThreshold(float t) const
   {
     return (1 - t * t)*(edgevalue_min) + t * t * (edgevalue_max);
@@ -272,6 +275,27 @@ namespace agi3d
   inline bool* Graph::getIsNeighbor() const
   {
     return isNeighbor;
+  }
+  
+  inline const std::string& Graph::getNodeLabel(int i) const
+  {
+    return labels[i];
+  }
+  
+  inline std::vector<int> Graph::getNeiborIds(int id, float nodethreshold_b, float nodethreshold_t) const
+  {
+    std::vector<int> res;
+    if(id == -1) {
+      return res;
+    } else {
+      for (size_t i = 0; i < neighbor[id].size(); i++) {
+        int _nei = neighbor[id][i];
+        if (nodevalues[_nei] >= nodethreshold_b && nodevalues[_nei] <= nodethreshold_t) {
+          res.push_back(_nei);
+        }
+      }
+      return res;
+    }
   }
   
 }

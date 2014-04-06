@@ -25,8 +25,7 @@ namespace agi3d {
   
   typedef enum {
     RefreshOnly = 0,
-    NeedReLayout = 2,
-    
+    NeedReLayout = 1,        
   } E_ObserveType;
 }
 

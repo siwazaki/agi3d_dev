@@ -68,21 +68,16 @@ ControlPanel::ControlPanel(wxWindow* parent)
   edgeThresholdSlider_b = new wxSlider(myPanel, 80, 0, 0, 100, wxPoint(10, 190), wxSize(247, -1));
   edgeThresholdSlider_t = new wxSlider(myPanel, 81, 100, 0, 100, wxPoint(10, 207), wxSize(247, -1));
   target = new wxListBox(myPanel, 554, wxPoint(5, 240), wxSize(260, 25));
-
-  listbox = new wxListBox(myPanel, 555, wxPoint(5, 270), wxSize(260, 460));
- 
+  listbox = new wxListBox(myPanel, 555, wxPoint(5, 270), wxSize(260, 460)); 
 }
 
 ControlPanel::~ControlPanel() {
   
 }
 
-void ControlPanel::update(const agi3d::Observable &observable, E_ObserveType observeType)
+void ControlPanel::update(const agi3d::Observable &, E_ObserveType)
 {
-  switch (observeType) {
-    default:
-      break;
-  }
+  this->refresh();
 }
 
 void ControlPanel::init(const std::shared_ptr<Graph>& graph,
@@ -91,5 +86,20 @@ void ControlPanel::init(const std::shared_ptr<Graph>& graph,
   _graph = graph;
   _userDefault = userDefault;
   _configuration = configuration;
+}
+
+void ControlPanel::refresh()
+{
+  target->Clear();
+  listbox->Clear();
+  target->Append(wxString(_configuration->getNodeLabel()));
   
+  const std::vector<std::string>& neiborLabels = _configuration->getNeiborLabels();
+  typedef std::vector<std::string>::const_iterator vi;
+  
+  for(vi iter = neiborLabels.begin(); iter != neiborLabels.end(); ++iter)
+  {
+    listbox->Append(wxString(*iter));
+  }
+  listbox->SetFirstItem(0);
 }

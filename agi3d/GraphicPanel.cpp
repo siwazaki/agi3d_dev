@@ -398,6 +398,7 @@ void GraphicPanel::moveEye(int delta) {
 }
 
 void GraphicPanel::renderScene() {
+  if(!LOAD_FLAG) return;
   int N = _graph->getN();
   int M = _graph->getM();
   float nodevalue_max = _graph->getMaxNodeValue();
@@ -700,13 +701,9 @@ void GraphicPanel::setupPanel() {
   _graph->reset();
   //Free Memory
   {
-    if(pos_x) {
+    if(LOAD_FLAG) {
       delete[] pos_x;
-    }
-    if(pos_y) {
       delete[] pos_y;
-    }
-    if(pos_z) {
       delete[] pos_z;
     }
   }

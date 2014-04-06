@@ -53,9 +53,7 @@ namespace agi3d {
     void onToggleEdge(wxCommandEvent& event);
     void onToggleNodeSize(wxCommandEvent& event);
     void selectNodeAttr(wxCommandEvent& event);
-    void selectEdgeAttr(wxCommandEvent& event);
-    
-    void setTarget(int id);
+    void selectEdgeAttr(wxCommandEvent& event);    
     
   };
 }

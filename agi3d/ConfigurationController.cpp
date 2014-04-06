@@ -123,29 +123,6 @@ void ConfigurationController::init() {
   //  _controlPanel->edgeSizeLabel->SetLabel(edgeSize);
 }
 
-void ConfigurationController::setTarget(int id) {
-  //@TODO
-  //  target->Clear();
-  //  listbox->Clear();
-  //  labelMap.clear();
-  //  if (id != -1) {
-  //    target->Append(wxString(labels[id]));
-  //    _id = id;
-  //    int key = 0;
-  //    for (int i = 0; i < neighbor[id].size(); i++) {
-  //      int _nei = neighbor[id][i];
-  //      if (nodevalues[_nei] >= _nodethreshold_b && nodevalues[_nei] <= _nodethreshold_t) {
-  //        listbox->Append(wxString(labels[_nei]));
-  //        labelMap.insert(map<int, int>::value_type(key, i));
-  //        key++;
-  //      }
-  //    }
-  //    listbox->SetFirstItem(0);
-  //  } else {
-  //    _id = id;
-  //  }
-}
-
 void ConfigurationController::handleListEvent(wxCommandEvent& event) {
   int m = event.GetInt();
   auto dp = AppDelegete::instance().getGraphicPanel();

@@ -7,8 +7,10 @@
 using namespace agi3d;
 using namespace std;
 
-GraphicController::GraphicController(const std::shared_ptr<Graph>& graph) {
+GraphicController::GraphicController(const std::shared_ptr<Graph>& graph,
+                                     const std::shared_ptr<Configuration>& configuration) {
   _graph = graph;
+  _configuration = configuration;
   _graphicPanel = AppDelegete::instance().getGraphicPanel();
   
   auto mouseMovedHandler(bind(&GraphicController::mouseMoved, this, placeholders::_1 ));
@@ -43,7 +45,7 @@ GraphicController::~GraphicController() {
   
 }
 
-void GraphicController::resized(wxSizeEvent& evt) {
+void GraphicController::resized(wxSizeEvent&) {
   _graphicPanel->resize();
 }
 
@@ -56,13 +58,24 @@ void GraphicController::onIdle(wxEvent&) {
 }
 
 void GraphicController::mouseLeftDown(wxMouseEvent& event) {
-  int id = _graphicPanel->pick(event.GetX(), event.GetY());  
-  auto sbp = AppDelegete::instance().getControlPanel();
-  //@TODO
-  //sbp->setTarget(id);
+  int id = _graphicPanel->pick(event.GetX(), event.GetY());
+  if(id != -1) {
+    
+    std::string label = _graph->getNodeLabel(id);
+    std::vector<int> neiborIds = _graph->getNeiborIds(id, _configuration->getNodeThreshHold_b(), _configuration->getNodeThreshHold_t());    
+    std::vector<std::string> neiborLabels;
+    
+    typedef std::vector<int>::iterator vi;
+    for(vi itr = neiborIds.begin(); itr != neiborIds.end(); ++itr)
+    {
+      const std::string& label = _graph->getNodeLabel(*itr);
+      neiborLabels.push_back(label);
+    }
+    _configuration->changeTarget(label, neiborLabels);
+  }
 }
 
-void GraphicController::mouseLeftReleased(wxMouseEvent& event) {
+void GraphicController::mouseLeftReleased(wxMouseEvent&) {
   _graphicPanel->releaseLeft();
 }
 
@@ -72,7 +85,7 @@ void GraphicController::mouseRightDown(wxMouseEvent& event) {
   _graphicPanel->downRight(x, y);
 }
 
-void GraphicController::mouseRightReleased(wxMouseEvent& event) {
+void GraphicController::mouseRightReleased(wxMouseEvent&) {
   _graphicPanel->releaseRight();
 }
 
@@ -83,7 +96,7 @@ void GraphicController::mouseScroll(wxMouseEvent& event) {
   }
 }
 
-void GraphicController::renderScene(wxPaintEvent& evt) {
+void GraphicController::renderScene(wxPaintEvent&) {
   if(_graph->isLoaded()) {
     _graphicPanel->renderScene();
   }

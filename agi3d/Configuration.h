@@ -34,22 +34,29 @@ namespace agi3d {
     int getNodeThreshHold_b() const;
     int getEdgeThreshHold_t() const;
     int getEdgeThreshHold_b() const;
+    const std::string& getNodeLabel() const;
+    const std::vector<std::string>& getNeiborLabels() const;
+    
+    void changeTarget(const std::string& label, const std::vector<std::string>& neiborLabels);
     
   private:
     std::string _graphName;
-    std::map<int, int> _labelMap;
-    float fps = 0.0f;
-    float tmp = 0.0f;    
-    int nodeThresholdAttrID = 0;
-    int edgeThresholdAttrID = 0;
-    int pickid = -1;
-    int _id = -1;
+    std::string _label;
+    std::vector<std::string> _neiborLabels;
     
     float _nodethreshold_t;
     float _nodethreshold_b;
     float _edgethreshold_t;
     float _edgethreshold_b;
-    
+
+    //TODO: 要らないフィールドの削除
+    std::map<int, int> _labelMap;
+    float fps = 0.0f;
+    float tmp = 0.0f;
+    int nodeThresholdAttrID = 0;
+    int edgeThresholdAttrID = 0;
+    int pickid = -1;
+    int _id;;
   };
   
   inline const std::string& Configuration::graphName() const
@@ -75,6 +82,16 @@ namespace agi3d {
   inline int Configuration::getEdgeThreshHold_b() const
   {
     return _edgethreshold_b;
+  }
+
+  inline const std::string& Configuration::getNodeLabel() const
+  {
+    return _label;
+  }
+  
+  inline const std::vector<std::string>& Configuration::getNeiborLabels() const
+  {
+    return _neiborLabels;
   }
 
 }

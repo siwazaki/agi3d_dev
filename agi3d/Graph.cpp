@@ -116,7 +116,6 @@ bool Graph::loadData(const std::string &filePath)　{
   string f_ext = fname.substr(ext_i + 1);
   string filename = fname.substr(path_i + 1);
   
-  
   if (f_ext == "txt") {
     if (filename.find("DisMat") != string::npos) {
       _name = fname.substr(path_i + 1, fname.size() - path_i - 11);
@@ -1288,5 +1287,3 @@ int Graph::getNew2DLayout(int id,
     return 0;
   }
 }
-
-

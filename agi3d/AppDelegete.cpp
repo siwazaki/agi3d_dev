@@ -59,11 +59,12 @@ void AppDelegete::initMVC()
                                                                   
   _configurationController = std::shared_ptr<ConfigurationController>(new ConfigurationController(_configuration, _userDefault, _graph));
                                                                   
-  _graphicController = std::shared_ptr<GraphicController>(new GraphicController(_graph));
+  _graphicController = std::shared_ptr<GraphicController>(new GraphicController(_graph, _configuration));
 
   
   //ビューにモデルをセット
   _graphicPanel->init(_graph, _userDefault, _configuration);
+  _controlPanel->init(_graph, _userDefault, _configuration);
   
   //モデルにオブザーバーをセット
   _graph->addObserver(_graphicPanel);
