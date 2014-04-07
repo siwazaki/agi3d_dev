@@ -29,17 +29,17 @@ namespace agi3d {
   public:
     UserDefault();
     virtual ~UserDefault();
-    E_Layout layout();
-    E_Rotation rotation();
-    int nodeSize();
-    int edgeThickness();
-    int scale();
-    int delta();
-    int dimention();
-    bool isDrawNode();
-    bool isDrawEdge();
-    
+    E_Layout layout() const;
+    E_Rotation rotation() const;
+    int nodeSize() const;
+    int edgeThickness() const;
+    int scale()const;
+    int delta() const;
+    int dimention() const ;
+    bool isDrawNode() const;
+    bool isDrawEdge() const;    
     void changeNodeSize(float nodeSize);
+    void changeEdgeThickness(float thickness);
     
   private:
     E_Layout _layout;
@@ -53,6 +53,43 @@ namespace agi3d {
     bool _isDrawEdge;
     
   };
+  
+  inline E_Layout UserDefault::layout() const {
+    return _layout;
+  }
+  
+  inline E_Rotation UserDefault::rotation() const {
+    return _rotation;
+  }
+  
+  inline int UserDefault::nodeSize() const {
+    return _nodeSize;
+  }
+  
+  inline int UserDefault::edgeThickness() const {
+    return _edgeThickness;
+  }
+  
+  inline int UserDefault::scale() const {
+    return _scale;
+  }
+  
+  inline int UserDefault::delta() const {
+    return _delta;
+  }
+  
+  inline int UserDefault::dimention() const {
+    return _dimention;
+  }
+  
+  inline bool UserDefault::isDrawNode() const {
+    return _isDrawNode;
+  }
+  
+  inline bool UserDefault::isDrawEdge() const {
+    return _isDrawEdge;
+  }
+  
 }
 
 #endif /* defined(__agi3d__Setting__) */

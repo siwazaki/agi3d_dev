@@ -23,44 +23,14 @@ UserDefault::UserDefault() : _layout(E_Layout::D2), _rotation(E_Rotation::None),
 
 UserDefault::~UserDefault() {}
 
-E_Layout UserDefault::layout() {
-  return _layout;
-}
-
-E_Rotation UserDefault::rotation() {
-  return _rotation;
-}
-
-int UserDefault::nodeSize() {
-  return _nodeSize;
-}
-
-int UserDefault::edgeThickness() {
-  return _edgeThickness;
-}
-
-int UserDefault::scale() {
-  return _scale;
-}
-
-int UserDefault::delta() {
-  return _delta;
-}
-
-int UserDefault::dimention() {
-  return _dimention;
-}
-
-bool UserDefault::isDrawNode() {
-  return _isDrawNode;
-}
-
-bool UserDefault::isDrawEdge() {
-  return _isDrawEdge;
-}
-
 void UserDefault::changeNodeSize(float nodeSize)
 {
   _nodeSize = nodeSize;
+  this->notify(E_ObserveType::RefreshOnly);
+}
+
+void UserDefault::changeEdgeThickness(float edgeThickness)
+{
+  _edgeThickness = edgeThickness;
   this->notify(E_ObserveType::RefreshOnly);
 }

@@ -80,10 +80,6 @@ void ConfigurationController::setFPS(float _f) {
   _controlPanel->m_FPS->SetLabel(str);
 }
 
-void ConfigurationController::init() {
- 
-}
-
 void ConfigurationController::handleListEvent(wxCommandEvent& event) {
   int m = event.GetInt();
   
@@ -93,18 +89,13 @@ void ConfigurationController::handleListEvent(wxCommandEvent& event) {
 }
 
 void ConfigurationController::notifyUpdateNodeSize(wxCommandEvent& event) {
-  //TODO:
   float rate = (float) (event.GetInt()) / 100.0f;
   _userDefault->changeNodeSize(rate);
-//  auto dp = AppDelegete::instance().getGraphicPanel();
-//  dp->changeSize(rate);
 }
 
 void ConfigurationController::notifyUpdateEdgeThickness(wxCommandEvent& event) {
-  //TODO:
   float rate = (float) (event.GetInt()) / 50.0f;
-  auto dp = AppDelegete::instance().getGraphicPanel();
-  dp->changeThickness(rate);
+  _userDefault->changeEdgeThickness(rate);
 }
 
 void ConfigurationController::notifyUpdateDelta(wxCommandEvent&) {
@@ -211,5 +202,3 @@ void ConfigurationController::selectEdgeAttr(wxCommandEvent&) {
   //  loadEdgeAttrData(n, configurationController->getGraphName());
   //  dp->ResetIsDrawingEdges();
 }
-
-

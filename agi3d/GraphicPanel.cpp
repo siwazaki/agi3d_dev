@@ -51,7 +51,7 @@ width(1000), height(870) {
   
   glutInitDisplayMode(GLUT_MULTISAMPLE | GLUT_DOUBLE | GLUT_RGB);
   
-  glLineWidth((GLfloat) linewidth);
+  glLineWidth((GLfloat) 1.0f);
   
   glEnable(GL_NORMALIZE);
   
@@ -412,6 +412,7 @@ void GraphicPanel::renderScene() {
   bool* isdrawingEdges = _graph->getIsDrawingEdges();
   bool* isNeighbor = _graph->getIsNeighbor();
   bool* edgeAttribute = _graph->getEdgeAttribute();
+  float linewidth = _userDefault->edgeThickness();
   //for FPS
   wxGLCanvas::SetCurrent(*m_context);
   wxPaintDC(this);
@@ -707,8 +708,6 @@ void GraphicPanel::setupPanel() {
     }
   }
   
-  linewidth = default_linewidth;
-  
   DRAW_EDGES = true;
   NODE_MODE = true;
   AUTO_X_ROTATION = false;
@@ -761,7 +760,6 @@ void GraphicPanel::setupPanel() {
 }
 
 void GraphicPanel::resetLayout() {
-  linewidth = default_linewidth;
   
   DRAW_EDGES = true;
   NODE_MODE = true;
@@ -952,11 +950,6 @@ void GraphicPanel::changeColor(int m) {
 void GraphicPanel::changeEye(float _v) {
   v = default_v*_v;
   eye.set(eye[0] * v, eye[1] * v, eye[2] * v);
-  Refresh();
-}
-
-void GraphicPanel::changeThickness(float t) {
-  linewidth = t;
   Refresh();
 }
 

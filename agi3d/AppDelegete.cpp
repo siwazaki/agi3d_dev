@@ -125,8 +125,8 @@ const std::shared_ptr<UserDefault>& AppDelegete::getUserDefault()
 {
   return _userDefault;
 }
+
 const std::shared_ptr<Configuration>& AppDelegete::getConfiguration()
 {
   return _configuration;
 }
-

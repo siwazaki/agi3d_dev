@@ -98,7 +98,6 @@ void UserDefaultController::setAutoYRotation(wxCommandEvent&) {
 void UserDefaultController::stopAutoRotation(wxCommandEvent&) {
   _userDefault->_rotation = E_Rotation::None;
   _menuBar->renderModel(_userDefault);
-
   //ResetMenuParams();
 }
 
@@ -109,16 +108,12 @@ void UserDefaultController::onOpen(wxCommandEvent&) {
      wxString filePath = openFileDialog->GetPath();
     _graph->loadData(std::string(filePath.mb_str()));
     
-    auto configurationController = AppDelegete::instance().getConfigurationController();
-    
-    //TODO:
-    //configurationController->changeGraphName(graphName);
     
     //TODO:should be refactored
     auto graphicPanel = AppDelegete::instance().getGraphicPanel();
     auto appearanceWindow = AppDelegete::instance().getAppearanceWindow();
     graphicPanel->setupPanel();
-    configurationController->init();
+
     appearanceWindow->Init();
   }
 }

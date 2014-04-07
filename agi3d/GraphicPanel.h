@@ -54,7 +54,6 @@ namespace agi3d {
     //Observerパターンでよい。
     //そんで、前処理はGraphに持っていく
     void changeColor(int i);
-    void changeThickness(float);
     void setXRotation(bool);
     void setYRotation(bool);
     void nodeModeChange();
@@ -96,11 +95,7 @@ namespace agi3d {
     float * pos_x, * pos_y, * pos_z;
     vector3 * colors;
     float radius = 0.015f;
-    
-    //Line Attribute
-    float default_linewidth = 1.0f;
-    float linewidth = 1.0f;
-    
+        
     //Light Attribute
     float light_z = 200.0f;
     
