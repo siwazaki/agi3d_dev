@@ -39,6 +39,9 @@ namespace agi3d {
     
     void changeTarget(const std::string& label, const std::vector<std::string>& neiborLabels);
     
+    void changeFPS(float fps);
+    float getFPS() const;
+    
   private:
     std::string _graphName;
     std::string _label;
@@ -48,6 +51,7 @@ namespace agi3d {
     float _nodethreshold_b;
     float _edgethreshold_t;
     float _edgethreshold_b;
+    float _fps;
 
     //TODO: 要らないフィールドの削除
     std::map<int, int> _labelMap;
@@ -93,7 +97,18 @@ namespace agi3d {
   {
     return _neiborLabels;
   }
+  
+  inline float Configuration::getFPS() const
+  {
+    return _fps;
+  }
 
+  inline void Configuration::changeFPS(float fps)
+  {
+    _fps = fps;
+    this->notify(E_ObserveType::ConfigurationOnly);
+  }
+  
 }
 
 #endif /* defined(__agi3d__Configuration__) */

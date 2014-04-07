@@ -16,8 +16,10 @@ _neiborLabels(),
 _nodethreshold_t(10000.0f),
 _nodethreshold_b(-1.0f),
 _edgethreshold_t(10000.0f),
-_edgethreshold_b(-1.0f)
+_edgethreshold_b(-1.0f),
+_fps(0.0f)
 {
+ 
   
 }
 
@@ -32,5 +34,5 @@ void Configuration::changeTarget(const std::string& label, const std::vector<std
   for(vi itr = neiborLabels.begin(), end = neiborLabels.end(); itr != end; ++itr){
     _neiborLabels.push_back(*itr);
   }
-  this->notify(E_ObserveType::RefreshOnly);  
+  this->notify(E_ObserveType::ConfigurationOnly);
 }

@@ -11,6 +11,7 @@
 
 #include <iostream>
 #include "Enums.h"
+#include "Observable.h"
 
 namespace agi3d {
   
@@ -20,7 +21,7 @@ namespace agi3d {
    * UserDefaultController以外はプロパティ変更不可。
    * @TODO: Jsonにシリアライズ
    */
-  class UserDefault
+  class UserDefault : public Observable
   {
     
     friend class UserDefaultController;
@@ -37,6 +38,8 @@ namespace agi3d {
     int dimention();
     bool isDrawNode();
     bool isDrawEdge();
+    
+    void changeNodeSize(float nodeSize);
     
   private:
     E_Layout _layout;

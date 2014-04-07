@@ -39,16 +39,16 @@ Graph::~Graph() {
 //      ファイルを開いたら、古いモデルはdestroyして、新しいモデルをnewする
 void Graph::reset() {
   if(isNeighbor) {
-    delete[] isNeighbor;
+    //delete[] isNeighbor;
   }
   if(isdrawingNodes) {
-    delete[] isdrawingNodes;
+    //delete[] isdrawingNodes;
   }
   if(edgeAttribute) {
-    delete[] edgeAttribute;
+    //delete[] edgeAttribute;
   }
   if(isdrawingEdges) {
-    delete[] isdrawingEdges;
+    //delete[] isdrawingEdges;
   }
   
   isNeighbor = new bool[N];

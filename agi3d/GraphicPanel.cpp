@@ -30,11 +30,11 @@ float getDepth(int x, int y) {
 }
 
 GraphicPanel::GraphicPanel(wxWindow* parent, int* args) :
-wxGLCanvas(parent, wxID_ANY, args, wxDefaultPosition, wxSize(1000, 870), wxFULL_REPAINT_ON_RESIZE),
+wxGLCanvas(parent, wxID_ANY, args, wxDefaultPosition, wxSize(1000, 870), wxFULL_REPAINT_ON_RESIZE),glframe(0), gltimenow(0.0),
 width(1000), height(870) {
   
-  m_context = new wxGLContext(this);
   sw = new wxStopWatch();
+  m_context = new wxGLContext(this);
   SetBackgroundStyle(wxBG_STYLE_CUSTOM);
   
   //  for (int i = 0; i < N; i++) {
@@ -169,7 +169,7 @@ int GraphicPanel::pick(int x, int y) {
   
   if (LOAD_FLAG) {
     {
-      int p_id = ProcessSelection(x, y);
+      int p_id = processSelection(x, y);
       
       if (p_id >= 0) {
         //case :: some node is beeing picked
@@ -399,6 +399,7 @@ void GraphicPanel::moveEye(int delta) {
 
 void GraphicPanel::renderScene() {
   if(!LOAD_FLAG) return;
+  float size_rate = _userDefault->nodeSize();
   int N = _graph->getN();
   int M = _graph->getM();
   float nodevalue_max = _graph->getMaxNodeValue();
@@ -411,8 +412,7 @@ void GraphicPanel::renderScene() {
   bool* isdrawingEdges = _graph->getIsDrawingEdges();
   bool* isNeighbor = _graph->getIsNeighbor();
   bool* edgeAttribute = _graph->getEdgeAttribute();
-  
-  auto sbp = AppDelegete::instance().getControlPanel();
+  //for FPS
   wxGLCanvas::SetCurrent(*m_context);
   wxPaintDC(this);
   
@@ -580,7 +580,7 @@ void GraphicPanel::renderScene() {
     } else {
       if (id != -1) {
         glColor4f(0.1f, 0.1f, 0.1f, 0.7f);
-        for (int i = 0; i < edgelist[id].size(); i++) {
+        for (size_t i = 0; i < edgelist[id].size(); i++) {
           int from = edges[edgelist[id][i]].first, to = edges[edgelist[id][i]].second;
           glLineWidth((GLfloat) linewidth * 2 * edgevalues[i] / edgevalue_max);
           glBegin(GL_LINES);
@@ -598,14 +598,13 @@ void GraphicPanel::renderScene() {
   glDisableClientState(GL_VERTEX_ARRAY);
   glDisableClientState(GL_NORMAL_ARRAY);
   
-  GLframe++;
-  GLtimenow = sw->Time();
-  if ((GLtimenow > 1000) && LOAD_FLAG) {
-    float _fps = GLframe * 1000.0 / GLtimenow;
-    //@TODO
-    //sbp->SetFPS(_fps);
+  glframe++;
+  gltimenow = sw->Time();
+  if ((gltimenow > 1000) && LOAD_FLAG) {
+    float fps = glframe * 1000.0 / gltimenow;
+    _configuration->changeFPS(fps);
     sw->Start(0);
-    GLframe = 0;
+    glframe = 0;
   }
   
   SwapBuffers();
@@ -761,7 +760,7 @@ void GraphicPanel::setupPanel() {
   Refresh();
 }
 
-void GraphicPanel::ResetLayout() {
+void GraphicPanel::resetLayout() {
   linewidth = default_linewidth;
   
   DRAW_EDGES = true;
@@ -770,7 +769,6 @@ void GraphicPanel::ResetLayout() {
   AUTO_Y_ROTATION = false;
   
   id = -1;
-  size_rate = 1.0f;
   
   phi = 0;
   theta = 0;
@@ -846,11 +844,12 @@ int GraphicPanel::getHeight() {
   return GetSize().y;
 }
 
-void GraphicPanel::Render(float x, float y, float z) {
+void GraphicPanel::render(float x, float y, float z) {
   int N = _graph->getN();
   float nodevalue_max = _graph->getMaxNodeValue();
   float *nodevalues = _graph->getNodeValues();
   bool* isdrawingNodes = _graph->getIsDrawingNodes();
+  float size_rate = _userDefault->nodeSize();
   wxGLCanvas::SetCurrent(*m_context);
   wxPaintDC(this);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -950,28 +949,23 @@ void GraphicPanel::changeColor(int m) {
   }
 }
 
-void GraphicPanel::UpdateEye(float _v) {
+void GraphicPanel::changeEye(float _v) {
   v = default_v*_v;
   eye.set(eye[0] * v, eye[1] * v, eye[2] * v);
   Refresh();
 }
 
-void GraphicPanel::UpdateSize(float _s) {
-  size_rate = _s;
-  Refresh();
-}
-
-void GraphicPanel::UpdateThickness(float t) {
+void GraphicPanel::changeThickness(float t) {
   linewidth = t;
   Refresh();
 }
 
-void GraphicPanel::ChangeLayoutMode(int mode) {
+void GraphicPanel::changeLayoutMode(int mode) {
   LayoutMode = mode;
-  ResetLayout();
+  resetLayout();
 }
 
-void GraphicPanel::ResetIsDrawingNodes() {
+void GraphicPanel::resetIsDrawingNodes() {
   float nodevalue_min = _graph->getMinNodeValue();
   float nodevalue_max = _graph->getMaxNodeValue();
   bool* isdrawingNodes = _graph->getIsDrawingNodes();
@@ -985,7 +979,7 @@ void GraphicPanel::ResetIsDrawingNodes() {
   }
 }
 
-void GraphicPanel::ResetIsDrawingEdges() {
+void GraphicPanel::resetIsDrawingEdges() {
   int M = _graph->getM();
   bool* isdrawingEdges = _graph->getIsDrawingEdges();
   //TODO: コメントアウトしてるので、実装すること
@@ -996,7 +990,7 @@ void GraphicPanel::ResetIsDrawingEdges() {
   }
 }
 
-void GraphicPanel::ScaleLayout(float f) {
+void GraphicPanel::scaleLayout(float f) {
   if (LayoutMode == 3) {
     _graph->updateScale3D(f);
     relayout3D();
@@ -1007,7 +1001,7 @@ void GraphicPanel::ScaleLayout(float f) {
   Refresh();
 }
 
-void GraphicPanel::ChangeDimension(float f) {
+void GraphicPanel::changeDimension(float f) {
   if (LayoutMode == 3) {
     _graph->updateDimension3D(f);
     relayout3D();
@@ -1017,27 +1011,27 @@ void GraphicPanel::ChangeDimension(float f) {
   }
 }
 
-void GraphicPanel::DrawEdge() {
+void GraphicPanel::drawEdge() {
   DRAW_EDGES = !DRAW_EDGES;
   Refresh();
 }
 
-void GraphicPanel::NodeModeChange() {
+void GraphicPanel::nodeModeChange() {
   NODE_MODE = !NODE_MODE;
   Refresh();
 }
 
-void GraphicPanel::SetXRotation(bool value) {
+void GraphicPanel::setXRotation(bool value) {
   AUTO_X_ROTATION = value;
   Refresh();
 }
 
-void GraphicPanel::SetYRotation(bool value) {
+void GraphicPanel::setYRotation(bool value) {
   AUTO_Y_ROTATION = value;
   Refresh();
 }
 
-void GraphicPanel::SavePixelData() {
+void GraphicPanel::savePixelData() {
   //@TODO 一時的な実装
   const std::string& graphName = _graph->getName();
   string name = graphName + "img" + boost::lexical_cast<std::string>(imgnum) + ".png";
@@ -1080,7 +1074,7 @@ void GraphicPanel::SavePixelData() {
   fclose(fp);
 }
 
-void GraphicPanel::CalculateWorldCo(int x, int y, float depth, double &wx, double &wy, double &wz) {
+void GraphicPanel::calculateWorldCo(int x, int y, float depth, double &wx, double &wy, double &wz) {
   GLdouble pjMatrix[16];
   GLint viewport[4];
   glGetIntegerv(GL_VIEWPORT, viewport);
@@ -1090,7 +1084,7 @@ void GraphicPanel::CalculateWorldCo(int x, int y, float depth, double &wx, doubl
 
 #define BUFFER_LENGTH 64
 
-int GraphicPanel::ProcessSelection(int xPos, int yPos) {
+int GraphicPanel::processSelection(int xPos, int yPos) {
   int N = _graph->getN();
   GLfloat fAspect;
   static GLuint selectBuff[BUFFER_LENGTH];
@@ -1098,7 +1092,7 @@ int GraphicPanel::ProcessSelection(int xPos, int yPos) {
   
   float depth = getDepth(xPos, yPos);
   double _x, _y, _z;
-  CalculateWorldCo(xPos, yPos, depth, _x, _y, _z);
+  calculateWorldCo(xPos, yPos, depth, _x, _y, _z);
   
   glSelectBuffer(BUFFER_LENGTH, selectBuff);
   glGetIntegerv(GL_VIEWPORT, viewport);
@@ -1112,7 +1106,7 @@ int GraphicPanel::ProcessSelection(int xPos, int yPos) {
   fAspect = (float) viewport[2] / (float) viewport[3];
   gluPerspective(angle, fAspect, near, far);
   
-  Render((float) _x, (float) _y, (float) _z);
+  render((float) _x, (float) _y, (float) _z);
   
   hits = glRenderMode(GL_RENDER);
   

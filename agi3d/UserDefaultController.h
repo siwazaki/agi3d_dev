@@ -34,17 +34,17 @@ namespace agi3d {
     MenuBar* _menuBar;
     AppearanceWindow* _appearanceWindow;
 
-    void nortifyUpdateNodeSize(wxScrollEvent& event);
-    void SetAutoXRotation(wxCommandEvent& event);
-    void SetAutoYRotation(wxCommandEvent& event);
-    void StopAutoRotation(wxCommandEvent& event);
-    void ResetMenuParams();
-    void CaptureImage(wxCommandEvent& event);
-    void Reset(wxCommandEvent& event);
-    void ChangeLayoutModeTo2D(wxCommandEvent& event);
-    void ChangeLayoutModeTo3D(wxCommandEvent& event);
-    void OnOpen(wxCommandEvent& event);
-    void OpenAppearanceWindow(wxCommandEvent& event);
+    void notifyUpdateNodeSize(wxScrollEvent& event);
+    void setAutoXRotation(wxCommandEvent& event);
+    void setAutoYRotation(wxCommandEvent& event);
+    void stopAutoRotation(wxCommandEvent& event);
+    void resetMenuParams();
+    void captureImage(wxCommandEvent& event);
+    void reset(wxCommandEvent& event);
+    void changeLayoutModeTo2D(wxCommandEvent& event);
+    void changeLayoutModeTo3D(wxCommandEvent& event);
+    void onOpen(wxCommandEvent& event);
+    void openAppearanceWindow(wxCommandEvent& event);
 
   };
 }

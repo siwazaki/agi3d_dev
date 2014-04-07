@@ -30,10 +30,7 @@ ConfigurationController::ConfigurationController(const std::shared_ptr<Configura
   
   _controlPanel = AppDelegete::instance().getControlPanel();
   
-  //@TODO
-  //labelMap.clear();
-  
-  auto notifyUpdateNodeSizeHandler(bind(&ConfigurationController::notifyUpdateNodeSize, this, placeholders::_1 ));
+  auto notifyUpdateNodeSizeHandler(bind(&ConfigurationController::notifyUpdateNodeSize, this, placeholders::_1));
   this->_controlPanel->Bind(wxEVT_COMMAND_SLIDER_UPDATED, notifyUpdateNodeSizeHandler, 40);
   
   auto notifyUpdateEdgeThicknessHandler(bind(&ConfigurationController::notifyUpdateEdgeThickness, this, placeholders::_1 ));
@@ -79,52 +76,17 @@ ConfigurationController::~ConfigurationController() {
 
 void ConfigurationController::setFPS(float _f) {
   fps = _f;
-  wxString str = wxString::Format(wxT("   FPS : %f"), fps);
-  
+  wxString str = wxString::Format(wxT("   FPS : %f"), fps);  
   _controlPanel->m_FPS->SetLabel(str);
 }
 
 void ConfigurationController::init() {
-  _controlPanel->DeltaSlider->SetValue(50);
-  
-  _controlPanel->nodeThresholdSlider_b->SetValue(0);
-  _controlPanel->nodeThresholdSlider_t->SetValue(100);
-  
-  _controlPanel->edgeThresholdSlider_b->SetValue(0);
-  _controlPanel->edgeThresholdSlider_t->SetValue(100);
-  
-  _controlPanel->nodeAttrsChoice->SetSelection(0);
-  _configuration->nodeThresholdAttrID = 0;
-  _controlPanel->edgeAttrsChoice->SetSelection(0);
-  _configuration->edgeThresholdAttrID = 0;
-  
-  _controlPanel->target->SetLabel(wxString());
-  _controlPanel->listbox->Clear();
-  
-  _configuration->_labelMap.clear();
-  
-  auto dp = AppDelegete::instance().getGraphicPanel();
-  
-  dp->UpdateSize(1.0f);
-  dp->UpdateThickness(1.0f);
-  
-  dp->SetXRotation(false);
-  dp->SetYRotation(false);
-  
-  //@TODO 一時的な実装
-  wxString _graphlabel = wxString::Format(wxT("   FileName \t %s"), _configuration->graphName());
-  //@TODO
-  //wxString _nodeSize = wxString::Format(wxT("   #Node \t %i"), N);
-  //wxString _edgeSize = wxString::Format(wxT("   #Edge   \t %i"), M);
-  
-  _controlPanel->fileNameLabel->SetLabel(_graphlabel);
-  //@TODO
-  //  _controlPanel->nodeSizeLabel->SetLabel(nodeSize);
-  //  _controlPanel->edgeSizeLabel->SetLabel(edgeSize);
+ 
 }
 
 void ConfigurationController::handleListEvent(wxCommandEvent& event) {
   int m = event.GetInt();
+  
   auto dp = AppDelegete::instance().getGraphicPanel();
   //TODO:
   //dp->changeColor(labelMap[m]);
@@ -133,15 +95,16 @@ void ConfigurationController::handleListEvent(wxCommandEvent& event) {
 void ConfigurationController::notifyUpdateNodeSize(wxCommandEvent& event) {
   //TODO:
   float rate = (float) (event.GetInt()) / 100.0f;
-  auto dp = AppDelegete::instance().getGraphicPanel();
-  dp->UpdateSize(rate);
+  _userDefault->changeNodeSize(rate);
+//  auto dp = AppDelegete::instance().getGraphicPanel();
+//  dp->changeSize(rate);
 }
 
 void ConfigurationController::notifyUpdateEdgeThickness(wxCommandEvent& event) {
   //TODO:
   float rate = (float) (event.GetInt()) / 50.0f;
   auto dp = AppDelegete::instance().getGraphicPanel();
-  dp->UpdateThickness(rate);
+  dp->changeThickness(rate);
 }
 
 void ConfigurationController::notifyUpdateDelta(wxCommandEvent&) {
@@ -155,7 +118,7 @@ void ConfigurationController::notifyUpdateScale(wxCommandEvent& event) {
   //TODO:
   float rate = (float) (event.GetInt()) / 20.0f;
   auto dp = AppDelegete::instance().getGraphicPanel();
-  dp->ScaleLayout(rate);
+  dp->scaleLayout(rate);
 }
 
 void ConfigurationController::notifyUpdateDimension(wxCommandEvent& event) {
@@ -205,12 +168,12 @@ void ConfigurationController::updateEdgeValueThreshold(wxCommandEvent&) {
 
 void ConfigurationController::onToggleEdge(wxCommandEvent&) {
   auto dp = AppDelegete::instance().getGraphicPanel();
-  dp->DrawEdge();
+  dp->drawEdge();
 }
 
 void ConfigurationController::onToggleNodeSize(wxCommandEvent&) {
   auto dp = AppDelegete::instance().getGraphicPanel();
-  dp->NodeModeChange();
+  dp->nodeModeChange();
 }
 
 void ConfigurationController::selectNodeAttr(wxCommandEvent&) {

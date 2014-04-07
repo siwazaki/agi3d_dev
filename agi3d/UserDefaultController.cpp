@@ -7,15 +7,12 @@
 //
 #include <sstream>
 #include <exception>
+#include <functional>
 
 #include "wx/panel.h"
 #include "wx/sizer.h"
 #include "wx/slider.h"
 #include "wx/stattext.h"
-
-#include <boost/function.hpp>
-#include <boost/bind.hpp>
-#include <boost/lexical_cast.hpp>
 
 #include "AppDelegete.h"
 #include "UserDefaultController.h"
@@ -32,27 +29,32 @@ UserDefaultController:: UserDefaultController(const std::shared_ptr<UserDefault>
   this->_appearanceWindow = AppDelegete::instance().getAppearanceWindow();
   
   //イベントハンドラの登録
-  auto xRotationHandler(boost::bind(&UserDefaultController::SetAutoXRotation, this, _1 ));
+  auto resetHandler(bind(&UserDefaultController::reset, this, placeholders::_1));
+  this->_menuBar->Bind(wxEVT_COMMAND_MENU_SELECTED, resetHandler, 10);
+  
+  auto changeLayoutModeTo3DHandler(bind(&UserDefaultController::changeLayoutModeTo3D, this, placeholders::_1));
+  this->_menuBar->Bind(wxEVT_COMMAND_MENU_SELECTED, changeLayoutModeTo3DHandler, 11);
+
+  auto changeLayoutModeTo2DHandler(bind(&UserDefaultController::changeLayoutModeTo2D, this, placeholders::_1));
+  this->_menuBar->Bind(wxEVT_COMMAND_MENU_SELECTED, changeLayoutModeTo2DHandler, 12);
+  
+  auto xRotationHandler(bind(&UserDefaultController::setAutoXRotation, this, placeholders::_1));
   this->_menuBar->Bind(wxEVT_COMMAND_MENU_SELECTED, xRotationHandler, 13);
   
-  auto yRotationHandler( boost::bind(&UserDefaultController::SetAutoYRotation, this, _1 ));
+  auto yRotationHandler(bind(&UserDefaultController::setAutoYRotation, this, placeholders::_1));
   this->_menuBar->Bind(wxEVT_COMMAND_MENU_SELECTED, yRotationHandler, 14);
   
-  auto stopAutoRotationHandler( boost::bind(&UserDefaultController::StopAutoRotation, this, _1 ));
+  auto stopAutoRotationHandler( bind(&UserDefaultController::stopAutoRotation, this, placeholders::_1));
   this->_menuBar->Bind(wxEVT_COMMAND_MENU_SELECTED, stopAutoRotationHandler, 15);
   
-  auto openApperanceWindowHandler( boost::bind(&UserDefaultController::OpenAppearanceWindow, this, _1 ));
+  auto openApperanceWindowHandler(bind(&UserDefaultController::openAppearanceWindow, this, placeholders::_1));
   this->_menuBar->Bind(wxEVT_COMMAND_MENU_SELECTED, openApperanceWindowHandler, 16);
   
-  auto openFileHandler( boost::bind(&UserDefaultController::OnOpen, this, _1 ));
+  auto openFileHandler(bind(&UserDefaultController::onOpen, this, placeholders::_1));
   this->_menuBar->Bind(wxEVT_COMMAND_MENU_SELECTED, openFileHandler, wxID_OPEN);
   
-  
-/*  Connect(10, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(UserDefaultController::Reset));
-  Connect(11, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(UserDefaultController::ChangeLayoutModeTo3D));
-  Connect(12, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(UserDefaultController::ChangeLayoutModeTo2D));
-  Connect(17, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(UserDefaultController::CaptureImage));
-*/
+  auto captureImageHandler(bind(&UserDefaultController::captureImage, this, placeholders::_1));
+  this->_menuBar->Bind(wxEVT_COMMAND_MENU_SELECTED, captureImageHandler, 17);
   
 }
 
@@ -61,7 +63,7 @@ UserDefaultController::~UserDefaultController()
   
 }
 
-void UserDefaultController::SetAutoXRotation(wxCommandEvent& event) {
+void UserDefaultController::setAutoXRotation(wxCommandEvent&) {
   _userDefault->_rotation = (E_Rotation)(_userDefault->_rotation ^ E_Rotation::X);
   std::cout << _userDefault->_rotation << std::endl;
   _menuBar->renderModel(_userDefault);
@@ -78,7 +80,7 @@ void UserDefaultController::SetAutoXRotation(wxCommandEvent& event) {
   //  }
 }
 
-void UserDefaultController::SetAutoYRotation(wxCommandEvent& event) {
+void UserDefaultController::setAutoYRotation(wxCommandEvent&) {
   _userDefault->_rotation = (E_Rotation)(_userDefault->_rotation ^ E_Rotation::Y);
   _menuBar->renderModel(_userDefault);
   
@@ -93,7 +95,7 @@ void UserDefaultController::SetAutoYRotation(wxCommandEvent& event) {
   //  }
 }
 
-void UserDefaultController::StopAutoRotation(wxCommandEvent& event) {
+void UserDefaultController::stopAutoRotation(wxCommandEvent&) {
   _userDefault->_rotation = E_Rotation::None;
   _menuBar->renderModel(_userDefault);
 
@@ -101,7 +103,7 @@ void UserDefaultController::StopAutoRotation(wxCommandEvent& event) {
 }
 
 
-void UserDefaultController::OnOpen(wxCommandEvent& event) {
+void UserDefaultController::onOpen(wxCommandEvent&) {
   wxFileDialog * openFileDialog = new wxFileDialog(_menuBar);
   if (openFileDialog->ShowModal() == wxID_OK) {
      wxString filePath = openFileDialog->GetPath();
@@ -121,7 +123,7 @@ void UserDefaultController::OnOpen(wxCommandEvent& event) {
   }
 }
 
-void UserDefaultController::ResetMenuParams() {
+void UserDefaultController::resetMenuParams() {
 //  x_rotation = false;
 //  left->SetXRotation(false);
 //  rotationMenu->SetLabel(13, wxT(" X Rotation"));
@@ -130,14 +132,14 @@ void UserDefaultController::ResetMenuParams() {
 //  rotationMenu->SetLabel(14, wxT(" Y Rotation"));
 }
 
-void UserDefaultController::Reset(wxCommandEvent& event) {
+void UserDefaultController::reset(wxCommandEvent&) {
 //  left->ResetLayout();
 //  right->Init();
 //  appw->Init();
 //  ResetMenuParams();
 }
 
-void UserDefaultController::ChangeLayoutModeTo2D(wxCommandEvent& event) {
+void UserDefaultController::changeLayoutModeTo2D(wxCommandEvent&) {
 //  left->ChangeLayoutMode(2);
 //  right->Init();
 //  appw->Init();
@@ -146,7 +148,7 @@ void UserDefaultController::ChangeLayoutModeTo2D(wxCommandEvent& event) {
 //  ResetMenuParams();
 }
 
-void UserDefaultController::ChangeLayoutModeTo3D(wxCommandEvent& event) {
+void UserDefaultController::changeLayoutModeTo3D(wxCommandEvent&) {
 //  left->ChangeLayoutMode(3);
 //  right->Init();
 //  appw->Init();
@@ -156,11 +158,11 @@ void UserDefaultController::ChangeLayoutModeTo3D(wxCommandEvent& event) {
 }
 
 
-void UserDefaultController::CaptureImage(wxCommandEvent& event) {
+void UserDefaultController::captureImage(wxCommandEvent&) {
   //left->SavePixelData();
 }
 
-void UserDefaultController::OpenAppearanceWindow(wxCommandEvent& event) {
-  //_appearanceWindow->Show(true);
-  //_appearanceWindow->Raise();
+void UserDefaultController::openAppearanceWindow(wxCommandEvent&) {
+  _appearanceWindow->Show(true);
+  _appearanceWindow->Raise();
 }

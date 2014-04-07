@@ -23,6 +23,7 @@ namespace agi3d {
   typedef GLfloat Position[3];
   typedef GLuint Face[3];
   
+  
   class GraphicPanel : public wxGLCanvas, public Observer {
     
     wxGLContext* m_context;
@@ -52,38 +53,41 @@ namespace agi3d {
     //モデルの内容を書き換えて、Refresh呼ぶだけなので、
     //Observerパターンでよい。
     //そんで、前処理はGraphに持っていく
-    void UpdateThickness(float);
-    void SetXRotation(bool);
-    void SetYRotation(bool);
-    void NodeModeChange();
-    void SavePixelData();
-    void DrawEdge();
-    void ScaleLayout(float);
-    void Render(float x, float y, float z);
-    void changeColor(int);
-    void ChangeLayoutMode(int);
-    void ResetIsDrawingNodes();
-    void ResetIsDrawingEdges();
-    void ChangeDimension(float);
-    void UpdateSize(float);  
+    void changeColor(int i);
+    void changeThickness(float);
+    void setXRotation(bool);
+    void setYRotation(bool);
+    void nodeModeChange();
+    void savePixelData();
+    void drawEdge();
+    void scaleLayout(float);
+    void render(float x, float y, float z);
+    void changeLayoutMode(int);
+    void resetIsDrawingNodes();
+    void resetIsDrawingEdges();
+    void changeDimension(float);
+
     
   private:
     /**
      * @TODO: remove this
      */
-    void UpdateEye(float);
+    void changeEye(float);
     GLuint setUpVBA(float radius, int slices, int stacks);
-    int ProcessSelection(int, int);
-    void ResetLayout();
+    int processSelection(int, int);
+    void resetLayout();
     void relayout();
     void relayout3D();
     void relayout2D();
-    void CalculateWorldCo(int x, int y, float depth, double &wx, double &wy, double &wz);
+    void calculateWorldCo(int x, int y, float depth, double &wx, double &wy, double &wz);
     
   private:
     std::shared_ptr<Graph> _graph;
     std::shared_ptr<Configuration> _configuration;
     std::shared_ptr<UserDefault> _userDefault;
+    int glframe = 0;
+    long gltimenow = 0;
+    wxStopWatch *sw;
            
     //Layout Mode
     int LayoutMode = 3;
@@ -92,7 +96,6 @@ namespace agi3d {
     float * pos_x, * pos_y, * pos_z;
     vector3 * colors;
     float radius = 0.015f;
-    float size_rate = 1.0f;
     
     //Line Attribute
     float default_linewidth = 1.0f;
@@ -145,18 +148,11 @@ namespace agi3d {
     GLuint vertexBuf, indexBuf;
     GLuint points;
     
-    int imgnum = 1;
-    
-    //Timer for FPS
-    wxStopWatch * sw;
+    int imgnum = 1;      
     
     //View Matrix?
     GLdouble mvMatrix[16];
-    
-    //for FPS
-    int GLframe = 0;
-    long GLtimenow = 0;
-    float fps = 0.0f;
+       
     
     int getWidth();
     int getHeight();
