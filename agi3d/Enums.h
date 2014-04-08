@@ -1,11 +1,3 @@
-//
-//  Enums.h
-//  agi3d
-//
-//  Created by 岩崎 敏 on 2014/03/31.
-//  Copyright (c) 2014年 com.nefrock. All rights reserved.
-//
-
 #ifndef __agi3d__Enums__
 #define __agi3d__Enums__
 
@@ -24,10 +16,11 @@ namespace agi3d {
   } E_Rotation;
   
   typedef enum {
-    RefreshOnly = 0,
-    NeedReLayout = 1,
-    ConfigurationOnly = 2,
-    ConfigurationFPSOnly = 3
+    RefreshOnly,
+    NeedReLayout,
+    ColorOnly,
+    ConfigurationOnly,
+    ConfigurationFPSOnly,
   } E_ObserveType;
 }
 

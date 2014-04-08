@@ -37,12 +37,7 @@ namespace agi3d {
     std::shared_ptr<Graph> _graph;
     ControlPanel *_controlPanel;
     
-    //TODO: move to configuration
-    float fps;
-    void setFPS(float);
-    
-    void handleListEvent(wxCommandEvent& event);
-    
+    void hilightNode(wxCommandEvent& event);
     void notifyUpdateNodeSize(wxCommandEvent& event);
     void notifyUpdateEdgeThickness(wxCommandEvent& event);
     void notifyUpdateDelta(wxCommandEvent& event);

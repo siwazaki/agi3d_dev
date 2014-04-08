@@ -69,7 +69,9 @@ void AppDelegete::initMVC()
   //モデルにオブザーバーをセット
   _graph->addObserver(_graphicPanel);
   _configuration->addObserver(_controlPanel);
+  _configuration->addObserver(_graphicPanel);
   _userDefault->addObserver(_graphicPanel);
+
 
 }
 

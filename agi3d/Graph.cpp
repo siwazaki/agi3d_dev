@@ -1,11 +1,3 @@
-//
-//  Graph.cpp
-//  agi3d
-//
-//  Created by 岩崎 敏 on 2014/04/01.
-//  Copyright (c) 2014年 com.nefrock. All rights reserved.
-//
-
 #include <iostream>
 #include <stdio.h>
 #include <vector>
@@ -14,10 +6,12 @@
 #include <fstream>
 #include <sys/time.h>
 #include <exception>
+
 #include <boost/algorithm/string.hpp>
 #include <boost/numeric/ublas/matrix.hpp>
 #include <boost/numeric/ublas/vector.hpp>
 #include <boost/numeric/ublas/io.hpp>
+
 #include <Accelerate/Accelerate.h>
 
 #include "constraintsolver2d.h"
@@ -27,7 +21,7 @@
 using namespace std;
 using namespace agi3d;
 
-Graph::Graph() : _name("unknown"){
+Graph::Graph() : _isLoaded(false), _name("unknown"), _dataDir(""){
   
 }
 
@@ -78,26 +72,46 @@ void Graph::changeProjectionFactor(float f, E_Layout layout) {
     case E_Layout::D3:
       this->updateProjection3D(f);
       this->notify(E_ObserveType::NeedReLayout);
-      break;      
+      break;
     default:
       throw invalid_argument("unkown layout type found.");
   }
 }
 
+void Graph::changeScaleLayout(float f, E_Layout layoutType) {
+  switch (layoutType) {
+    case E_Layout::D2:
+    {
+      this->updateScale2D(f);
+      this->notify(E_ObserveType::NeedReLayout);
+      break;
+    }
+    case E_Layout::D3:
+    {
+      this->updateScale3D(f);
+      this->notify(E_ObserveType::NeedReLayout);
+      break;
+    }
+    default: {
+      break;
+    }
+  }
+}
+
 void Graph::changeNodeThreshold(float b, float t) {
-   for (int i = 0; i < N; i++) {
-      isdrawingNodes[i] = ((nodevalues[i] >= b) && (nodevalues[i] <= t));
-    }
-    for (int i = 0; i < N; i++) {
-      if (isdrawingNodes[i]) {
-        bool f = false;
-        for (size_t j = 0; j < neighbor[i].size(); j++) {
-          f |= isdrawingNodes[neighbor[i][j]];
-          if (f) break;
-        }
-        if (!f) isdrawingNodes[i] = false;
+  for (int i = 0; i < N; i++) {
+    isdrawingNodes[i] = ((nodevalues[i] >= b) && (nodevalues[i] <= t));
+  }
+  for (int i = 0; i < N; i++) {
+    if (isdrawingNodes[i]) {
+      bool f = false;
+      for (size_t j = 0; j < neighbor[i].size(); j++) {
+        f |= isdrawingNodes[neighbor[i][j]];
+        if (f) break;
       }
+      if (!f) isdrawingNodes[i] = false;
     }
+  }
   this->notify(E_ObserveType::RefreshOnly);
 }
 
@@ -108,24 +122,23 @@ void Graph::changeEdgeThreshold(float b, float t) {
   this->notify(E_ObserveType::RefreshOnly);
 }
 
-bool Graph::loadData(const std::string &filePath)　{
-  
+bool Graph::loadData(const std::string &filePath){
   string fname = string(filePath);
   int path_i = fname.find_last_of("/");
   int ext_i = fname.find_last_of(".");
   string f_ext = fname.substr(ext_i + 1);
   string filename = fname.substr(path_i + 1);
-  
+  _dataDir = fname.substr(0, path_i + 1);
   if (f_ext == "txt") {
     if (filename.find("DisMat") != string::npos) {
       _name = fname.substr(path_i + 1, fname.size() - path_i - 11);
-      loadMatrixData_t(filePath.c_str(), _name);
+      loadMatrixData_t(filePath.c_str());
     } else if (filename.find("Data.") != string::npos) {
       _name = fname.substr(path_i + 1, fname.size() - path_i - 9);
-      loadLayoutData_t(filePath.c_str(), _name);
+      loadLayoutData_t(filePath.c_str());
     } else if (filename.find("DataAll") != string::npos) {
       _name = fname.substr(path_i + 1, fname.size() - path_i - 12);
-      loadLayoutData_t(filePath.c_str(), _name);
+      loadLayoutData_t(filePath.c_str());
     } else {
       cerr << "This file is not available" << endl;
       return false;
@@ -133,13 +146,13 @@ bool Graph::loadData(const std::string &filePath)　{
   } else if (f_ext == "bin") {
     if (filename.find("DisMat") != string::npos) {
       _name = fname.substr(path_i + 1, fname.size() - path_i - 11);
-      loadMatrixData_b(filePath.c_str(), _name);
+      loadMatrixData_b(filePath.c_str());
     } else if (filename.find("Data.") != string::npos) {
       _name = fname.substr(path_i + 1, fname.size() - path_i - 15);
-      loadLayoutData_b(filePath.c_str(), _name);
+      loadLayoutData_b(filePath.c_str());
     } else if (filename.find("DataAll") != string::npos) {
       _name = fname.substr(path_i + 1, fname.size() - path_i - 18);
-      loadLayoutData_b(filePath.c_str(), _name);
+      loadLayoutData_b(filePath.c_str());
     } else {
       cerr << "This file is not available" << endl;
       return false;
@@ -556,21 +569,21 @@ void Graph::calc2DLayout() {
   init2D[5] = 0.4;
 }
 
-void Graph::loadNodeAttrData(int n, const std::string& graphName) {
-  string datadir = "../data/" + graphName + "/";
+void Graph::loadNodeAttrData(int n) {
   bool isNormal = false;
+  std::string fileName = _dataDir;
   switch (n) {
-    case 1: datadir += graphName + "degree.txt";
+    case 1: fileName += _name + "degree.txt";
       break;
-    case 2: datadir += graphName + "clcent.txt";
+    case 2: fileName += _name + "clcent.txt";
       break;
-    case 3: datadir += graphName + "bwcent.txt";
+    case 3: fileName += _name + "bwcent.txt";
       break;
-    case 4: datadir += graphName + "clcoeff.txt";
+    case 4: fileName += _name + "clcoeff.txt";
       break;
-    case 5: datadir += graphName + "evcent.txt";
+    case 5: fileName += _name + "evcent.txt";
       break;
-    case 6: datadir += graphName + "pr.txt";
+    case 6: fileName += _name + "pr.txt";
       break;
     default: isNormal = true;
       break;
@@ -583,7 +596,7 @@ void Graph::loadNodeAttrData(int n, const std::string& graphName) {
     nodevalue_max = 5;
     nodevalue_min = 0;
   } else {
-    ifstream ifs(datadir.c_str());
+    ifstream ifs(fileName.c_str());
     if (!ifs.fail()) {
       nodevalue_max = 0;
       nodevalue_min = 1000000000000;
@@ -609,17 +622,18 @@ void Graph::loadNodeAttrData(int n, const std::string& graphName) {
   }
 }
 
-void Graph::loadEdgeAttrData(int n, const std::string& graphName) {
-  string datadir = "../data/" + graphName + "/";
+void Graph::loadEdgeAttrData(int n) {
+  
   bool isDefault = false;
+  std::string fileName = _dataDir;
   switch (n) {
-    case 1: datadir += graphName + "Simpson.txt";
+    case 1: fileName += _name + "Simpson.txt";
       break;
-    case 2: datadir += graphName + "SimpsonEx.txt";
+    case 2: fileName += _name + "SimpsonEx.txt";
       break;
-    case 3: datadir += graphName + "ebw.txt";
+    case 3: fileName += _name + "ebw.txt";
       break;
-    case 4: datadir += graphName + "Weight.txt";
+    case 4: fileName += _name + "Weight.txt";
       break;
     default: isDefault = true;
       break;
@@ -632,7 +646,7 @@ void Graph::loadEdgeAttrData(int n, const std::string& graphName) {
     edgevalue_min = 0;
     edgevalue_max = 1;
   } else {
-    ifstream ifs(datadir.c_str());
+    ifstream ifs(fileName.c_str());
     if (!ifs.fail()) {
       edgevalue_max = 0;
       edgevalue_min = 100000000;
@@ -645,66 +659,61 @@ void Graph::loadEdgeAttrData(int n, const std::string& graphName) {
       ifs.close();
     } else {
       cout << "File not found" << endl;
-      //Calculate Attributes
-      bool c = false; //calculate flag
-      if (c) {
-        if (n == 1) {
-          string filename = graphName + "Simpson.txt";
-          ofstream ofs(filename.c_str());
-          edgevalue_max = 0;
-          edgevalue_min = 100000000;
-          for (int i = 0; i < M; i++) {
-            int from = edges[i].first, to = edges[i].second;
-            float inter = 1.0f;
-            for (int j = 0; j < N; j++) {
-              if (D[from][j] == 1 && D[to][j] == 1) {
-                inter += 1.0f;
-              }
-            }
-            float f = (float) min(neighbor[from].size(), neighbor[to].size());
-            edgevalues[i] = (float) inter / (float) f;
-            edgevalue_min = min(edgevalue_min, edgevalues[i]);
-            edgevalue_max = max(edgevalue_max, edgevalues[i]);
-            ofs << from << " " << to << " " << edgevalues[i] << endl;
-          }
-          ofs.close();
-        } else if (n == 2) {
-          string filename = graphName + "SimpsonEx.txt";
-          ofstream ofs(filename.c_str());
-          edgevalue_max = 0;
-          edgevalue_min = 100000000;
-          for (int i = 0; i < M; i++) {
-            int from = edges[i].first, to = edges[i].second;
-            float count = 0.0f;
-            for (int j = 0; j < N; j++) {
-              if (D[from][j] == 1 && D[to][j] == 1) {
-                count += 1.0f;
-              }
-            }
-            int a = min(neighbor[from].size(), neighbor[to].size());
-            if (a >= 2) {
-              edgevalues[i] = (float) count / (float) a;
-            } else {
-              edgevalues[i] = 0;
-            }
-            edgevalue_min = min(edgevalue_min, edgevalues[i]);
-            edgevalue_max = max(edgevalue_max, edgevalues[i]);
-            ofs << from << " " << to << " " << edgevalues[i] << endl;
-          }
-          ofs.close();
-        }
-      } else {
-        for (int i = 0; i < M; i++) {
-          edgevalues[i] = 1.0;
-        }
-        edgevalue_min = 0;
-        edgevalue_max = 1;
-      }
     }
   }
 }
 
-void Graph::loadLabelData(const std::string& graphName) {
+void Graph::calcSimpson()
+{
+  string filename = _dataDir + _name + "Simpson.txt";
+  ofstream ofs(filename.c_str());
+  edgevalue_max = 0;
+  edgevalue_min = 100000000;
+  for (int i = 0; i < M; i++) {
+    int from = edges[i].first, to = edges[i].second;
+    float inter = 1.0f;
+    for (int j = 0; j < N; j++) {
+      if (D[from][j] == 1 && D[to][j] == 1) {
+        inter += 1.0f;
+      }
+    }
+    float f = (float) min(neighbor[from].size(), neighbor[to].size());
+    edgevalues[i] = (float) inter / (float) f;
+    edgevalue_min = min(edgevalue_min, edgevalues[i]);
+    edgevalue_max = max(edgevalue_max, edgevalues[i]);
+    ofs << from << " " << to << " " << edgevalues[i] << endl;
+  }
+  ofs.close();
+}
+
+void Graph::calcSimpsonEx() {
+    string filename = _dataDir + _name + "SimpsonEx.txt";
+    ofstream ofs(filename.c_str());
+    edgevalue_max = 0;
+    edgevalue_min = 100000000;
+    for (int i = 0; i < M; i++) {
+      int from = edges[i].first, to = edges[i].second;
+      float count = 0.0f;
+      for (int j = 0; j < N; j++) {
+        if (D[from][j] == 1 && D[to][j] == 1) {
+          count += 1.0f;
+        }
+      }
+      int a = min(neighbor[from].size(), neighbor[to].size());
+      if (a >= 2) {
+        edgevalues[i] = (float) count / (float) a;
+      } else {
+        edgevalues[i] = 0;
+      }
+      edgevalue_min = min(edgevalue_min, edgevalues[i]);
+      edgevalue_max = max(edgevalue_max, edgevalues[i]);
+      ofs << from << " " << to << " " << edgevalues[i] << endl;
+    }
+    ofs.close();
+}
+
+void Graph::loadLabelData() {
+  const std::string& graphName = this->getName();
   string labeldata = "../data/" + graphName + "/" + graphName + "labels.txt";
   ifstream lifs(labeldata.c_str());
   if (lifs.fail()) {
@@ -724,7 +733,6 @@ void Graph::loadLabelData(const std::string& graphName) {
 }
 
 //Set Default Node & Edge value
-
 void Graph::setNodeEdgeValue() {
   if(isLoaded()) {
     delete[] nodevalues;
@@ -737,7 +745,7 @@ void Graph::setNodeEdgeValue() {
   nodevalue_max = 5;
   nodevalue_min = 0;
   
-
+  
   edgevalues = new float[M];
   for (int i = 0; i < M; i++) {
     edgevalues[i] = 1.0f;
@@ -746,8 +754,8 @@ void Graph::setNodeEdgeValue() {
   edgevalue_min = 0;
 }
 
-void Graph::loadMatrixData_t(const char * data, const std::string& graphName) {
-  //Free Memory
+void Graph::loadMatrixData_t(const char * data) {
+  //Free Memor
   {
     if (memory_status) {
       for (int i = 0; i < N; i++) {
@@ -812,7 +820,7 @@ void Graph::loadMatrixData_t(const char * data, const std::string& graphName) {
   }
   
   //Load Label Data
-  loadLabelData(graphName);
+  loadLabelData();
   //Set Default Node & Edge value
   setNodeEdgeValue();
   
@@ -820,7 +828,7 @@ void Graph::loadMatrixData_t(const char * data, const std::string& graphName) {
   delta = 0.5;
 }
 
-void Graph::loadMatrixData_b(const char * data, const std::string& graphName) {
+void Graph::loadMatrixData_b(const char * data) {
   if(this->isLoaded()) {
     //Free Memory
     {
@@ -896,14 +904,14 @@ void Graph::loadMatrixData_b(const char * data, const std::string& graphName) {
   }
   
   //Load Label Data
-  loadLabelData(graphName);
+  loadLabelData();
   //Set Default Node & Edge value
   setNodeEdgeValue();
   scale = 1.0f;
   delta = 0.5;
 }
 
-void Graph::loadLayoutData_t(const char * data, const std::string& graphName) {
+void Graph::loadLayoutData_t(const char * data) {
   //Free Memory
   {
     if (memory_status) {
@@ -976,7 +984,7 @@ void Graph::loadLayoutData_t(const char * data, const std::string& graphName) {
   }
   
   //Load Label Data
-  loadLabelData(graphName);
+  loadLabelData();
   //Set Default Node & Edge value
   setNodeEdgeValue();
   
@@ -984,7 +992,8 @@ void Graph::loadLayoutData_t(const char * data, const std::string& graphName) {
   delta = 0.5;
 }
 
-void Graph::loadLayoutData_b(const char * data, const std::string& graphName) {
+void Graph::loadLayoutData_b(const char * data) {
+  const std::string& graphName = this->getName();
   //Free Memory
   {
     if (memory_status) {
@@ -1079,7 +1088,7 @@ void Graph::loadLayoutData_b(const char * data, const std::string& graphName) {
     edgeData.close();
   }
   //Load Label Data
-  loadLabelData(graphName);
+  loadLabelData();
   //Set Default Node & Edge value
   setNodeEdgeValue();
   cout << N << " " << M << " " << dim << endl;

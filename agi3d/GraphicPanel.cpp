@@ -109,6 +109,11 @@ void GraphicPanel::update(const agi3d::Observable &observable, E_ObserveType obs
       Refresh();
       break;
     }
+    case E_ObserveType::ColorOnly:
+    {
+      this->changeColor();
+      break;
+    }
       
     default:
       break;
@@ -525,7 +530,7 @@ void GraphicPanel::renderScene() {
         
         glTranslatef((GLfloat) pos_x[i], (GLfloat) pos_y[i], (GLfloat) pos_z[i]);
         
-        if (NODE_MODE) {
+        if (_userDefault->isDrawNode()) {
           float cb = (float) 3.0 * pow((double) nodevalues[i] / nodevalue_max, 1.0 / 3.0);
           glScalef((GLfloat) cb*size_rate, (GLfloat) cb*size_rate, (GLfloat) cb * size_rate);
         } else {
@@ -546,7 +551,7 @@ void GraphicPanel::renderScene() {
   
   //Draw Edges
   {
-    if (DRAW_EDGES) {
+    if (_userDefault->isDrawEdge()) {
       if (id != -1) {
         for (int i = 0; i < M; i++) {
           int from = edges[i].first, to = edges[i].second;
@@ -708,8 +713,7 @@ void GraphicPanel::setupPanel() {
     }
   }
   
-  DRAW_EDGES = true;
-  NODE_MODE = true;
+  
   AUTO_X_ROTATION = false;
   AUTO_Y_ROTATION = false;
   
@@ -761,8 +765,6 @@ void GraphicPanel::setupPanel() {
 
 void GraphicPanel::resetLayout() {
   
-  DRAW_EDGES = true;
-  NODE_MODE = true;
   AUTO_X_ROTATION = false;
   AUTO_Y_ROTATION = false;
   
@@ -917,7 +919,7 @@ void GraphicPanel::render(float x, float y, float z) {
     float dist = (x - pos_x[i])*(x - pos_x[i]) + (y - pos_y[i])*(y - pos_y[i]) + (z - pos_z[i])*(z - pos_z[i]);
     if (isdrawingNodes[i] && (dist < 0.1)) {
       glTranslatef((GLfloat) pos_x[i], (GLfloat) pos_y[i], (GLfloat) pos_z[i]);
-      if (NODE_MODE) {
+      if (_userDefault->isDrawNode()) {
         float cb = (float) 3.0 * pow((double) nodevalues[i] / nodevalue_max, 1.0 / 3.0);
         glScalef((GLfloat) cb, (GLfloat) cb, (GLfloat) cb);
       } else
@@ -936,14 +938,12 @@ void GraphicPanel::render(float x, float y, float z) {
   glDisable(GL_DEPTH_TEST);
 }
 
-void GraphicPanel::changeColor(int m) {
-  auto neighbor = _graph->getNeighbor();
-  if (id != -1) {
-    colors[neighbor[id][m]] = red;
-    if (highlited_id != -1) {
-      colors[neighbor[id][highlited_id]] = deepblue;
-    }
-    highlited_id = m;
+void GraphicPanel::changeColor() {
+  int m = _configuration->getSelectedId();
+  int highlited_id = _configuration->getPrevSelectedId();
+  colors[m] = red;
+  if (highlited_id != -1) {
+    colors[highlited_id] = deepblue;
   }
 }
 
@@ -958,42 +958,6 @@ void GraphicPanel::changeLayoutMode(int mode) {
   resetLayout();
 }
 
-void GraphicPanel::resetIsDrawingNodes() {
-  float nodevalue_min = _graph->getMinNodeValue();
-  float nodevalue_max = _graph->getMaxNodeValue();
-  bool* isdrawingNodes = _graph->getIsDrawingNodes();
-  int N = _graph->getN();
-
-  //TODO: コメントアウトしてるので、実装すること
-  //nodethreshold_b = nodevalue_min;
-  //nodethreshold_t = nodevalue_max;
-  for (int i = 0; i < N; i++) {
-    isdrawingNodes[i] = true;
-  }
-}
-
-void GraphicPanel::resetIsDrawingEdges() {
-  int M = _graph->getM();
-  bool* isdrawingEdges = _graph->getIsDrawingEdges();
-  //TODO: コメントアウトしてるので、実装すること
-//  edgethreshold_b = edgevalue_min;
-//  edgethreshold_t = edgevalue_max;
-  for (int i = 0; i < M; i++) {
-    isdrawingEdges[i] = true;
-  }
-}
-
-void GraphicPanel::scaleLayout(float f) {
-  if (LayoutMode == 3) {
-    _graph->updateScale3D(f);
-    relayout3D();
-  } else if (LayoutMode == 2) {
-    _graph->updateScale2D(f);
-    relayout2D();
-  }
-  Refresh();
-}
-
 void GraphicPanel::changeDimension(float f) {
   if (LayoutMode == 3) {
     _graph->updateDimension3D(f);
@@ -1002,16 +966,6 @@ void GraphicPanel::changeDimension(float f) {
     _graph->updateDimension2D(f);
     relayout2D();
   }
-}
-
-void GraphicPanel::drawEdge() {
-  DRAW_EDGES = !DRAW_EDGES;
-  Refresh();
-}
-
-void GraphicPanel::nodeModeChange() {
-  NODE_MODE = !NODE_MODE;
-  Refresh();
 }
 
 void GraphicPanel::setXRotation(bool value) {

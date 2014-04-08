@@ -71,7 +71,7 @@ void GraphicController::mouseLeftDown(wxMouseEvent& event) {
       const std::string& label = _graph->getNodeLabel(*itr);
       neiborLabels.push_back(label);
     }
-    _configuration->changeTarget(label, neiborLabels);
+    _configuration->changeTarget(label, neiborLabels, neiborIds);
   }
 }
 

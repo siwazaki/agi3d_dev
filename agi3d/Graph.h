@@ -1,11 +1,3 @@
-//
-//  Graph.h
-//  agi3d
-//
-//  Created by 岩崎 敏 on 2014/04/01.
-//  Copyright (c) 2014年 com.nefrock. All rights reserved.
-//
-
 #ifndef __agi3d__Graph__
 #define __agi3d__Graph__
 
@@ -22,7 +14,9 @@ namespace agi3d
   
   class GraphicController;
   typedef boost::numeric::ublas::vector<float> fvector;
-  
+  /**
+   * TODO: インプットとなるファイルデータの管理を別クラスに委譲する。
+   */
   class Graph : public Observable
   {
     
@@ -56,6 +50,7 @@ namespace agi3d
     void changeProjectionFactor(float f, E_Layout layout);
     void changeNodeThreshold(float b, float t);
     void changeEdgeThreshold(float b, float t);
+    void changeScaleLayout(float f, E_Layout layoutType);
     
     //calcuation functions
     float calcNodeThreshold(float t) const;
@@ -80,13 +75,13 @@ namespace agi3d
     void updateDimension2D(float);
     
     //データ取込
-    void loadNodeAttrData(int n, const std::string& graphName);
-    void loadEdgeAttrData(int n, const std::string& graphName);
-    void loadLabelData(const std::string& graphName);
-    void loadMatrixData_t(const char * data, const std::string& graphName);
-    void loadMatrixData_b(const char * data, const std::string& graphName);
-    void loadLayoutData_b(const char * data, const std::string& graphName);
-    void loadLayoutData_t(const char * data, const std::string& graphName);
+    void loadNodeAttrData(int n);
+    void loadEdgeAttrData(int n);
+    void loadLabelData();
+    void loadMatrixData_t(const char * data);
+    void loadMatrixData_b(const char * data);
+    void loadLayoutData_b(const char * data);
+    void loadLayoutData_t(const char * data);
     
     void calcmdsLayout();
     void calc2DLayout();
@@ -107,6 +102,7 @@ namespace agi3d
     //graph properties
     bool _isLoaded;
     std::string _name;
+    std::string _dataDir;
     int N;
     int M;
     int ** D;
@@ -145,6 +141,9 @@ namespace agi3d
     
     //private functions
     void setNodeEdgeValue();
+    //使っていない
+    void calcSimpson();
+    void calcSimpsonEx();
     
   };
   

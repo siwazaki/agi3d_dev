@@ -48,7 +48,7 @@ ConfigurationController::ConfigurationController(const std::shared_ptr<Configura
   auto updateNodeValueThresholdHandler(bind(&ConfigurationController::updateNodeValueThreshold, this, placeholders::_1 ));
   this->_controlPanel->Bind(wxEVT_COMMAND_SLIDER_UPDATED, updateNodeValueThresholdHandler, 70);
   this->_controlPanel->Bind(wxEVT_COMMAND_SLIDER_UPDATED, updateNodeValueThresholdHandler, 71);
-
+  
   auto updateEdgeValueThresholdHandler(bind(&ConfigurationController::updateEdgeValueThreshold, this, placeholders::_1 ));
   this->_controlPanel->Bind(wxEVT_COMMAND_SLIDER_UPDATED, updateEdgeValueThresholdHandler, 80);
   this->_controlPanel->Bind(wxEVT_COMMAND_SLIDER_UPDATED, updateEdgeValueThresholdHandler, 81);
@@ -65,8 +65,8 @@ ConfigurationController::ConfigurationController(const std::shared_ptr<Configura
   auto onToggleNodeSizeHandler(bind(&ConfigurationController::onToggleNodeSize, this, placeholders::_1 ));
   this->_controlPanel->Bind(wxEVT_COMMAND_CHECKBOX_CLICKED, onToggleNodeSizeHandler, 201);
   
-  auto handleListHandler(bind(&ConfigurationController::handleListEvent, this, placeholders::_1 ));
-  this->_controlPanel->Bind(wxEVT_LISTBOX, handleListHandler, 555);
+  auto hilightHandler(bind(&ConfigurationController::hilightNode, this, placeholders::_1 ));
+  this->_controlPanel->Bind(wxEVT_LISTBOX, hilightHandler, 555);
   
 }
 
@@ -74,18 +74,10 @@ ConfigurationController::~ConfigurationController() {
   
 }
 
-void ConfigurationController::setFPS(float _f) {
-  fps = _f;
-  wxString str = wxString::Format(wxT("   FPS : %f"), fps);  
-  _controlPanel->m_FPS->SetLabel(str);
-}
-
-void ConfigurationController::handleListEvent(wxCommandEvent& event) {
+void ConfigurationController::hilightNode(wxCommandEvent& event) {
   int m = event.GetInt();
-  
-  auto dp = AppDelegete::instance().getGraphicPanel();
-  //TODO:
-  //dp->changeColor(labelMap[m]);
+  int centerNodeId = _configuration->getNodeIdinLabels(m);
+  _configuration->changeColor(centerNodeId);
 }
 
 void ConfigurationController::notifyUpdateNodeSize(wxCommandEvent& event) {
@@ -99,106 +91,82 @@ void ConfigurationController::notifyUpdateEdgeThickness(wxCommandEvent& event) {
 }
 
 void ConfigurationController::notifyUpdateDelta(wxCommandEvent&) {
-  //TODO:
   float rate = (float) (_controlPanel->DeltaSlider->GetValue()) / 100.0f;
   _graph->changeProjectionFactor(rate, _userDefault->layout());
-  
 }
 
 void ConfigurationController::notifyUpdateScale(wxCommandEvent& event) {
-  //TODO:
   float rate = (float) (event.GetInt()) / 20.0f;
-  auto dp = AppDelegete::instance().getGraphicPanel();
-  dp->scaleLayout(rate);
+  _graph->changeScaleLayout(rate, _userDefault->layout());
 }
 
 void ConfigurationController::notifyUpdateDimension(wxCommandEvent& event) {
-  //TODO:
-  //  float rate = (float) (event.GetInt()) / 1000.0f;
-  //  auto dp = AppDelegete::instance().getGraphicPanel();
-  //  dp->ChangeDimension(rate);
+  float rate = (float) (event.GetInt()) / 1000.0f;
+  _graph->changeScaleLayout(rate, _userDefault->layout());
 }
 
-void ConfigurationController::updateNodeValueThreshold(wxCommandEvent& event) {
+void ConfigurationController::updateNodeValueThreshold(wxCommandEvent&) {
   auto node_slider_b_pos = _controlPanel->nodeThresholdSlider_b->GetValue();
   auto node_slider_t_pos = _controlPanel->nodeThresholdSlider_t->GetValue();
-    if (node_slider_b_pos <= node_slider_t_pos) {
-      float bz = (float) (node_slider_b_pos) / 100.0f;
-      float tz = (float) (node_slider_t_pos) / 100.0f;
-      float nodethreshold_b = _graph->calcNodeThreshold(bz);
-      float nodethreshold_t = _graph->calcNodeThreshold(tz);
-      _configuration->_nodethreshold_b = nodethreshold_b;
-      _configuration->_nodethreshold_t = nodethreshold_t;
-      _graph->changeNodeThreshold(nodethreshold_b, nodethreshold_t);
-    } else {
-      _controlPanel->nodeThresholdSlider_b->SetValue(node_slider_t_pos - 1);
-      float nodethreshold_b = _configuration->_nodethreshold_t * 0.99;
-      _controlPanel->nodeThresholdSlider_t->SetValue(node_slider_b_pos + 1);
-      float nodethreshold_t = nodethreshold_b * 1.01;
-      _configuration->_nodethreshold_b = nodethreshold_b;
-      _configuration->_nodethreshold_t = nodethreshold_t;
-    }
+  if (node_slider_b_pos <= node_slider_t_pos) {
+    float bz = (float) (node_slider_b_pos) / 100.0f;
+    float tz = (float) (node_slider_t_pos) / 100.0f;
+    float nodethreshold_b = _graph->calcNodeThreshold(bz);
+    float nodethreshold_t = _graph->calcNodeThreshold(tz);
+    _configuration->_nodethreshold_b = nodethreshold_b;
+    _configuration->_nodethreshold_t = nodethreshold_t;
+    _graph->changeNodeThreshold(nodethreshold_b, nodethreshold_t);
+  } else {
+    _controlPanel->nodeThresholdSlider_b->SetValue(node_slider_t_pos - 1);
+    float nodethreshold_b = _configuration->_nodethreshold_t * 0.99;
+    _controlPanel->nodeThresholdSlider_t->SetValue(node_slider_b_pos + 1);
+    float nodethreshold_t = nodethreshold_b * 1.01;
+    _configuration->_nodethreshold_b = nodethreshold_b;
+    _configuration->_nodethreshold_t = nodethreshold_t;
+  }
 }
 
 void ConfigurationController::updateEdgeValueThreshold(wxCommandEvent&) {
   auto edge_slider_b_pos = _controlPanel->edgeThresholdSlider_b->GetValue();
   auto edge_slider_t_pos = _controlPanel->edgeThresholdSlider_t->GetValue();
-    if (edge_slider_b_pos < edge_slider_t_pos) {
-      float bz = (float) (edge_slider_b_pos) / 100.0f;
-      float tz = (float) (edge_slider_t_pos) / 100.0f;
-      float edgethreshold_b = _graph->calcEdgeThreshold(bz);
-      float edgethreshold_t = _graph->calcEdgeThreshold(tz);
-      _configuration->_edgethreshold_b = edgethreshold_b;
-      _configuration->_edgethreshold_t = edgethreshold_t;
-      _graph->changeEdgeThreshold(edgethreshold_b, edgethreshold_t);
-    } else {
-      _controlPanel->edgeThresholdSlider_b->SetValue(edge_slider_t_pos - 1);
-      _controlPanel->edgeThresholdSlider_t->SetValue(edge_slider_b_pos + 1);
-    }
+  if (edge_slider_b_pos < edge_slider_t_pos) {
+    float bz = (float) (edge_slider_b_pos) / 100.0f;
+    float tz = (float) (edge_slider_t_pos) / 100.0f;
+    float edgethreshold_b = _graph->calcEdgeThreshold(bz);
+    float edgethreshold_t = _graph->calcEdgeThreshold(tz);
+    _configuration->_edgethreshold_b = edgethreshold_b;
+    _configuration->_edgethreshold_t = edgethreshold_t;
+    _graph->changeEdgeThreshold(edgethreshold_b, edgethreshold_t);
+  } else {
+    _controlPanel->edgeThresholdSlider_b->SetValue(edge_slider_t_pos - 1);
+    _controlPanel->edgeThresholdSlider_t->SetValue(edge_slider_b_pos + 1);
+  }
 }
 
 void ConfigurationController::onToggleEdge(wxCommandEvent&) {
-  auto dp = AppDelegete::instance().getGraphicPanel();
-  dp->drawEdge();
+  bool isDraw = !_userDefault->isDrawEdge();
+  _userDefault->changeIsDrawEdge(isDraw);
 }
 
 void ConfigurationController::onToggleNodeSize(wxCommandEvent&) {
-  auto dp = AppDelegete::instance().getGraphicPanel();
-  dp->nodeModeChange();
+  bool isDraw = !_userDefault->isDrawNode();
+  _userDefault->changeIsDrawNode(isDraw);
 }
 
 void ConfigurationController::selectNodeAttr(wxCommandEvent&) {
-  //TODO:
-  //  auto dp = AppDelegete::instance().getGraphicPanel();
-  //  wxString label = nodeAttrsChoice->GetStringSelection();
-  //  int n = nodeAttrsChoice->GetSelection();
-  //  nodeThresholdSlider_b->SetValue(0);
-  //  nodeThresholdSlider_t->SetValue(100);
-  //  node_slider_b_pos = 0;
-  //  node_slider_t_pos = 100;
-  //  nodeThresholdAttrID = n;
-  //  string strs = string(label.mb_str());
-  //
-  //  //一時的な実装
-  //  auto configurationController = AppDelegete::instance().getConfigurationController();
-  //  loadNodeAttrData(n, configurationController->getGraphName());
-  //  dp->ResetIsDrawingNodes();
+  wxString label = _controlPanel->nodeAttrsChoice->GetStringSelection();
+  int n = _controlPanel->nodeAttrsChoice->GetSelection();
+  _controlPanel->nodeThresholdSlider_b->SetValue(0);
+  _controlPanel->nodeThresholdSlider_t->SetValue(100);
+  _graph->loadNodeAttrData(n);
+  _configuration->changeNodeThreshholdAtrr(n);
 }
 
 void ConfigurationController::selectEdgeAttr(wxCommandEvent&) {
-  //TODO:
-  //  auto dp = AppDelegete::instance().getGraphicPanel();
-  //  wxString label = edgeAttrsChoice->GetStringSelection();
-  //  int n = edgeAttrsChoice->GetSelection();
-  //  edgeThresholdSlider_b->SetValue(0);
-  //  edgeThresholdSlider_t->SetValue(100);
-  //  edge_slider_b_pos = 0;
-  //  edge_slider_t_pos = 100;
-  //  edgeThresholdAttrID = n;
-  //  string strs = string(label.mb_str());
-  //
-  //  //一時的な実装
-  //  auto configurationController = AppDelegete::instance().getConfigurationController();
-  //  loadEdgeAttrData(n, configurationController->getGraphName());
-  //  dp->ResetIsDrawingEdges();
+  wxString label = _controlPanel->edgeAttrsChoice->GetStringSelection();
+  int n = _controlPanel->edgeAttrsChoice->GetSelection();
+  _controlPanel->edgeThresholdSlider_b->SetValue(0);
+  _controlPanel->edgeThresholdSlider_t->SetValue(100);
+  _graph->loadEdgeAttrData(n);
+  _configuration->changeEdgeThreshholdAttr(n);
 }

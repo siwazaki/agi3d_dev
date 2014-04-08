@@ -107,8 +107,7 @@ void UserDefaultController::onOpen(wxCommandEvent&) {
   if (openFileDialog->ShowModal() == wxID_OK) {
      wxString filePath = openFileDialog->GetPath();
     _graph->loadData(std::string(filePath.mb_str()));
-    
-    
+      
     //TODO:should be refactored
     auto graphicPanel = AppDelegete::instance().getGraphicPanel();
     auto appearanceWindow = AppDelegete::instance().getAppearanceWindow();

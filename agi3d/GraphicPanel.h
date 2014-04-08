@@ -47,31 +47,30 @@ namespace agi3d {
     void downRight(int x, int y);
     void moveEye(int delta);
     void renderScene();
+    
+    //TODO: refactor this
     void setupPanel();
     
     //TODO:下のAPIは整理が必要
     //モデルの内容を書き換えて、Refresh呼ぶだけなので、
     //Observerパターンでよい。
     //そんで、前処理はGraphに持っていく
-    void changeColor(int i);
     void setXRotation(bool);
     void setYRotation(bool);
-    void nodeModeChange();
     void savePixelData();
-    void drawEdge();
-    void scaleLayout(float);
     void render(float x, float y, float z);
     void changeLayoutMode(int);
-    void resetIsDrawingNodes();
-    void resetIsDrawingEdges();
     void changeDimension(float);
 
     
   private:
+    void changeColor();
+    void scaleLayout(float);
     /**
      * @TODO: remove this
      */
     void changeEye(float);
+
     GLuint setUpVBA(float radius, int slices, int stacks);
     int processSelection(int, int);
     void resetLayout();
@@ -113,8 +112,6 @@ namespace agi3d {
     
     //Option Flags
     bool LOAD_FLAG = false;
-    bool DRAW_EDGES = true;
-    bool NODE_MODE = true;
     bool AUTO_X_ROTATION = false;
     bool AUTO_Y_ROTATION = false;
     

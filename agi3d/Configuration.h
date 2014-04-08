@@ -1,11 +1,3 @@
-//
-//  Configuration.h
-//  agi3d
-//
-//  Created by 岩崎 敏 on 2014/04/01.
-//  Copyright (c) 2014年 com.nefrock. All rights reserved.
-//
-
 #ifndef __agi3d__Configuration__
 #define __agi3d__Configuration__
 
@@ -15,7 +7,7 @@
 #include "Observable.h"
 
 namespace agi3d {
-
+  
   class ConfigurationController;
   /**
    * ControlPanelで変更可能なデータを保持するモデル。
@@ -36,11 +28,19 @@ namespace agi3d {
     int getEdgeThreshHold_b() const;
     const std::string& getNodeLabel() const;
     const std::vector<std::string>& getNeiborLabels() const;
-    
-    void changeTarget(const std::string& label, const std::vector<std::string>& neiborLabels);
-    
-    void changeFPS(float fps);
+    int getNodeIdinLabels(int ithInTheLabel);
     float getFPS() const;
+    int getPickedId() const;
+    void setPickedId(int i);
+    int getSelectedId() const;
+    int getPrevSelectedId() const;
+    void setSelectedId(int i);
+    
+    void changeTarget(const std::string& label, const std::vector<std::string>& neiborLabels, const std::vector<int>& neiborIds);
+    void changeFPS(float fps);
+    void changeColor(int selectedNodeId);
+    void changeNodeThreshholdAtrr(int id);
+    void changeEdgeThreshholdAttr(int id);
     
   private:
     std::string _graphName;
@@ -52,15 +52,16 @@ namespace agi3d {
     float _edgethreshold_t;
     float _edgethreshold_b;
     float _fps;
-
-    //TODO: 要らないフィールドの削除
+    //TODO:要らないかもしれないので削除
+    int _pickid;
+    
     std::map<int, int> _labelMap;
-    float fps = 0.0f;
-    float tmp = 0.0f;
-    int nodeThresholdAttrID = 0;
-    int edgeThresholdAttrID = 0;
-    int pickid = -1;
-    int _id;;
+    int _selectedId;
+    int _prevSelectedId;
+    
+    int _nodeThresholdAttrID;
+    int _edgeThresholdAttrID;
+    
   };
   
   inline const std::string& Configuration::graphName() const
@@ -87,7 +88,7 @@ namespace agi3d {
   {
     return _edgethreshold_b;
   }
-
+  
   inline const std::string& Configuration::getNodeLabel() const
   {
     return _label;
@@ -102,11 +103,40 @@ namespace agi3d {
   {
     return _fps;
   }
-
+  
   inline void Configuration::changeFPS(float fps)
   {
     _fps = fps;
-    this->notify(E_ObserveType::ConfigurationOnly);
+    this->notify(E_ObserveType::ConfigurationFPSOnly);
+  }
+  
+  inline int Configuration::getNodeIdinLabels(int ithInTheLabel)
+  {
+    return _labelMap[ithInTheLabel];
+  }
+  
+  inline int Configuration::getSelectedId() const
+  {
+    return _selectedId;
+  }
+  
+  inline int Configuration::getPrevSelectedId() const
+  {
+    return _prevSelectedId;
+  }
+  
+  inline void Configuration::setSelectedId(int i)
+  {
+    _prevSelectedId = _selectedId;
+    _selectedId = i;
+  }
+  
+  inline int Configuration::getPickedId() const {
+    return _pickid;
+  }
+  
+  inline void Configuration::setPickedId(int i) {
+    _pickid=i;
   }
   
 }

@@ -1,24 +1,8 @@
-//
-//  Setting.cpp
-//  agi3d
-//
-//  Created by 岩崎 敏 on 2014/03/31.
-//  Copyright (c) 2014年 com.nefrock. All rights reserved.
-//
-
 #include "UserDefault.h"
 
 using namespace agi3d;
 
-UserDefault::UserDefault() : _layout(E_Layout::D2), _rotation(E_Rotation::None), _nodeSize(1.0f), _edgeThickness(1.0f), _scale(20), _delta(50), _dimention(1000) ,_isDrawNode(true), _isDrawEdge(true){
-/*  dp->changeSize(1.0f);
-  dp->changeThickness(1.0f);
-  
-  dp->setXRotation(false);
-  dp->setYRotation(false);
- */
-
-
+UserDefault::UserDefault() : _layout(E_Layout::D2), _rotation(E_Rotation::None), _nodeSize(1.0f), _edgeThickness(1.0f),_isDrawNode(true), _isDrawEdge(true) {
 }
 
 UserDefault::~UserDefault() {}
@@ -33,4 +17,16 @@ void UserDefault::changeEdgeThickness(float edgeThickness)
 {
   _edgeThickness = edgeThickness;
   this->notify(E_ObserveType::RefreshOnly);
+}
+
+void UserDefault::changeIsDrawEdge(bool isDraw)
+{
+  _isDrawEdge = isDraw;
+  this->notify(E_ObserveType::RefreshOnly);
+}
+
+void UserDefault::changeIsDrawNode(bool isDraw)
+{
+  _isDrawNode = isDraw;
+  this->notify(E_ObserveType::RefreshOnly);  
 }
