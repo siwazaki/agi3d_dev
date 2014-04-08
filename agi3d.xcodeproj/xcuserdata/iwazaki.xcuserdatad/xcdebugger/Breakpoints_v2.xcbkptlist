@@ -310,11 +310,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "agi3d/Graph.h"
-            timestampString = "418670469.655612"
+            timestampString = "418674602.320481"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "281"
-            endingLineNumber = "281"
+            startingLineNumber = "283"
+            endingLineNumber = "283"
             landmarkName = "Graph::getNodeLabel(int i)"
             landmarkType = "5">
          </BreakpointContent>
@@ -342,11 +342,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "agi3d/Graph.h"
-            timestampString = "418670469.655612"
+            timestampString = "418674602.320481"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "292"
-            endingLineNumber = "292"
+            startingLineNumber = "294"
+            endingLineNumber = "294"
             landmarkName = "Graph::getNeiborIds(int id, float nodethreshold_b, float nodethreshold_t)"
             landmarkType = "5">
          </BreakpointContent>
@@ -598,11 +598,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "agi3d/Graph.cpp"
-            timestampString = "418670469.655612"
+            timestampString = "418674602.320481"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "629"
-            endingLineNumber = "629"
+            startingLineNumber = "649"
+            endingLineNumber = "649"
             landmarkName = "Graph::loadEdgeAttrData(int n)"
             landmarkType = "5">
          </BreakpointContent>
@@ -620,6 +620,22 @@
             startingLineNumber = "36"
             endingLineNumber = "36"
             landmarkName = "UserDefault::changeRotation(E_Rotation rotation)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "agi3d/Graph.cpp"
+            timestampString = "418674746.115844"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "66"
+            endingLineNumber = "66"
+            landmarkName = "Graph::changeProjectionFactor(float f, E_Layout layout)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

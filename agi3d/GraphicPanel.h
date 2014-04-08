@@ -22,8 +22,7 @@ namespace agi3d {
   typedef cml::matrix44f_c matrix;
   typedef GLfloat Position[3];
   typedef GLuint Face[3];
-  
-  
+    
   class GraphicPanel : public wxGLCanvas, public Observer {
     
     wxGLContext* m_context;

@@ -51,6 +51,7 @@ namespace agi3d
     void changeNodeThreshold(float b, float t);
     void changeEdgeThreshold(float b, float t);
     void changeScaleLayout(float f, E_Layout layoutType);
+    void changeDimension(float f,  E_Layout layoutType);
     
     //calcuation functions
     float calcNodeThreshold(float t) const;
@@ -58,6 +59,7 @@ namespace agi3d
     
     //initialization
     bool isLoaded() const;
+    
     //FIXME:この関数は消すこと
     void reset();
     bool loadData(const std::string& filePath);

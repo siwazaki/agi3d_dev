@@ -98,6 +98,26 @@ void Graph::changeScaleLayout(float f, E_Layout layoutType) {
   }
 }
 
+void Graph::changeDimension(float f, E_Layout layoutType) {
+  switch (layoutType) {
+    case E_Layout::D2:
+    {
+      this->updateDimension2D(f);
+      this->notify(E_ObserveType::NeedRelayout);
+      break;
+    }
+    case E_Layout::D3:
+    {
+      this->updateDimension3D(f);
+      this->notify(E_ObserveType::NeedRelayout);
+      break;
+    }
+    default: {
+      break;
+    }
+  }
+}
+
 void Graph::changeNodeThreshold(float b, float t) {
   for (int i = 0; i < N; i++) {
     isdrawingNodes[i] = ((nodevalues[i] >= b) && (nodevalues[i] <= t));

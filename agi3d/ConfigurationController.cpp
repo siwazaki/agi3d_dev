@@ -102,7 +102,7 @@ void ConfigurationController::notifyUpdateScale(wxCommandEvent& event) {
 
 void ConfigurationController::notifyUpdateDimension(wxCommandEvent& event) {
   float rate = (float) (event.GetInt()) / 1000.0f;
-  _graph->changeScaleLayout(rate, _userDefault->layout());
+  _graph->changeDimension(rate, _userDefault->layout());
 }
 
 void ConfigurationController::updateNodeValueThreshold(wxCommandEvent&) {
