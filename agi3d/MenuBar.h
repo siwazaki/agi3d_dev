@@ -8,23 +8,27 @@
 #include <wx/menu.h>
 
 #include "UserDefault.h"
+#include "Observer.h"
 
 namespace agi3d {
   
-  class MenuBar : public wxMenuBar
+  class MenuBar : public wxMenuBar, public Observer
   {
     
   public:
     MenuBar();
     virtual ~MenuBar(){}
-    void renderModel(const std::shared_ptr<UserDefault>& userDefault);
+    virtual void update(const Observable& observable, E_ObserveType observeType);
+    void init(const std::shared_ptr<UserDefault> userDefault);
     
   private:
+    std::shared_ptr<UserDefault> _userDefault;
     wxMenuItem *quit;
     wxMenu *file;
     wxMenu *edit;
     wxMenu *layoutMenu;
     wxMenu *rotationMenu;
+    void changeMenu();
     
   };
 }

@@ -28,7 +28,7 @@ namespace agi3d {
     
     wxGLContext* m_context;
     
-  public:    
+  public:
     GraphicPanel(wxWindow* parent, int* args);
     virtual ~GraphicPanel();
     
@@ -55,13 +55,12 @@ namespace agi3d {
     //モデルの内容を書き換えて、Refresh呼ぶだけなので、
     //Observerパターンでよい。
     //そんで、前処理はGraphに持っていく
-    void setXRotation(bool);
-    void setYRotation(bool);
+    
+    
     void savePixelData();
     void render(float x, float y, float z);
-    void changeLayoutMode(int);
     void changeDimension(float);
-
+    
     
   private:
     void changeColor();
@@ -70,7 +69,7 @@ namespace agi3d {
      * @TODO: remove this
      */
     void changeEye(float);
-
+    
     GLuint setUpVBA(float radius, int slices, int stacks);
     int processSelection(int, int);
     void resetLayout();
@@ -86,7 +85,7 @@ namespace agi3d {
     int glframe = 0;
     long gltimenow = 0;
     wxStopWatch *sw;
-           
+    
     //Layout Mode
     int LayoutMode = 3;
     
@@ -94,7 +93,7 @@ namespace agi3d {
     float * pos_x, * pos_y, * pos_z;
     vector3 * colors;
     float radius = 0.015f;
-        
+    
     //Light Attribute
     float light_z = 200.0f;
     
@@ -140,14 +139,15 @@ namespace agi3d {
     GLuint vertexBuf, indexBuf;
     GLuint points;
     
-    int imgnum = 1;      
+    int imgnum = 1;
     
     //View Matrix?
     GLdouble mvMatrix[16];
-       
+    
     
     int getWidth();
     int getHeight();
+    void changeAutoRotation();
     
   };
 }

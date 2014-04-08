@@ -44,8 +44,12 @@ MenuBar::MenuBar() {
   this->Append(edit, wxT("&Edit"));
 }
 
-void MenuBar::renderModel(const std::shared_ptr<UserDefault> &userDefault) {
-  switch(userDefault->rotation()) {
+void MenuBar::init(const std::shared_ptr<UserDefault> userDefault) {
+  _userDefault = userDefault;
+}
+
+void MenuBar::changeMenu() {
+  switch(_userDefault->rotation()) {
     case E_Rotation::X: {
       rotationMenu->SetLabel(13, wxT(" X Rotation  ✓"));
       rotationMenu->SetLabel(14, wxT(" Y Rotation  "));
@@ -71,4 +75,25 @@ void MenuBar::renderModel(const std::shared_ptr<UserDefault> &userDefault) {
     default:
       throw std::invalid_argument("unknown rotaion type found");
   }
+  
+  switch(_userDefault->layout())
+  {
+    case E_Layout::D2: {
+      layoutMenu->SetLabel(11, wxT(" 3D"));
+      layoutMenu->SetLabel(12, wxT(" 2D  ✓"));
+      break;
+    }
+    case E_Layout::D3: {
+      layoutMenu->SetLabel(11, wxT(" 3D  ✓"));
+      layoutMenu->SetLabel(12, wxT(" 2D"));
+      break;
+    }
+    default:
+      throw std::invalid_argument("unknown layout type found");
+  }
+}
+
+void MenuBar::update(const Observable&, E_ObserveType)
+{
+  this->changeMenu();
 }

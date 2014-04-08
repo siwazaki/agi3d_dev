@@ -38,7 +38,6 @@ namespace agi3d {
     void setAutoXRotation(wxCommandEvent& event);
     void setAutoYRotation(wxCommandEvent& event);
     void stopAutoRotation(wxCommandEvent& event);
-    void resetMenuParams();
     void captureImage(wxCommandEvent& event);
     void reset(wxCommandEvent& event);
     void changeLayoutModeTo2D(wxCommandEvent& event);

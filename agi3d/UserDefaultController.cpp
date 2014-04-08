@@ -64,41 +64,17 @@ UserDefaultController::~UserDefaultController()
 }
 
 void UserDefaultController::setAutoXRotation(wxCommandEvent&) {
-  _userDefault->_rotation = (E_Rotation)(_userDefault->_rotation ^ E_Rotation::X);
-  std::cout << _userDefault->_rotation << std::endl;
-  _menuBar->renderModel(_userDefault);
-
-
-  //  if (x_rotation) {
-  //    left->SetXRotation(false);
-  //    x_rotation = false;
-  //    rotationMenu->SetLabel(13, wxT(" X Rotation  "));
-  //  } else {
-  //    left->SetXRotation(true);
-  //    x_rotation = true;
-  //    rotationMenu->SetLabel(13, wxT(" X Rotation  ✓"));
-  //  }
+  E_Rotation rotation = (E_Rotation)(_userDefault->_rotation ^ E_Rotation::X);
+  _userDefault->changeRotation(rotation);
 }
 
 void UserDefaultController::setAutoYRotation(wxCommandEvent&) {
-  _userDefault->_rotation = (E_Rotation)(_userDefault->_rotation ^ E_Rotation::Y);
-  _menuBar->renderModel(_userDefault);
-  
-  //  if (y_rotation) {
-  //    left->SetYRotation(false);
-  //    y_rotation = false;
-  //    rotationMenu->SetLabel(14, wxT(" Y Rotation  "));
-  //  } else {
-  //    left->SetYRotation(true);
-  //    y_rotation = true;
-  //    rotationMenu->SetLabel(14, wxT(" Y Rotation  ✓"));
-  //  }
+  E_Rotation rotation = (E_Rotation)(_userDefault->_rotation ^ E_Rotation::Y);
+  _userDefault->changeRotation(rotation);
 }
 
 void UserDefaultController::stopAutoRotation(wxCommandEvent&) {
-  _userDefault->_rotation = E_Rotation::None;
-  _menuBar->renderModel(_userDefault);
-  //ResetMenuParams();
+  _userDefault->changeRotation(E_Rotation::None);
 }
 
 
@@ -112,43 +88,27 @@ void UserDefaultController::onOpen(wxCommandEvent&) {
     auto graphicPanel = AppDelegete::instance().getGraphicPanel();
     auto appearanceWindow = AppDelegete::instance().getAppearanceWindow();
     graphicPanel->setupPanel();
-
     appearanceWindow->Init();
   }
 }
 
-void UserDefaultController::resetMenuParams() {
-//  x_rotation = false;
-//  left->SetXRotation(false);
-//  rotationMenu->SetLabel(13, wxT(" X Rotation"));
-//  y_rotation = false;
-//  left->SetYRotation(false);
-//  rotationMenu->SetLabel(14, wxT(" Y Rotation"));
-}
-
 void UserDefaultController::reset(wxCommandEvent&) {
-//  left->ResetLayout();
-//  right->Init();
-//  appw->Init();
-//  ResetMenuParams();
+  auto graphicPanel = AppDelegete::instance().getGraphicPanel();
+  auto appearanceWindow = AppDelegete::instance().getAppearanceWindow();
+  appearanceWindow->Init();
 }
 
 void UserDefaultController::changeLayoutModeTo2D(wxCommandEvent&) {
-//  left->ChangeLayoutMode(2);
+  _userDefault->changeLayout(E_Layout::D2);
 //  right->Init();
 //  appw->Init();
-//  layoutMenu->SetLabel(11, wxT(" 3D"));
-//  layoutMenu->SetLabel(12, wxT(" 2D  ✓"));
-//  ResetMenuParams();
 }
 
 void UserDefaultController::changeLayoutModeTo3D(wxCommandEvent&) {
-//  left->ChangeLayoutMode(3);
+    _userDefault->changeLayout(E_Layout::D3);
+
 //  right->Init();
 //  appw->Init();
-//  layoutMenu->SetLabel(11, wxT(" 3D  ✓"));
-//  layoutMenu->SetLabel(12, wxT(" 2D"));
-//  ResetMenuParams();
 }
 
 

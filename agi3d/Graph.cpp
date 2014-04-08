@@ -67,11 +67,11 @@ void Graph::changeProjectionFactor(float f, E_Layout layout) {
   switch (layout) {
     case E_Layout::D2:
       this->updateProjection2D(f);
-      this->notify(E_ObserveType::NeedReLayout);
+      this->notify(E_ObserveType::NeedRelayout);
       break;
     case E_Layout::D3:
       this->updateProjection3D(f);
-      this->notify(E_ObserveType::NeedReLayout);
+      this->notify(E_ObserveType::NeedRelayout);
       break;
     default:
       throw invalid_argument("unkown layout type found.");
@@ -83,13 +83,13 @@ void Graph::changeScaleLayout(float f, E_Layout layoutType) {
     case E_Layout::D2:
     {
       this->updateScale2D(f);
-      this->notify(E_ObserveType::NeedReLayout);
+      this->notify(E_ObserveType::NeedRelayout);
       break;
     }
     case E_Layout::D3:
     {
       this->updateScale3D(f);
-      this->notify(E_ObserveType::NeedReLayout);
+      this->notify(E_ObserveType::NeedRelayout);
       break;
     }
     default: {

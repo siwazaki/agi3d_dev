@@ -17,8 +17,9 @@ namespace agi3d {
   
   typedef enum {
     RefreshOnly,
-    NeedReLayout,
+    NeedRelayout,
     ColorOnly,
+    ChangeAutoRotation,
     ConfigurationOnly,
     ConfigurationFPSOnly,
   } E_ObserveType;

@@ -22,7 +22,6 @@ ControlPanel::ControlPanel(wxWindow* parent)
   
   wxBoxSizer *mybox = new wxBoxSizer(wxVERTICAL);
   
-  wxBoxSizer *b1 = new wxBoxSizer(wxHORIZONTAL);
   
   m_FPS = new wxStaticText(this, -1, wxT("   FPS"), wxDefaultPosition, wxSize(100, 28), wxALIGN_LEFT);
   fileNameLabel = new wxStaticText(this, -1, wxT("   filename"), wxDefaultPosition, wxSize(100, 25), wxALIGN_LEFT);

@@ -95,10 +95,9 @@ void GraphicPanel::init(const std::shared_ptr<Graph>& graph,
   _right = vector3(1, 0, 0);
 }
 
-void GraphicPanel::update(const agi3d::Observable &observable, E_ObserveType observeType)
-{
+void GraphicPanel::update(const agi3d::Observable &, E_ObserveType observeType) {
   switch (observeType) {
-    case E_ObserveType::NeedReLayout:
+    case E_ObserveType::NeedRelayout:
     {
       relayout();
       Refresh();
@@ -114,9 +113,48 @@ void GraphicPanel::update(const agi3d::Observable &observable, E_ObserveType obs
       this->changeColor();
       break;
     }
-      
+    case E_ObserveType::ChangeAutoRotation:
+    {
+      this->changeAutoRotation();
+      Refresh();
+      break;
+    }
     default:
       break;
+  }
+}
+
+void GraphicPanel::changeAutoRotation() {
+  switch(_userDefault->rotation())
+  {
+    case E_Rotation::X:
+    {
+      AUTO_X_ROTATION = true;
+      AUTO_Y_ROTATION = false;;
+      break;
+    }
+      
+    case E_Rotation::Y:
+    {
+      AUTO_X_ROTATION = false;
+      AUTO_Y_ROTATION = true;
+      break;
+    }
+      
+    case E_Rotation::XY:
+    {
+      AUTO_X_ROTATION = true;
+      AUTO_Y_ROTATION = true;
+      break;
+    }
+      
+    case E_Rotation::None:
+    {
+      AUTO_X_ROTATION = false;
+      AUTO_Y_ROTATION = false;
+      break;
+    }
+      
   }
 }
 
@@ -953,11 +991,6 @@ void GraphicPanel::changeEye(float _v) {
   Refresh();
 }
 
-void GraphicPanel::changeLayoutMode(int mode) {
-  LayoutMode = mode;
-  resetLayout();
-}
-
 void GraphicPanel::changeDimension(float f) {
   if (LayoutMode == 3) {
     _graph->updateDimension3D(f);
@@ -966,16 +999,6 @@ void GraphicPanel::changeDimension(float f) {
     _graph->updateDimension2D(f);
     relayout2D();
   }
-}
-
-void GraphicPanel::setXRotation(bool value) {
-  AUTO_X_ROTATION = value;
-  Refresh();
-}
-
-void GraphicPanel::setYRotation(bool value) {
-  AUTO_Y_ROTATION = value;
-  Refresh();
 }
 
 void GraphicPanel::savePixelData() {

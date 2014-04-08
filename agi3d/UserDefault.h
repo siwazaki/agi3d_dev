@@ -34,6 +34,8 @@ namespace agi3d {
     void changeEdgeThickness(float thickness);
     void changeIsDrawEdge(bool isDraw);
     void changeIsDrawNode(bool isDraw);
+    void changeLayout(E_Layout layout);
+    void changeRotation(E_Rotation rotation);
     
   private:
     E_Layout _layout;
