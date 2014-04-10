@@ -27,6 +27,8 @@ UserDefaultController:: UserDefaultController(const std::shared_ptr<UserDefault>
   this->_graph = graph;
   this->_menuBar = AppDelegete::instance().getMenuBar();
   this->_appearanceWindow = AppDelegete::instance().getAppearanceWindow();
+  this->_graphicPanel = AppDelegete::instance().getGraphicPanel();
+  this->_controlPanel = AppDelegete::instance().getControlPanel();
   
   //イベントハンドラの登録
   auto resetHandler(bind(&UserDefaultController::reset, this, placeholders::_1));
@@ -77,45 +79,40 @@ void UserDefaultController::stopAutoRotation(wxCommandEvent&) {
   _userDefault->changeRotation(E_Rotation::None);
 }
 
-
 void UserDefaultController::onOpen(wxCommandEvent&) {
   wxFileDialog * openFileDialog = new wxFileDialog(_menuBar);
   if (openFileDialog->ShowModal() == wxID_OK) {
      wxString filePath = openFileDialog->GetPath();
     _graph->loadData(std::string(filePath.mb_str()));
-      
-    //TODO:should be refactored
-    auto graphicPanel = AppDelegete::instance().getGraphicPanel();
     auto appearanceWindow = AppDelegete::instance().getAppearanceWindow();
-    graphicPanel->setupPanel();
-    appearanceWindow->Init();
+    _graphicPanel->setupPanel();
+    _appearanceWindow->Init();
   }
 }
 
 void UserDefaultController::reset(wxCommandEvent&) {
-  auto graphicPanel = AppDelegete::instance().getGraphicPanel();
-  auto appearanceWindow = AppDelegete::instance().getAppearanceWindow();
-  appearanceWindow->Init();
+  _appearanceWindow->Init();
 }
 
 void UserDefaultController::changeLayoutModeTo2D(wxCommandEvent&) {
   _userDefault->changeLayout(E_Layout::D2);
+  _appearanceWindow->Init();
+
 //TODO:
 //  right->Init();
-//  appw->Init();
+
 }
 
 void UserDefaultController::changeLayoutModeTo3D(wxCommandEvent&) {
     _userDefault->changeLayout(E_Layout::D3);
+    _appearanceWindow->Init();
 //TODO:
 //  right->Init();
-//  appw->Init();
 }
 
 
 void UserDefaultController::captureImage(wxCommandEvent&) {
-//TODO:  
-  //left->SavePixelData();
+  _graphicPanel->savePixelData();
 }
 
 void UserDefaultController::openAppearanceWindow(wxCommandEvent&) {

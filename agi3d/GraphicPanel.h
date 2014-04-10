@@ -24,9 +24,7 @@ namespace agi3d {
   typedef GLuint Face[3];
     
   class GraphicPanel : public wxGLCanvas, public Observer {
-    
-
-    
+        
   public:
     wxGLContext* m_context;
     GraphicPanel(wxWindow* parent, int* args);

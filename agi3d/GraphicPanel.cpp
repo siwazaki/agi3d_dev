@@ -36,7 +36,7 @@ wxGLCanvas(parent,
            wxDefaultPosition,
            wxSize(1000, 870),
            wxFULL_REPAINT_ON_RESIZE),
-　　　　　 　glframe(0),
+           glframe(0),
            gltimenow(0.0),
            width(1000),
            height(870) {
@@ -789,7 +789,6 @@ void GraphicPanel::setupPanel() {
     }
   }
   
-  
   AUTO_X_ROTATION = false;
   AUTO_Y_ROTATION = false;
   
@@ -1052,7 +1051,6 @@ void GraphicPanel::changeEye(float _v) {
 }
 
 void GraphicPanel::savePixelData() {
-  //@TODO 一時的な実装
   const std::string& graphName = _graph->getName();
   string name = graphName + "img" + boost::lexical_cast<std::string>(imgnum) + ".png";
   imgnum++;

@@ -8,15 +8,15 @@ CPPFLAGS += -std=c++11 -stdlib=libc++
 LDFLAGS +=
 LBFGSLIB = -llbfgs
 WXLIBS = `$(BIN_WXCONFIG) --libs --gl-libs`
-LIBS += -lpng15 $(FRAMEWORK) -lglfw3 -lpthread -llapack -lblas $(LBFGSLIB) $(WXLIBS)
-WXCONFIG = `$(BIN_WXCONFIG) --cxxflags`
-INCLUDES := -I../vendor
-DEFS := $(INCLUDES) $(WXCONFIG) 
 FRAMEWORK = -framework OpenGL
 FRAMEWORK += -framework GLUT
 FRAMEWORK += -framework Accelerate
 FRAMEWORK += -framework IOKit
 FRAMEWORK += -framework Cocoa
+LIBS += -lpng15 $(FRAMEWORK) -lglfw3 -lpthread -llapack -lblas $(LBFGSLIB) $(WXLIBS)
+WXCONFIG = `$(BIN_WXCONFIG) --cxxflags`
+INCLUDES := -I../vendor
+DEFS := $(INCLUDES) $(WXCONFIG) 
 
 SRCS = constraintsolver3d.cpp constraintsolver2d.cpp Enums.cpp Observer.cpp Observable.cpp UserDefault.cpp Graph.cpp Configuration.cpp MenuBar.cpp UserDefaultController.cpp GraphicController.cpp  ConfigurationController.cpp AppDelegete.cpp GraphicPanel.cpp ControlPanel.cpp Frame.cpp AppearanceWindow.cpp App.cpp
 

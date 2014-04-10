@@ -20,14 +20,12 @@
 using namespace std;
 using namespace agi3d;
 
-//TODO: Use Builder or Factory
 ConfigurationController::ConfigurationController(const std::shared_ptr<Configuration>& configuration
                                                  , const std::shared_ptr<UserDefault>& userDefault
                                                  , const std::shared_ptr<Graph>& graph) {
   _configuration = configuration;
   _userDefault = userDefault;
-  _graph = graph;
-  
+  _graph = graph;  
   _controlPanel = AppDelegete::instance().getControlPanel();
   
   auto notifyUpdateNodeSizeHandler(bind(&ConfigurationController::notifyUpdateNodeSize, this, placeholders::_1));

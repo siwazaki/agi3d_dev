@@ -15,6 +15,8 @@
 
 #include "Graph.h"
 #include "UserDefault.h"
+
+#include "GraphicPanel.h"
 #include "MenuBar.h"
 #include "AppearanceWindow.h"
 
@@ -33,6 +35,9 @@ namespace agi3d {
     std::shared_ptr<Graph> _graph;
     MenuBar* _menuBar;
     AppearanceWindow* _appearanceWindow;
+    GraphicPanel* _graphicPanel;
+    ControlPanel* _controlPanel;
+    
 
     void notifyUpdateNodeSize(wxScrollEvent& event);
     void setAutoXRotation(wxCommandEvent& event);
