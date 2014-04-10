@@ -3,22 +3,25 @@ PROGNAME := agi3d
 buildtype := debug
 BIN_WXCONFIG :=$(HOME)/homebrew/bin/wx-config	
 CXX := g++
-CPPFLAGS += -std=c++11 -stdlib=libc++ 
+CPPFLAGS += -std=c++11 -stdlib=libc++
 #CPPFLAGS +=
 LDFLAGS +=
 LBFGSLIB = -llbfgs
 WXLIBS = `$(BIN_WXCONFIG) --libs --gl-libs`
-LIBS += -lpng15 $(FRAMEWORK) -lpthread -llapack -lblas $(LBFGSLIB) $(WXLIBS)
+LIBS += -lpng15 $(FRAMEWORK) -lglfw3 -lpthread -llapack -lblas $(LBFGSLIB) $(WXLIBS)
 WXCONFIG = `$(BIN_WXCONFIG) --cxxflags`
 INCLUDES := -I../vendor
 DEFS := $(INCLUDES) $(WXCONFIG) 
 FRAMEWORK = -framework OpenGL
 FRAMEWORK += -framework GLUT
 FRAMEWORK += -framework Accelerate
+FRAMEWORK += -framework IOKit
+FRAMEWORK += -framework Cocoa
 
 SRCS = constraintsolver3d.cpp constraintsolver2d.cpp Enums.cpp Observer.cpp Observable.cpp UserDefault.cpp Graph.cpp Configuration.cpp MenuBar.cpp UserDefaultController.cpp GraphicController.cpp  ConfigurationController.cpp AppDelegete.cpp GraphicPanel.cpp ControlPanel.cpp Frame.cpp AppearanceWindow.cpp App.cpp
 
-CXXFLAGS := -Wall -Wextra
+#CXXFLAGS := -Wall -Wextra
+CXXFLAGS := -Wall -Wno-unused-variable -Wno-unused-parameter -Wno-unused-function
 ifeq ($(buildtype),release)
   CXXFLAGS += -O3 -DNDEBUG
 else ifeq ($(buildtype),debug)

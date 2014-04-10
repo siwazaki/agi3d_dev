@@ -35,7 +35,7 @@ namespace agi3d {
     std::shared_ptr<Configuration> _configuration;
     std::shared_ptr<UserDefault> _userDefault;
     std::shared_ptr<Graph> _graph;
-    ControlPanel *_controlPanel;
+    ControlPanel *_controlPanel;    
     
     void hilightNode(wxCommandEvent& event);
     void notifyUpdateNodeSize(wxCommandEvent& event);

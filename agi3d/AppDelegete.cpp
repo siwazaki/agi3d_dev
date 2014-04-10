@@ -1,14 +1,7 @@
-//
-//  BaseController.cpp
-//  agi3d
-//
-//  Created by 岩崎 敏 on 2014/04/01.
-//  Copyright (c) 2014年 com.nefrock. All rights reserved.
-//
-
 #include "AppDelegete.h"
 
 using namespace agi3d;
+using namespace std;
 
 std::unique_ptr<AppDelegete> AppDelegete::m_instance;
 std::once_flag AppDelegete::m_onceFlag;
@@ -75,11 +68,21 @@ void AppDelegete::initMVC()
   _userDefault->addObserver(_menuBar);
   _userDefault->addObserver(_controlPanel);
   
+  //OpenGLの情報を出力
+  outputOpenGLInfo();
+  
 }
 
 void AppDelegete::run()
 {
-  _frame->Show(true);
+//  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+//  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+//  glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+//  glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+//  glfwCreateWindow(640, 480, "Hello World", NULL, NULL );
+  AppDelegete &delegete = AppDelegete::instance();
+
+ _frame->Show(true);
 }
 
 MenuBar* AppDelegete::getMenuBar() const {
@@ -133,4 +136,14 @@ const std::shared_ptr<UserDefault>& AppDelegete::getUserDefault()
 const std::shared_ptr<Configuration>& AppDelegete::getConfiguration()
 {
   return _configuration;
+}
+
+
+void AppDelegete::outputOpenGLInfo()
+{
+  cout << "Vendor :"<<glGetString(GL_VENDOR)<<'\n';
+  cout << "GPU : "<<glGetString(GL_RENDERER) <<'\n';
+  cout << "OpenGL ver. " <<glGetString(GL_VERSION)<<'\n';
+  cout << "【拡張機能一覧】"<<endl;
+  cout << glGetString(GL_EXTENSIONS) <<endl;
 }

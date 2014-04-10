@@ -43,6 +43,8 @@ namespace agi3d {
     const std::shared_ptr<UserDefault>& getUserDefault();
     const std::shared_ptr<Configuration>& getConfiguration();
     
+  private:
+    void outputOpenGLInfo();
     
   private:
     Frame *_frame;
@@ -59,9 +61,7 @@ namespace agi3d {
     std::shared_ptr<Graph> _graph;
     std::shared_ptr<UserDefault> _userDefault;
     std::shared_ptr<Configuration> _configuration;
-  
     
-  private:
     static std::unique_ptr<AppDelegete> m_instance;
     static std::once_flag m_onceFlag;
     AppDelegete(void);

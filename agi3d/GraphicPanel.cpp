@@ -30,8 +30,16 @@ float getDepth(int x, int y) {
 }
 
 GraphicPanel::GraphicPanel(wxWindow* parent, int* args) :
-wxGLCanvas(parent, wxID_ANY, args, wxDefaultPosition, wxSize(1000, 870), wxFULL_REPAINT_ON_RESIZE),glframe(0), gltimenow(0.0),
-width(1000), height(870) {
+wxGLCanvas(parent,
+           wxID_ANY,
+           args,
+           wxDefaultPosition,
+           wxSize(1000, 870),
+           wxFULL_REPAINT_ON_RESIZE),
+　　　　　 　glframe(0),
+           gltimenow(0.0),
+           width(1000),
+           height(870) {
   
   sw = new wxStopWatch();
   m_context = new wxGLContext(this);
@@ -96,6 +104,7 @@ void GraphicPanel::init(const std::shared_ptr<Graph>& graph,
 }
 
 void GraphicPanel::update(const agi3d::Observable &, E_ObserveType observeType) {
+  if(!LOAD_FLAG) { return; }
   switch (observeType) {
     case E_ObserveType::NeedRelayout:
     {
@@ -164,34 +173,32 @@ void GraphicPanel::refresh() {
 
 //:TODO rename
 void GraphicPanel::releaseLeft() {
-  if (LOAD_FLAG) {
-    isDrag = false;
-    Refresh();
-  }
+  if(!LOAD_FLAG) { return; }
+  isDrag = false;
+  Refresh();
 }
 
 //:TODO rename
 void GraphicPanel::releaseRight() {
-  if (LOAD_FLAG) {
-    isDrag = false;
-    isRightPressed = false;
-    Refresh();
-  }
+  if(!LOAD_FLAG) { return; }
+  isDrag = false;
+  isRightPressed = false;
+  Refresh();
 }
 
 //TODO: rename
 void GraphicPanel::downRight(int x, int y) {
-  if (LOAD_FLAG) {
-    if (!isDrag) isDrag = true;
-    if (!isRightPressed) isRightPressed = true;
-    
-    mouse_pos_x = x;
-    mouse_pos_y = y;
-  }
+  if(!LOAD_FLAG) { return; }
+  if (!isDrag) isDrag = true;
+  if (!isRightPressed) isRightPressed = true;
+  
+  mouse_pos_x = x;
+  mouse_pos_y = y;
 }
 
 //FIXME: Graphモデルのプロパティを書き換えている部分を、Graphに委譲する
 int GraphicPanel::pick(int x, int y) {
+  if(!LOAD_FLAG) { return -1; }
   int N = _graph->getN();
   int M = _graph->getM();
   float *nodevalues = _graph->getNodeValues();
@@ -210,192 +217,207 @@ int GraphicPanel::pick(int x, int y) {
   bool* isNeighbor = _graph->getIsNeighbor();
   bool* edgeAttribute = _graph->getEdgeAttribute();
   
-  if (LOAD_FLAG) {
-    {
-      int p_id = processSelection(x, y);
-      
-      if (p_id >= 0) {
-        //case :: some node is beeing picked
-        if (id >= 0) {
-          colors[id] = blue;
-          for (size_t i = 0; i < neighbor[id].size(); i++) {
-            int adj = neighbor[id][i];
-            isdrawingNodes[adj] = ((nodevalues[adj] >= nodethreshold_b) && (nodevalues[adj] <= nodethreshold_t));
-            colors[adj] = blue;
-          }
-          for (size_t i = 0; i < edgelist[id].size(); i++) {
-            int l = edgelist[id][i];
-            isdrawingEdges[l] = ((edgevalues[l] >= edgethreshold_b) && (edgevalues[l] <= edgethreshold_t));
-          }
-        }
-        
-        id = p_id;
-        pre_x = pos_x[id];
-        pre_y = pos_y[id];
-        pre_z = pos_z[id];
-        
-        for (int i = 0; i < N; i++) {
-          isNeighbor[i] = false;
-        }
-        
-        colors[id] = purple;
-        isNeighbor[id] = true;
-        isdrawingNodes[id] = true;
-        
+  
+  {
+    int p_id = processSelection(x, y);
+    
+    if (p_id >= 0) {
+      //case :: some node is beeing picked
+      if (id >= 0) {
+        colors[id] = blue;
         for (size_t i = 0; i < neighbor[id].size(); i++) {
           int adj = neighbor[id][i];
-          colors[adj] = deepblue;
-          isNeighbor[adj] = true;
           isdrawingNodes[adj] = ((nodevalues[adj] >= nodethreshold_b) && (nodevalues[adj] <= nodethreshold_t));
+          colors[adj] = blue;
         }
-        
-        isPicked = true;
-        
-        for (int i = 0; i < M; i++) {
-          edgeAttribute[i] = true;
-        }
-        
         for (size_t i = 0; i < edgelist[id].size(); i++) {
           int l = edgelist[id][i];
-          edgeAttribute[l] = false;
           isdrawingEdges[l] = ((edgevalues[l] >= edgethreshold_b) && (edgevalues[l] <= edgethreshold_t));
         }
       }
-      else {
-        //case :: some node is beeing picked
-        if (id >= 0) {
-          for (size_t i = 0; i < neighbor[id].size(); i++) {
-            int adj = neighbor[id][i];
-            isdrawingNodes[adj] = ((nodevalues[adj] >= nodethreshold_b) && (nodevalues[adj] <= nodethreshold_t));
-          }
-          for (size_t i = 0; i < edgelist[id].size(); i++) {
-            int l = edgelist[id][i];
-            isdrawingEdges[l] = ((edgevalues[l] >= edgethreshold_b) && (edgevalues[l] <= edgethreshold_t));
-          }
-          for (int i = 0; i < N; i++) {
-            colors[i] = blue;
-            isdrawingNodes[i] = ((nodevalues[i] >= nodethreshold_b) && (nodevalues[i] <= nodethreshold_t));
-          }
-          
-          for (int i = 0; i < N; i++) {
-            if (isdrawingNodes[i]) {
-              bool f = false;
-              for (size_t j = 0; j < neighbor[i].size(); j++) {
-                f |= isdrawingNodes[neighbor[i][j]];
-                if (f) break;
-              }
-              if (!f) isdrawingNodes[i] = false;
-            }
-          }
-          
-          id = -1;
-        }
-        
-        isPicked = false;
-        highlited_id = -1;
+      
+      id = p_id;
+      pre_x = pos_x[id];
+      pre_y = pos_y[id];
+      pre_z = pos_z[id];
+      
+      for (int i = 0; i < N; i++) {
+        isNeighbor[i] = false;
       }
       
-      if (!isDrag) isDrag = true;
+      colors[id] = purple;
+      isNeighbor[id] = true;
+      isdrawingNodes[id] = true;
       
-      mouse_pos_x = x;
-      mouse_pos_y = y;
-      return id;
+      for (size_t i = 0; i < neighbor[id].size(); i++) {
+        int adj = neighbor[id][i];
+        colors[adj] = deepblue;
+        isNeighbor[adj] = true;
+        isdrawingNodes[adj] = ((nodevalues[adj] >= nodethreshold_b) && (nodevalues[adj] <= nodethreshold_t));
+      }
+      
+      isPicked = true;
+      
+      for (int i = 0; i < M; i++) {
+        edgeAttribute[i] = true;
+      }
+      
+      for (size_t i = 0; i < edgelist[id].size(); i++) {
+        int l = edgelist[id][i];
+        edgeAttribute[l] = false;
+        isdrawingEdges[l] = ((edgevalues[l] >= edgethreshold_b) && (edgevalues[l] <= edgethreshold_t));
+      }
     }
+    else {
+      //case :: some node is beeing picked
+      if (id >= 0) {
+        for (size_t i = 0; i < neighbor[id].size(); i++) {
+          int adj = neighbor[id][i];
+          isdrawingNodes[adj] = ((nodevalues[adj] >= nodethreshold_b) && (nodevalues[adj] <= nodethreshold_t));
+        }
+        for (size_t i = 0; i < edgelist[id].size(); i++) {
+          int l = edgelist[id][i];
+          isdrawingEdges[l] = ((edgevalues[l] >= edgethreshold_b) && (edgevalues[l] <= edgethreshold_t));
+        }
+        for (int i = 0; i < N; i++) {
+          colors[i] = blue;
+          isdrawingNodes[i] = ((nodevalues[i] >= nodethreshold_b) && (nodevalues[i] <= nodethreshold_t));
+        }
+        
+        for (int i = 0; i < N; i++) {
+          if (isdrawingNodes[i]) {
+            bool f = false;
+            for (size_t j = 0; j < neighbor[i].size(); j++) {
+              f |= isdrawingNodes[neighbor[i][j]];
+              if (f) break;
+            }
+            if (!f) isdrawingNodes[i] = false;
+          }
+        }
+        
+        id = -1;
+      }
+      
+      isPicked = false;
+      highlited_id = -1;
+    }
+    
+    if (!isDrag) isDrag = true;
+    
+    mouse_pos_x = x;
+    mouse_pos_y = y;
+    return id;
+    
   }
   
 }
 
-void GraphicPanel::moveTo(int x, int y) {
+void GraphicPanel::moveTo2D(int x, int y) {
   auto neighbor = _graph->getNeighbor();
-  
-  if (LOAD_FLAG) {
-    int dx = x - mouse_pos_x;
-    int dy = y - mouse_pos_y;
-    if (LayoutMode == 3) {
-      if (isRightPressed && isDrag) {
-        vector3 vec = target - eye;
-        _right = cml::cross(up, vec);
-        _right.normalize();
-        target += (dx * _right + dy * up)*0.008;
-      } else if ((isDrag && !isPicked)) {
-        theta -= 0.005 * dy;
-        phi += 0.005 * dx;
-      } else if (isDrag && isPicked) {
-        vector3 pos(pos_x[id], pos_y[id], pos_z[id]);
-        vector3 vec = target - eye;
-        vector3 eye2pos = pos - eye;
-        float dot = cml::dot(vec, eye2pos);
-        _right = cml::cross(up, vec);
-        _right.normalize();
-        float dist = dot / vec.length();
-        
-        //Proper Rate is ???
-        float rate_x = (float) -dx * dist / ((float) width * 0.90);
-        float rate_y = (float) -dy * dist / ((float) height * 0.90);
-        
-        vector3 delta = rate_x * _right + rate_y * up;
-        
-        float new_x = pos_x[id] + delta[0];
-        float new_y = pos_y[id] + delta[1];
-        float new_z = pos_z[id] + delta[2];
-        
-        mouse_pos_x = x;
-        mouse_pos_y = y;
-        int a = _graph->getNew3DLayout(id, pre_x, pre_y, pre_z, new_x, new_y, new_z);
-        
-        if (a == 1) {
-          relayout3D();
-          pre_x = pos_x[id];
-          pre_y = pos_y[id];
-          pre_z = pos_z[id];
-          pos_x[id] = new_x;
-          pos_y[id] = new_y;
-          pos_z[id] = new_z;
-        }
+  int dx = x - mouse_pos_x;
+  int dy = y - mouse_pos_y;
+  if (isRightPressed && isDrag) {
+    vector3 vec = target - eye;
+    _right = cml::cross(up, vec);
+    _right.normalize();
+    target += (dx * _right + dy * up)*0.008;
+  } else if (isDrag && isPicked) {
+    vector3 pos(pos_x[id], pos_y[id], pos_z[id]);
+    vector3 vec = target - eye;
+    vector3 eye2pos = pos - eye;
+    float dot = cml::dot(vec, eye2pos);
+    _right = cml::cross(up, vec);
+    _right.normalize();
+    float dist = dot / vec.length();
+    
+    //Proper Rate is ???
+    float rate_x = (float) -dx * dist / ((float) width * 0.90);
+    float rate_y = (float) -dy * dist / ((float) height * 0.90);
+    
+    vector3 delta = rate_x * _right + rate_y * up;
+    
+    float new_x = pos_x[id] + delta[0];
+    float new_y = pos_y[id] + delta[1];
+    
+    int a = _graph->getNew2DLayout(id, pre_x, pre_y, new_x, new_y);
+    
+    if (a == 1) {
+      relayout2D();
+      pre_x = pos_x[id];
+      pre_y = pos_y[id];
+      pos_x[id] = new_x;
+      pos_y[id] = new_y;
+      pos_z[id] = radius;
+      for (size_t i = 0; i < neighbor[id].size(); i++) {
+        pos_z[neighbor[id][i]] = radius;
       }
-      Refresh();
-    } else if (LayoutMode == 2) {
-      if (isRightPressed && isDrag) {
-        vector3 vec = target - eye;
-        _right = cml::cross(up, vec);
-        _right.normalize();
-        target += (dx * _right + dy * up)*0.008;
-      } else if (isDrag && isPicked) {
-        vector3 pos(pos_x[id], pos_y[id], pos_z[id]);
-        vector3 vec = target - eye;
-        vector3 eye2pos = pos - eye;
-        float dot = cml::dot(vec, eye2pos);
-        _right = cml::cross(up, vec);
-        _right.normalize();
-        float dist = dot / vec.length();
-        
-        //Proper Rate is ???
-        float rate_x = (float) -dx * dist / ((float) width * 0.90);
-        float rate_y = (float) -dy * dist / ((float) height * 0.90);
-        
-        vector3 delta = rate_x * _right + rate_y * up;
-        
-        float new_x = pos_x[id] + delta[0];
-        float new_y = pos_y[id] + delta[1];
-        
-        int a = _graph->getNew2DLayout(id, pre_x, pre_y, new_x, new_y);
-        
-        if (a == 1) {
-          relayout2D();
-          pre_x = pos_x[id];
-          pre_y = pos_y[id];
-          pos_x[id] = new_x;
-          pos_y[id] = new_y;
-          pos_z[id] = radius;
-          for (size_t i = 0; i < neighbor[id].size(); i++) {
-            pos_z[neighbor[id][i]] = radius;
-          }
-        }
-      }
-      Refresh();
     }
+  }
+  Refresh();
+  mouse_pos_x = x;
+  mouse_pos_y = y;
+}
+
+void GraphicPanel::moveTo3D(int x, int y) {
+  int dx = x - mouse_pos_x;
+  int dy = y - mouse_pos_y;
+  if (isRightPressed && isDrag) {
+    vector3 vec = target - eye;
+    _right = cml::cross(up, vec);
+    _right.normalize();
+    target += (dx * _right + dy * up)*0.008;
+  } else if ((isDrag && !isPicked)) {
+    theta -= 0.005 * dy;
+    phi += 0.005 * dx;
+  } else if (isDrag && isPicked) {
+    vector3 pos(pos_x[id], pos_y[id], pos_z[id]);
+    vector3 vec = target - eye;
+    vector3 eye2pos = pos - eye;
+    float dot = cml::dot(vec, eye2pos);
+    _right = cml::cross(up, vec);
+    _right.normalize();
+    float dist = dot / vec.length();
+    
+    //Proper Rate is ???
+    float rate_x = (float) -dx * dist / ((float) width * 0.90);
+    float rate_y = (float) -dy * dist / ((float) height * 0.90);
+    
+    vector3 delta = rate_x * _right + rate_y * up;
+    
+    float new_x = pos_x[id] + delta[0];
+    float new_y = pos_y[id] + delta[1];
+    float new_z = pos_z[id] + delta[2];
+    
     mouse_pos_x = x;
     mouse_pos_y = y;
+    int a = _graph->getNew3DLayout(id, pre_x, pre_y, pre_z, new_x, new_y, new_z);
+    
+    if (a == 1) {
+      relayout3D();
+      pre_x = pos_x[id];
+      pre_y = pos_y[id];
+      pre_z = pos_z[id];
+      pos_x[id] = new_x;
+      pos_y[id] = new_y;
+      pos_z[id] = new_z;
+    }
+  }
+  Refresh();
+  mouse_pos_x = x;
+  mouse_pos_y = y;
+  
+}
+
+void GraphicPanel::moveTo(int x, int y) {
+  if(!LOAD_FLAG) { return; }
+  switch (_userDefault->layout()) {
+    case E_Layout::D2:
+      moveTo2D(x, y);
+      break;
+    case E_Layout::D3:
+      moveTo3D(x,y);
+    default:
+      break;
   }
 }
 
@@ -462,10 +484,20 @@ void GraphicPanel::renderScene() {
   
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   glEnable(GL_DEPTH_TEST);
-  if (LayoutMode == 3) {
-    glEnable(GL_LIGHTING);
-  } else if (LayoutMode == 2) {
-    glDisable(GL_LIGHTING);
+  switch(_userDefault->layout()) {
+    case E_Layout::D3 :
+    {
+      glEnable(GL_LIGHTING);
+      break;
+    }
+    case E_Layout::D2 :
+    {
+      glDisable(GL_LIGHTING);
+      break;
+    default:
+      glEnable(GL_LIGHTING);
+      
+    }
   }
   
   //ModelView
@@ -475,55 +507,61 @@ void GraphicPanel::renderScene() {
   //Set View
   {
     matrix xRot, yRot, zRot, view;
-    if (LayoutMode == 3) {
-      if (AUTO_X_ROTATION) {
-        theta += 0.01f;
-        if (theta > 3.141593f * 2) theta = 0;
+    switch (_userDefault->layout()) {
+      case E_Layout::D3: {
+        if (AUTO_X_ROTATION) {
+          theta += 0.01f;
+          if (theta > 3.141593f * 2) theta = 0;
+        }
+        if (AUTO_Y_ROTATION) {
+          phi += 0.01f;
+          if (phi > 3.141593f * 2) phi = 0;
+        }
+        
+        cml::matrix_rotation_world_x(xRot, -theta);
+        cml::matrix_rotation_world_y(yRot, phi);
+        up.set(0.0f, 1.0f, 0.0f);
+        vector4 _up(up[0], up[1], up[2], 1);
+        _up = yRot * xRot*_up;
+        up.set(_up[0], _up[1], _up[2]);
+        up.normalize();
+        
+        float camera_y = v * (float) sin(theta);
+        float camera_xz = v * (float) cos(theta);
+        float camera_x = camera_xz * (float) sin(phi);
+        float camera_z = camera_xz * (float) cos(phi);
+        eye.set(camera_x, camera_y, camera_z);
+        
+        cml::matrix_look_at_RH(view, eye, target, up);
+        glLoadMatrixf(view.data());
+        
+        if (id != -1 && brightness >= 0.5f) {
+          brightness -= 0.02f;
+        }
+        
+        if (id == -1 && brightness <= 1.0f) {
+          brightness += 0.02f;
+        }
+        
+        break;
       }
-      if (AUTO_Y_ROTATION) {
-        phi += 0.01f;
-        if (phi > 3.141593f * 2) phi = 0;
+      case E_Layout::D2: {
+        cml::matrix_rotation_world_z(zRot, 0.0f);
+        up.set(0.0f, 1.0f, 0.0f);
+        vector4 _up(up[0], up[1], up[2], 1);
+        _up = zRot*_up;
+        up.set(_up[0], _up[1], _up[2]);
+        up.normalize();
+        
+        eye.set(0, 0, v);
+        
+        cml::matrix_look_at_RH(view, eye, target, up);
+        glLoadMatrixf(view.data());
+        brightness = 1.0;
+        break;
       }
-      
-      cml::matrix_rotation_world_x(xRot, -theta);
-      cml::matrix_rotation_world_y(yRot, phi);
-      up.set(0.0f, 1.0f, 0.0f);
-      vector4 _up(up[0], up[1], up[2], 1);
-      _up = yRot * xRot*_up;
-      up.set(_up[0], _up[1], _up[2]);
-      up.normalize();
-      
-      float camera_y = v * (float) sin(theta);
-      float camera_xz = v * (float) cos(theta);
-      float camera_x = camera_xz * (float) sin(phi);
-      float camera_z = camera_xz * (float) cos(phi);
-      eye.set(camera_x, camera_y, camera_z);
-      
-      cml::matrix_look_at_RH(view, eye, target, up);
-      glLoadMatrixf(view.data());
-      
-      if (id != -1 && brightness >= 0.5f) {
-        brightness -= 0.02f;
-      }
-      
-      if (id == -1 && brightness <= 1.0f) {
-        brightness += 0.02f;
-      }
-      
-    }
-    if (LayoutMode == 2) {
-      cml::matrix_rotation_world_z(zRot, 0.0f);
-      up.set(0.0f, 1.0f, 0.0f);
-      vector4 _up(up[0], up[1], up[2], 1);
-      _up = zRot*_up;
-      up.set(_up[0], _up[1], _up[2]);
-      up.normalize();
-      
-      eye.set(0, 0, v);
-      
-      cml::matrix_look_at_RH(view, eye, target, up);
-      glLoadMatrixf(view.data());
-      brightness = 1.0;
+      default:
+        break;
     }
   }
   
@@ -763,25 +801,33 @@ void GraphicPanel::setupPanel() {
   pos_z = new float[N];
   colors = new vector3[N];
   float end = 0;
-  
-  if (LayoutMode == 3) {
-    for (int i = 0; i < N; i++) {
-      pos_x[i] = _graph->posX3D(i);
-      pos_y[i] = _graph->posY3D(i);
-      pos_z[i] = _graph->posZ3D(i);
-      colors[i] = blue;
-      end = max(end, sqrt(pos_x[i] * pos_x[i] + pos_y[i] * pos_y[i] + pos_z[i] * pos_z[i]));
+  switch(_userDefault->layout()) {
+    case E_Layout::D3:
+    {
+      for (int i = 0; i < N; i++) {
+        pos_x[i] = _graph->posX3D(i);
+        pos_y[i] = _graph->posY3D(i);
+        pos_z[i] = _graph->posZ3D(i);
+        colors[i] = blue;
+        end = max(end, sqrt(pos_x[i] * pos_x[i] + pos_y[i] * pos_y[i] + pos_z[i] * pos_z[i]));
+      }
+      angle = 55;
+      
+      break;
     }
-    angle = 55;
-  } else if (LayoutMode == 2) {
-    for (int i = 0; i < N; i++) {
-      pos_x[i] = _graph->posX2D(i);
-      pos_y[i] = _graph->posY2D(i);
-      pos_z[i] = 0;
-      colors[i] = blue;
-      end = max(end, sqrt(pos_x[i] * pos_x[i] + pos_y[i] * pos_y[i] + pos_z[i] * pos_z[i]));
+    case E_Layout::D2: {
+      for (int i = 0; i < N; i++) {
+        pos_x[i] = _graph->posX2D(i);
+        pos_y[i] = _graph->posY2D(i);
+        pos_z[i] = 0;
+        colors[i] = blue;
+        end = max(end, sqrt(pos_x[i] * pos_x[i] + pos_y[i] * pos_y[i] + pos_z[i] * pos_z[i]));
+      }
+      angle = 45;
+      break;
+    default:
+      break;
     }
-    angle = 45;
   }
   
   LOAD_FLAG = true;
@@ -824,32 +870,40 @@ void GraphicPanel::resetLayout() {
   bool* isNeighbor = _graph->getIsNeighbor();
   bool* edgeAttribute = _graph->getEdgeAttribute();
   
-  if (LayoutMode == 3) {
-    _graph->resetLayout3D();
-    for (int i = 0; i < N; i++) {
-      pos_x[i] = _graph->posX3D(i);
-      pos_y[i] = _graph->posY3D(i);
-      pos_z[i] = _graph->posZ3D(i);
-      colors[i] = blue;
-      isNeighbor[i] = false;
-      isdrawingNodes[i] = true;
-      end = max(end, sqrt(pos_x[i] * pos_x[i] + pos_y[i] * pos_y[i] + pos_z[i] * pos_z[i]));
+  switch(_userDefault->layout()) {
+    case E_Layout::D3: {
+      _graph->resetLayout3D();
+      for (int i = 0; i < N; i++) {
+        pos_x[i] = _graph->posX3D(i);
+        pos_y[i] = _graph->posY3D(i);
+        pos_z[i] = _graph->posZ3D(i);
+        colors[i] = blue;
+        isNeighbor[i] = false;
+        isdrawingNodes[i] = true;
+        end = max(end, sqrt(pos_x[i] * pos_x[i] + pos_y[i] * pos_y[i] + pos_z[i] * pos_z[i]));
+      }
+      radius = 0.03f;
+      angle = 55;
+      break;
     }
-    radius = 0.03f;
-    angle = 55;
-  } else if (LayoutMode == 2) {
-    _graph->resetLayout2D();
-    for (int i = 0; i < N; i++) {
-      pos_x[i] = _graph->posX2D(i);
-      pos_y[i] = _graph->posY2D(i);
-      pos_z[i] = 0;
-      colors[i] = blue;
-      isNeighbor[i] = false;
-      isdrawingNodes[i] = true;
-      end = max(end, sqrt(pos_x[i] * pos_x[i] + pos_y[i] * pos_y[i] + pos_z[i] * pos_z[i]));
+    case E_Layout::D2: {
+      _graph->resetLayout2D();
+      for (int i = 0; i < N; i++) {
+        pos_x[i] = _graph->posX2D(i);
+        pos_y[i] = _graph->posY2D(i);
+        pos_z[i] = 0;
+        colors[i] = blue;
+        isNeighbor[i] = false;
+        isdrawingNodes[i] = true;
+        end = max(end, sqrt(pos_x[i] * pos_x[i] + pos_y[i] * pos_y[i] + pos_z[i] * pos_z[i]));
+      }
+      radius = 0.01f;
+      angle = 45;
+      break;
     }
-    radius = 0.01f;
-    angle = 45;
+    default: {
+      break;
+    }
   }
   
   for (int i = 0; i < M; i++) {
@@ -900,48 +954,54 @@ void GraphicPanel::render(float x, float y, float z) {
   //Set View
   {
     matrix xRot, yRot, zRot, view;
-    if (LayoutMode == 3) {
-      if (AUTO_X_ROTATION) {
-        theta += 0.01f;
-        if (theta > 3.141593f * 2) theta = 0;
+    switch(_userDefault->layout()) {
+        
+      case E_Layout::D3: {
+        if (AUTO_X_ROTATION) {
+          theta += 0.01f;
+          if (theta > 3.141593f * 2) theta = 0;
+        }
+        if (AUTO_Y_ROTATION) {
+          phi += 0.01f;
+          if (phi > 3.141593f * 2) phi = 0;
+        }
+        cml::matrix_rotation_world_x(xRot, -theta);
+        cml::matrix_rotation_world_y(yRot, phi);
+        up.set(0.0f, 1.0f, 0.0f);
+        vector4 _up(up[0], up[1], up[2], 1);
+        _up = yRot * xRot*_up;
+        up.set(_up[0], _up[1], _up[2]);
+        up.normalize();
+        
+        float camera_y = v * (float) sin(theta);
+        float camera_xz = v * (float) cos(theta);
+        float camera_x = camera_xz * (float) sin(phi);
+        float camera_z = camera_xz * (float) cos(phi);
+        eye.set(camera_x, camera_y, camera_z);
+        
+        cml::matrix_look_at_RH(view, eye, target, up);
+        glLoadMatrixf(view.data());
+        break;
       }
-      if (AUTO_Y_ROTATION) {
-        phi += 0.01f;
-        if (phi > 3.141593f * 2) phi = 0;
+      case E_Layout::D2: {
+        cml::matrix_rotation_world_z(zRot, 0.0f);
+        up.set(0.0f, 1.0f, 0.0f);
+        vector4 _up(up[0], up[1], up[2], 1);
+        _up = zRot*_up;
+        up.set(_up[0], _up[1], _up[2]);
+        up.normalize();
+        
+        eye.set(0, 0, v);
+        
+        cml::matrix_look_at_RH(view, eye, target, up);
+        glLoadMatrixf(view.data());
+        break;
       }
-      cml::matrix_rotation_world_x(xRot, -theta);
-      cml::matrix_rotation_world_y(yRot, phi);
-      up.set(0.0f, 1.0f, 0.0f);
-      vector4 _up(up[0], up[1], up[2], 1);
-      _up = yRot * xRot*_up;
-      up.set(_up[0], _up[1], _up[2]);
-      up.normalize();
-      
-      float camera_y = v * (float) sin(theta);
-      float camera_xz = v * (float) cos(theta);
-      float camera_x = camera_xz * (float) sin(phi);
-      float camera_z = camera_xz * (float) cos(phi);
-      eye.set(camera_x, camera_y, camera_z);
-      
-      cml::matrix_look_at_RH(view, eye, target, up);
-      glLoadMatrixf(view.data());
-    } else if (LayoutMode == 2) {
-      cml::matrix_rotation_world_z(zRot, 0.0f);
-      up.set(0.0f, 1.0f, 0.0f);
-      vector4 _up(up[0], up[1], up[2], 1);
-      _up = zRot*_up;
-      up.set(_up[0], _up[1], _up[2]);
-      up.normalize();
-      
-      eye.set(0, 0, v);
-      
-      cml::matrix_look_at_RH(view, eye, target, up);
-      glLoadMatrixf(view.data());
     }
+    // Initialize the names stack
+    glInitNames();
+    glPushName(N);
   }
-  // Initialize the names stack
-  glInitNames();
-  glPushName(N);
   
   //Draw Nodes
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuf);
@@ -989,16 +1049,6 @@ void GraphicPanel::changeEye(float _v) {
   v = default_v*_v;
   eye.set(eye[0] * v, eye[1] * v, eye[2] * v);
   Refresh();
-}
-
-void GraphicPanel::changeDimension(float f) {
-  if (LayoutMode == 3) {
-    _graph->updateDimension3D(f);
-    relayout3D();
-  } else if (LayoutMode == 2) {
-    _graph->updateDimension2D(f);
-    relayout2D();
-  }
 }
 
 void GraphicPanel::savePixelData() {

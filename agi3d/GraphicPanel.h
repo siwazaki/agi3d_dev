@@ -25,9 +25,10 @@ namespace agi3d {
     
   class GraphicPanel : public wxGLCanvas, public Observer {
     
-    wxGLContext* m_context;
+
     
   public:
+    wxGLContext* m_context;
     GraphicPanel(wxWindow* parent, int* args);
     virtual ~GraphicPanel();
     
@@ -44,31 +45,33 @@ namespace agi3d {
     void releaseLeft();
     void releaseRight();
     void downRight(int x, int y);
-    void moveEye(int delta);
     void renderScene();
     
     //TODO: refactor this
     void setupPanel();
     
+    void savePixelData();
+    
     //TODO:下のAPIは整理が必要
     //モデルの内容を書き換えて、Refresh呼ぶだけなので、
     //Observerパターンでよい。
     //そんで、前処理はGraphに持っていく
-    
-    
-    void savePixelData();
-    void render(float x, float y, float z);
-    void changeDimension(float);
-    
+    void moveEye(int delta);
     
   private:
-    void changeColor();
-    void scaleLayout(float);
     /**
      * @TODO: remove this
      */
     void changeEye(float);
-    
+
+    int getWidth();
+    int getHeight();
+    void changeAutoRotation();
+    void moveTo2D(int x, int y);
+    void moveTo3D(int x, int y);
+    void render(float x, float y, float z);
+    void changeColor();
+    void scaleLayout(float);
     GLuint setUpVBA(float radius, int slices, int stacks);
     int processSelection(int, int);
     void resetLayout();
@@ -84,10 +87,7 @@ namespace agi3d {
     int glframe = 0;
     long gltimenow = 0;
     wxStopWatch *sw;
-    
-    //Layout Mode
-    int LayoutMode = 3;
-    
+ 
     //Node Attributes
     float * pos_x, * pos_y, * pos_z;
     vector3 * colors;
@@ -120,11 +120,14 @@ namespace agi3d {
     vector3 target;
     vector3 up;
     vector3 _right;
-    float phi = 0, theta = 0;
+    float phi = 0;
+    float theta = 0;
     float wheel_pos = 50.0;
     
     //Perspective
-    float angle = 55.0f, near = 0.1f, far = 1000.0f;
+    float angle = 55.0f;
+    float near = 0.1f;
+    float far = 1000.0f;
     
     //Mouse Adaption
     bool isPicked = false, isDrag = false, isRightPressed = false;
@@ -132,7 +135,9 @@ namespace agi3d {
     int mouse_pos_y = 0;
     int id = -1;
     int highlited_id = -1;
-    float pre_x, pre_y, pre_z;
+    float pre_x;
+    float pre_y;
+    float pre_z;
     
     //Buffer
     GLuint vertexBuf, indexBuf;
@@ -142,12 +147,6 @@ namespace agi3d {
     
     //View Matrix?
     GLdouble mvMatrix[16];
-    
-    
-    int getWidth();
-    int getHeight();
-    void changeAutoRotation();
-    
   };
 }
 #endif
