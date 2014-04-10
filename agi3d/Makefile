@@ -1,6 +1,6 @@
 PROGNAME := agi3d
 #release or debug
-buildtype := debug
+buildtype := release
 CXX := g++
 CPPFLAGS += -std=c++11 -stdlib=libc++
 #CPPFLAGS +=
