@@ -20,8 +20,7 @@ ControlPanel::ControlPanel(wxWindow* parent)
   
   wxPanel *myPanel = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxSize(280, 870));
   
-  wxBoxSizer *mybox = new wxBoxSizer(wxVERTICAL);
-  
+  wxBoxSizer *mybox = new wxBoxSizer(wxVERTICAL);  
   
   m_FPS = new wxStaticText(this, -1, wxT("   FPS"), wxDefaultPosition, wxSize(100, 28), wxALIGN_LEFT);
   fileNameLabel = new wxStaticText(this, -1, wxT("   filename"), wxDefaultPosition, wxSize(100, 25), wxALIGN_LEFT);
@@ -78,25 +77,43 @@ ControlPanel::ControlPanel(wxWindow* parent)
   edgeThresholdSlider_t->SetValue(100);
   
   nodeAttrsChoice->SetSelection(0);
-  //nodeThresholdAttrID = 0;
   edgeAttrsChoice->SetSelection(0);
-  //edgeThresholdAttrID = 0;
   target->SetLabel(wxString());
   listbox->Clear();
   
-  //@TODO 一時的な実装
-  wxString _graphlabel = wxString::Format(wxT("   FileName \t %s"), "");
-  //@TODO
+  wxString graphlabel = wxString::Format(wxT("   FileName \t %s"), "");
   wxString nodeSize = wxString::Format(wxT("   #Node \t %i"), 0);
   wxString edgeSize = wxString::Format(wxT("   #Edge   \t %i"), 0);
   
-  fileNameLabel->SetLabel(_graphlabel);
+  fileNameLabel->SetLabel(graphlabel);
   nodeSizeLabel->SetLabel(nodeSize);
   edgeSizeLabel->SetLabel(edgeSize);
 }
 
 ControlPanel::~ControlPanel() {
   
+}
+
+void ControlPanel::showModel() {
+  wxString graphlabel = wxString::Format(wxT("   FileName \t %s"), _graph->getName());
+  wxString nodeSize = wxString::Format(wxT("   #Node \t %i"), _graph->getN());
+  wxString edgeSize = wxString::Format(wxT("   #Edge   \t %i"), _graph->getM());
+  
+  fileNameLabel->SetLabel(graphlabel);
+  nodeSizeLabel->SetLabel(nodeSize);
+  edgeSizeLabel->SetLabel(edgeSize);
+  
+  //FIXME: configurationの値に合わせて設定する。
+  //threshholdのsliderの位置の計算をしなければ行けないので、保留中
+  DeltaSlider->SetValue(50);
+  nodeThresholdSlider_b->SetValue(0);
+  nodeThresholdSlider_t->SetValue(100);
+  edgeThresholdSlider_b->SetValue(0);
+  edgeThresholdSlider_t->SetValue(100);  
+  nodeAttrsChoice->SetSelection(0);
+  edgeAttrsChoice->SetSelection(0);
+  target->SetLabel(wxString());
+  listbox->Clear();
 }
 
 void ControlPanel::update(const agi3d::Observable &, E_ObserveType typ)

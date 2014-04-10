@@ -1043,12 +1043,6 @@ void GraphicPanel::changeColor() {
   }
 }
 
-void GraphicPanel::changeEye(float _v) {
-  v = default_v*_v;
-  eye.set(eye[0] * v, eye[1] * v, eye[2] * v);
-  Refresh();
-}
-
 void GraphicPanel::savePixelData() {
   const std::string& graphName = _graph->getName();
   string name = graphName + "img" + boost::lexical_cast<std::string>(imgnum) + ".png";

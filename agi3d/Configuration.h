@@ -8,15 +8,12 @@
 
 namespace agi3d {
   
-  class ConfigurationController;
-  /**
-   * ControlPanelで変更可能なデータを保持するモデル。
-   * @TODO: Jsonにシリアライズ
-   */
+  class ControlPanelController;
+  
   class Configuration : public Observable
   {
     
-    friend class ConfigurationController;
+    friend class ControlPanelController;
     
   public:
     Configuration();
@@ -30,8 +27,6 @@ namespace agi3d {
     const std::vector<std::string>& getNeiborLabels() const;
     int getNodeIdinLabels(int ithInTheLabel);
     float getFPS() const;
-    int getPickedId() const;
-    void setPickedId(int i);
     int getSelectedId() const;
     int getPrevSelectedId() const;
     void setSelectedId(int i);
@@ -52,8 +47,6 @@ namespace agi3d {
     float _edgethreshold_t;
     float _edgethreshold_b;
     float _fps;
-    //TODO:要らないかもしれないので削除
-    int _pickid;
     
     std::map<int, int> _labelMap;
     int _selectedId;
@@ -129,14 +122,6 @@ namespace agi3d {
   {
     _prevSelectedId = _selectedId;
     _selectedId = i;
-  }
-  
-  inline int Configuration::getPickedId() const {
-    return _pickid;
-  }
-  
-  inline void Configuration::setPickedId(int i) {
-    _pickid=i;
   }
   
 }

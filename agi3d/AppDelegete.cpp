@@ -40,20 +40,23 @@ AppDelegete::~AppDelegete()
   
 }
 
-void AppDelegete::initMVC()
+void AppDelegete::changeGraph(const std::string& graphFilePath)
 {
+  initMV();  
+  //Graphにデータをロード
+  _graph->loadData(graphFilePath);
+  //GraphicPanelを初期化
+  _graphicPanel->setupPanel();
+  //グラフ情報をControlPanelに反映
+  _controlPanel->showModel();
+  
+}
+
+void AppDelegete::initMV() {
   //モデルの生成
   _graph = std::shared_ptr<Graph>(new Graph);
   _userDefault = std::shared_ptr<UserDefault>(new UserDefault);
   _configuration = std::shared_ptr<Configuration>(new Configuration);
-  
-  //コントローラの作成
-  _userDefaultController = std::shared_ptr<UserDefaultController>(new UserDefaultController(_userDefault, _graph));
-                                                                  
-  _configurationController = std::shared_ptr<ConfigurationController>(new ConfigurationController(_configuration, _userDefault, _graph));
-                                                                  
-  _graphicController = std::shared_ptr<GraphicController>(new GraphicController(_graph, _configuration));
-
   
   //ビューにモデルをセット
   _graphicPanel->init(_graph, _userDefault, _configuration);
@@ -68,20 +71,47 @@ void AppDelegete::initMVC()
   _userDefault->addObserver(_menuBar);
   _userDefault->addObserver(_controlPanel);
   
-  //OpenGLの情報を出力
-  outputOpenGLInfo();
+  //コントローラーにモデルをセット
+  _menuBarController->_graph = _graph;
+  _menuBarController->_userDefault = _userDefault;
+  _controlPanelController->_graph = _graph;
+  _controlPanelController->_userDefault = _userDefault;
+  _controlPanelController->_configuration = _configuration;
+  _graphicPanelController->_graph = _graph;
+  _graphicPanelController->_configuration = _configuration;
   
+  //モデルをビューに描画
+  _appearanceWindow->showModel();
+  _menuBar->showModel();
+  _controlPanel->showModel();
+}
+
+void AppDelegete::initMVC()
+{
+  //コントローラの作成
+  _menuBarController = std::shared_ptr<MenuBarController>(new MenuBarController());
+  _controlPanelController = std::shared_ptr<ControlPanelController>(new ControlPanelController());
+  _graphicPanelController = std::shared_ptr<GraphicController>(new GraphicController());
+  
+  //コントローラーにビューをセット
+  _menuBarController->_menuBar = _menuBar;
+  _menuBarController->_appearanceWindow = _appearanceWindow;
+  _menuBarController->_graphicPanel = _graphicPanel;
+  _menuBarController->_controlPanel = _controlPanel;
+  _controlPanelController->_controlPanel = _controlPanel;
+  _graphicPanelController->_graphicPanel = _graphicPanel;
+  
+  //コントローラーのイベントハンドラを登録
+  _menuBarController->initEventHandlers();
+  _controlPanelController->initEventHandlers();
+  _graphicPanelController->initEventHandlers();
+  
+  this->initMV();
 }
 
 void AppDelegete::run()
 {
-//  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-//  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-//  glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-//  glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-//  glfwCreateWindow(640, 480, "Hello World", NULL, NULL );
   AppDelegete &delegete = AppDelegete::instance();
-
  _frame->Show(true);
 }
 
@@ -114,13 +144,13 @@ AppearanceWindow* AppDelegete::getAppearanceWindow() const
   return _appearanceWindow;
 }
 
-const std::shared_ptr<ConfigurationController>& AppDelegete::getConfigurationController(){
-  return _configurationController;
+const std::shared_ptr<ControlPanelController>& AppDelegete::getConfigurationController(){
+  return _controlPanelController;
 }
 
 const std::shared_ptr<GraphicController>& AppDelegete::getGraphicController()
 {
-  return _graphicController;
+  return _graphicPanelController;
 }
 
 const std::shared_ptr<Graph>& AppDelegete::getGraph()

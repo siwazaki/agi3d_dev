@@ -7,16 +7,15 @@
 
 namespace agi3d {
   
-  class UserDefaultController;
+  class MenuBarController;
   /**
    * MenuBarで変更可能なデータを保持するモデル。
-   * UserDefaultController以外はプロパティ変更不可。
-   * @TODO: Jsonにシリアライズ
+   * MenuBarController以外はプロパティ変更不可。
    */
   class UserDefault : public Observable
   {
     
-    friend class UserDefaultController;
+    friend class MenuBarController;
     
   public:
     UserDefault();

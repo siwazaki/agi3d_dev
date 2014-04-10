@@ -1,5 +1,5 @@
 //
-//  ConfigurationController.h
+//  ControlPanelController.h
 //  agi3d
 //
 //  Created by 岩崎 敏 on 2014/04/01.
@@ -22,14 +22,14 @@ namespace agi3d {
   
   class AppDelegete;
   
-  class ConfigurationController
+  class ControlPanelController
   {
     friend class AppDelegete;
     
   public:
-    ConfigurationController(const std::shared_ptr<Configuration>& configuration, const std::shared_ptr<UserDefault>& userDefault, const std::shared_ptr<Graph>& graph);
-    virtual ~ConfigurationController();
-    //TODO: remane
+    ControlPanelController();
+    virtual ~ControlPanelController();
+    void initEventHandlers();
 
   private:
     std::shared_ptr<Configuration> _configuration;

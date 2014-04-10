@@ -44,6 +44,11 @@ MenuBar::MenuBar() {
   this->Append(edit, wxT("&Edit"));
 }
 
+void MenuBar::showModel()
+{
+  this->changeMenu();
+}
+
 void MenuBar::init(const std::shared_ptr<UserDefault> userDefault) {
   _userDefault = userDefault;
 }

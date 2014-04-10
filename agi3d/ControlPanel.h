@@ -17,11 +17,11 @@
 
 namespace agi3d {
   
-  class ConfigurationController;
+  class ControlPanelController;
   
   class ControlPanel : public wxPanel, public Observer {
     
-    friend class ConfigurationController;
+    friend class ControlPanelController;
     
   public:
     ControlPanel(wxWindow* parent);
@@ -31,7 +31,8 @@ namespace agi3d {
     
     void init(const std::shared_ptr<Graph>& graph,
               const std::shared_ptr<UserDefault>& userDefault,
-              const std::shared_ptr<Configuration>& configuration);
+              const std::shared_ptr<Configuration>& configuration);    
+    void showModel();
     
   private:
     std::shared_ptr<Graph> _graph;

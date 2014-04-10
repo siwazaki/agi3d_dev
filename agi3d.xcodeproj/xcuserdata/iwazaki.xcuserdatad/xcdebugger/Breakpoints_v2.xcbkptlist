@@ -71,13 +71,13 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "agi3d/UserDefaultController.cpp"
-            timestampString = "418817962.436802"
+            filePath = "agi3d/MenuBarController.cpp"
+            timestampString = "418824551.421707"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "126"
-            endingLineNumber = "126"
-            landmarkName = "UserDefaultController::openAppearanceWindow(wxCommandEvent&amp;)"
+            startingLineNumber = "114"
+            endingLineNumber = "114"
+            landmarkName = "MenuBarController::openAppearanceWindow(wxCommandEvent&amp;)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -88,11 +88,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "agi3d/AppDelegete.cpp"
-            timestampString = "418735965.050867"
+            timestampString = "418824898.707363"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "115"
-            endingLineNumber = "115"
+            startingLineNumber = "145"
+            endingLineNumber = "145"
             landmarkName = "AppDelegete::getAppearanceWindow()"
             landmarkType = "5">
          </BreakpointContent>
@@ -104,11 +104,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "agi3d/GraphicController.cpp"
-            timestampString = "418301684.154362"
+            timestampString = "418820618.345936"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "57"
-            endingLineNumber = "57"
+            startingLineNumber = "56"
+            endingLineNumber = "56"
             landmarkName = "GraphicController::onIdle(wxEvent&amp;)"
             landmarkType = "5">
          </BreakpointContent>
@@ -120,11 +120,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "agi3d/GraphicController.cpp"
-            timestampString = "418305187.727024"
+            timestampString = "418820618.345936"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "74"
-            endingLineNumber = "74"
+            startingLineNumber = "73"
+            endingLineNumber = "73"
             landmarkName = "GraphicController::mouseLeftDown(wxMouseEvent&amp; event)"
             landmarkType = "5">
          </BreakpointContent>
@@ -136,11 +136,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "agi3d/Configuration.cpp"
-            timestampString = "418670469.655612"
+            timestampString = "418824551.421707"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "47"
-            endingLineNumber = "47"
+            startingLineNumber = "46"
+            endingLineNumber = "46"
             landmarkName = "Configuration::changeTarget(const std::string&amp; label, const std::vector&lt;std::string&gt;&amp; neiborLabels, const std::vector&lt;int&gt;&amp; neiborIds)"
             landmarkType = "5">
          </BreakpointContent>
@@ -152,11 +152,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "agi3d/GraphicController.cpp"
-            timestampString = "418306143.551994"
+            timestampString = "418820618.345936"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "65"
-            endingLineNumber = "65"
+            startingLineNumber = "64"
+            endingLineNumber = "64"
             landmarkName = "GraphicController::mouseLeftDown(wxMouseEvent&amp; event)"
             landmarkType = "5">
          </BreakpointContent>
@@ -168,11 +168,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "agi3d/Graph.h"
-            timestampString = "418817962.436802"
+            timestampString = "418823453.119848"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "280"
-            endingLineNumber = "280"
+            startingLineNumber = "279"
+            endingLineNumber = "279"
             landmarkName = "Graph::getNodeLabel(int i)"
             landmarkType = "5">
          </BreakpointContent>
@@ -184,11 +184,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "agi3d/Configuration.cpp"
-            timestampString = "418670469.655612"
+            timestampString = "418824551.421707"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "53"
-            endingLineNumber = "53"
+            startingLineNumber = "52"
+            endingLineNumber = "52"
             landmarkName = "Configuration::changeTarget(const std::string&amp; label, const std::vector&lt;std::string&gt;&amp; neiborLabels, const std::vector&lt;int&gt;&amp; neiborIds)"
             landmarkType = "5">
          </BreakpointContent>
@@ -200,11 +200,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "agi3d/Graph.h"
-            timestampString = "418817962.436802"
+            timestampString = "418823453.119848"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "291"
-            endingLineNumber = "291"
+            startingLineNumber = "290"
+            endingLineNumber = "290"
             landmarkName = "Graph::getNeiborIds(int id, float nodethreshold_b, float nodethreshold_t)"
             landmarkType = "5">
          </BreakpointContent>
@@ -216,11 +216,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "agi3d/Configuration.cpp"
-            timestampString = "418670469.655612"
+            timestampString = "418824551.421707"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "41"
-            endingLineNumber = "41"
+            startingLineNumber = "40"
+            endingLineNumber = "40"
             landmarkName = "Configuration::changeColor(int selectedNodeId)"
             landmarkType = "5">
          </BreakpointContent>
@@ -231,13 +231,13 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "agi3d/ConfigurationController.cpp"
-            timestampString = "418817159.498188"
+            filePath = "agi3d/ControlPanelController.cpp"
+            timestampString = "418820618.345936"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "160"
-            endingLineNumber = "160"
-            landmarkName = "ConfigurationController::selectNodeAttr(wxCommandEvent&amp;)"
+            startingLineNumber = "158"
+            endingLineNumber = "158"
+            landmarkName = "ControlPanelController::selectNodeAttr(wxCommandEvent&amp;)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -247,13 +247,13 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "agi3d/ConfigurationController.cpp"
-            timestampString = "418817159.498188"
+            filePath = "agi3d/ControlPanelController.cpp"
+            timestampString = "418820618.345936"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "169"
-            endingLineNumber = "169"
-            landmarkName = "ConfigurationController::selectEdgeAttr(wxCommandEvent&amp;)"
+            startingLineNumber = "167"
+            endingLineNumber = "167"
+            landmarkName = "ControlPanelController::selectEdgeAttr(wxCommandEvent&amp;)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -263,13 +263,13 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "agi3d/ConfigurationController.cpp"
-            timestampString = "418817159.498188"
+            filePath = "agi3d/ControlPanelController.cpp"
+            timestampString = "418820618.345936"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "164"
-            endingLineNumber = "164"
-            landmarkName = "ConfigurationController::selectEdgeAttr(wxCommandEvent&amp;)"
+            startingLineNumber = "162"
+            endingLineNumber = "162"
+            landmarkName = "ControlPanelController::selectEdgeAttr(wxCommandEvent&amp;)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -279,13 +279,13 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "agi3d/ConfigurationController.cpp"
-            timestampString = "418817159.498188"
+            filePath = "agi3d/ControlPanelController.cpp"
+            timestampString = "418820618.345936"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "168"
-            endingLineNumber = "168"
-            landmarkName = "ConfigurationController::selectEdgeAttr(wxCommandEvent&amp;)"
+            startingLineNumber = "166"
+            endingLineNumber = "166"
+            landmarkName = "ControlPanelController::selectEdgeAttr(wxCommandEvent&amp;)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -295,45 +295,29 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "agi3d/ConfigurationController.cpp"
-            timestampString = "418817159.498188"
+            filePath = "agi3d/ControlPanelController.cpp"
+            timestampString = "418820618.345936"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "157"
+            endingLineNumber = "157"
+            landmarkName = "ControlPanelController::selectNodeAttr(wxCommandEvent&amp;)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "agi3d/ControlPanelController.cpp"
+            timestampString = "418820618.345936"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "159"
             endingLineNumber = "159"
-            landmarkName = "ConfigurationController::selectNodeAttr(wxCommandEvent&amp;)"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "agi3d/ConfigurationController.cpp"
-            timestampString = "418817159.498188"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "161"
-            endingLineNumber = "161"
-            landmarkName = "ConfigurationController::selectNodeAttr(wxCommandEvent&amp;)"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "agi3d/Graph.cpp"
-            timestampString = "418818131.790438"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "651"
-            endingLineNumber = "651"
-            landmarkName = "Graph::loadEdgeAttrData(int n)"
+            landmarkName = "ControlPanelController::selectNodeAttr(wxCommandEvent&amp;)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -350,22 +334,6 @@
             startingLineNumber = "36"
             endingLineNumber = "36"
             landmarkName = "UserDefault::changeRotation(E_Rotation rotation)"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "agi3d/Graph.cpp"
-            timestampString = "418674746.115844"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "66"
-            endingLineNumber = "66"
-            landmarkName = "Graph::changeProjectionFactor(float f, E_Layout layout)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -446,6 +414,54 @@
             startingLineNumber = "301"
             endingLineNumber = "301"
             landmarkName = "GraphicPanel::pick(int x, int y)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "agi3d/AppDelegete.cpp"
+            timestampString = "418824898.707363"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "91"
+            endingLineNumber = "91"
+            landmarkName = "AppDelegete::initMVC()"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "agi3d/ControlPanel.cpp"
+            timestampString = "418824789.210504"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "98"
+            endingLineNumber = "98"
+            landmarkName = "ControlPanel::showModel()"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "agi3d/Configuration.cpp"
+            timestampString = "418825245.626408"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "6"
+            endingLineNumber = "6"
+            landmarkName = "Configuration::Configuration()"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

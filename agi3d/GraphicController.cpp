@@ -7,12 +7,15 @@
 using namespace agi3d;
 using namespace std;
 
-GraphicController::GraphicController(const std::shared_ptr<Graph>& graph,
-                                     const std::shared_ptr<Configuration>& configuration) {
-  _graph = graph;
-  _configuration = configuration;
-  _graphicPanel = AppDelegete::instance().getGraphicPanel();
+GraphicController::GraphicController() {
   
+}
+
+GraphicController::~GraphicController() {
+  
+}
+
+void GraphicController::initEventHandlers() {
   auto mouseMovedHandler(bind(&GraphicController::mouseMoved, this, placeholders::_1 ));
   this->_graphicPanel->Bind(wxEVT_MOTION, mouseMovedHandler);
   
@@ -39,10 +42,6 @@ GraphicController::GraphicController(const std::shared_ptr<Graph>& graph,
   
   auto mouseScrollHandler(bind(&GraphicController::onIdle, this, placeholders::_1 ));
   this->_graphicPanel->Bind(wxEVT_MOUSEWHEEL, mouseScrollHandler);
-}
-
-GraphicController::~GraphicController() {
-  
 }
 
 void GraphicController::resized(wxSizeEvent&) {

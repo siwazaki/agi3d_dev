@@ -21,45 +21,34 @@
 using namespace std;
 using namespace agi3d;
 
-Graph::Graph() : _isLoaded(false), _name("unknown"), _dataDir(""){
+Graph::Graph() : _isLoaded(false), _name(""), _dataDir(""), N(0), M(0){
   
 }
 
 Graph::~Graph() {
-  
-}
-
-//FIXME:ファイルを開く度にモデルを使いまわすのを止めたい
-//      ファイルを開いたら、古いモデルはdestroyして、新しいモデルをnewする
-void Graph::reset() {
-  if(isNeighbor) {
-    delete[] isNeighbor;
-  }
-  if(isdrawingNodes) {
+  if(this->isLoaded()) {
+    for (int i = 0; i < N; i++) {
+      delete[] D[i];
+    }
+    delete[] D;
+    delete[] nodevalues;
+    delete[] edgevalues;
     delete[] isdrawingNodes;
-  }
-  if(edgeAttribute) {
-    delete[] edgeAttribute;
-  }
-  if(isdrawingEdges) {
     delete[] isdrawingEdges;
+    delete[] edgeAttribute;
+    delete[] isNeighbor;
+    
+    delete[] lambdas;
+    delete[] P;
+    delete[] P_norms;
+    delete[] Layout3D;
+    delete[] E_3D;
+    delete[] E_3D_init;
+    delete[] Layout2D;
+    delete[] E_2D;
+    delete[] E_2D_init;
   }
   
-  isNeighbor = new bool[N];
-  isdrawingNodes = new bool[N];
-  
-  edgeAttribute = new bool[M];
-  isdrawingEdges = new bool[M];
-  
-  for (int i = 0; i < N; i++) {
-    isNeighbor[i] = false;
-    isdrawingNodes[i] = true;
-  }
-  
-  for (int i = 0; i < M; i++) {
-    edgeAttribute[i] = true;
-    isdrawingEdges[i] = true;
-  }
 }
 
 void Graph::changeProjectionFactor(float f, E_Layout layout) {
@@ -143,7 +132,6 @@ void Graph::changeEdgeThreshold(float b, float t) {
 }
 
 bool Graph::loadData(const std::string &filePath){
-  _isLoaded = true;
   string fname = string(filePath);
   int path_i = fname.find_last_of("/");
   int ext_i = fname.find_last_of(".");
@@ -154,12 +142,15 @@ bool Graph::loadData(const std::string &filePath){
     if (filename.find("DisMat") != string::npos) {
       _name = fname.substr(path_i + 1, fname.size() - path_i - 11);
       loadMatrixData_t(filePath.c_str());
+      _isLoaded = true;
     } else if (filename.find("Data.") != string::npos) {
       _name = fname.substr(path_i + 1, fname.size() - path_i - 9);
       loadLayoutData_t(filePath.c_str());
+      _isLoaded = true;
     } else if (filename.find("DataAll") != string::npos) {
       _name = fname.substr(path_i + 1, fname.size() - path_i - 12);
       loadLayoutData_t(filePath.c_str());
+      _isLoaded = true;
     } else {
       _isLoaded = false;
       cerr << "This file is not available" << endl;
@@ -169,19 +160,39 @@ bool Graph::loadData(const std::string &filePath){
     if (filename.find("DisMat") != string::npos) {
       _name = fname.substr(path_i + 1, fname.size() - path_i - 11);
       loadMatrixData_b(filePath.c_str());
+      _isLoaded = true;
     } else if (filename.find("Data.") != string::npos) {
       _name = fname.substr(path_i + 1, fname.size() - path_i - 15);
       loadLayoutData_b(filePath.c_str());
+      _isLoaded = true;
     } else if (filename.find("DataAll") != string::npos) {
       _name = fname.substr(path_i + 1, fname.size() - path_i - 18);
       loadLayoutData_b(filePath.c_str());
+      _isLoaded = true;
     } else {
-     _isLoaded = false;
+      _isLoaded = false;
       cerr << "This file is not available" << endl;
       return false;
     }
   }
-  this->reset();
+  
+  if(_isLoaded) {
+    isNeighbor = new bool[N];
+    isdrawingNodes = new bool[N];
+    
+    edgeAttribute = new bool[M];
+    isdrawingEdges = new bool[M];
+    
+    for (int i = 0; i < N; i++) {
+      isNeighbor[i] = false;
+      isdrawingNodes[i] = true;
+    }
+    
+    for (int i = 0; i < M; i++) {
+      edgeAttribute[i] = true;
+      isdrawingEdges[i] = true;
+    }
+  }
   return true;
 }
 
@@ -276,11 +287,6 @@ void Graph::resetLayout2D() {
 }
 
 void Graph::calcmdsLayout() {
-  if(this->isLoaded()) {
-    delete[] lambdas;
-    delete[] P_norms;
-    delete[] P;
-  }
   float * D2 = new float[N * N];
   for (int i = 0; i < N; i++) {
     D2[i + i * N] = 0.0f;
@@ -529,9 +535,6 @@ void Graph::calc3DLayout() {
     }
   }
   
-  if(this->isLoaded()) {
-    delete[] Layout3D;
-  }
   Layout3D = new float[N * 3];
   cblas_sgemm(CblasColMajor, CblasNoTrans, CblasNoTrans,
               N, 3, dim, 1.0, P, N, E_3D, dim, 0.0, Layout3D, N);
@@ -573,10 +576,6 @@ void Graph::calc2DLayout() {
       E_2D[j + i * dim] = e[i][j];
       E_2D_init[j + i * dim] = e[i][j];
     }
-  }
-  
-  if(this->isLoaded()) {
-    delete[] Layout2D;
   }
   Layout2D = new float[N * 2];
   cblas_sgemm(CblasColMajor, CblasNoTrans, CblasNoTrans,
@@ -709,29 +708,29 @@ void Graph::calcSimpson()
 }
 
 void Graph::calcSimpsonEx() {
-    string filename = _dataDir + _name + "SimpsonEx.txt";
-    ofstream ofs(filename.c_str());
-    edgevalue_max = 0;
-    edgevalue_min = 100000000;
-    for (int i = 0; i < M; i++) {
-      int from = edges[i].first, to = edges[i].second;
-      float count = 0.0f;
-      for (int j = 0; j < N; j++) {
-        if (D[from][j] == 1 && D[to][j] == 1) {
-          count += 1.0f;
-        }
+  string filename = _dataDir + _name + "SimpsonEx.txt";
+  ofstream ofs(filename.c_str());
+  edgevalue_max = 0;
+  edgevalue_min = 100000000;
+  for (int i = 0; i < M; i++) {
+    int from = edges[i].first, to = edges[i].second;
+    float count = 0.0f;
+    for (int j = 0; j < N; j++) {
+      if (D[from][j] == 1 && D[to][j] == 1) {
+        count += 1.0f;
       }
-      int a = min(neighbor[from].size(), neighbor[to].size());
-      if (a >= 2) {
-        edgevalues[i] = (float) count / (float) a;
-      } else {
-        edgevalues[i] = 0;
-      }
-      edgevalue_min = min(edgevalue_min, edgevalues[i]);
-      edgevalue_max = max(edgevalue_max, edgevalues[i]);
-      ofs << from << " " << to << " " << edgevalues[i] << endl;
     }
-    ofs.close();
+    int a = min(neighbor[from].size(), neighbor[to].size());
+    if (a >= 2) {
+      edgevalues[i] = (float) count / (float) a;
+    } else {
+      edgevalues[i] = 0;
+    }
+    edgevalue_min = min(edgevalue_min, edgevalues[i]);
+    edgevalue_max = max(edgevalue_max, edgevalues[i]);
+    ofs << from << " " << to << " " << edgevalues[i] << endl;
+  }
+  ofs.close();
 }
 
 void Graph::loadLabelData() {
@@ -756,10 +755,7 @@ void Graph::loadLabelData() {
 
 //Set Default Node & Edge value
 void Graph::setNodeEdgeValue() {
-  if(isLoaded()) {
-    delete[] nodevalues;
-    delete[] edgevalues;
-  }
+  
   nodevalues = new float[N];
   for (int i = 0; i < N; i++) {
     nodevalues[i] = 1.0f;
@@ -777,15 +773,13 @@ void Graph::setNodeEdgeValue() {
 }
 
 void Graph::loadMatrixData_t(const char * data) {
-  //Free Memor
+  ifstream ifs(data);
+  ifs >> N;
+  D = new int*[N];
+  neighbor = new vector<int>[N];
+  edgelist = new vector<int>[N];
+  
   {
-    if (memory_status) {
-      for (int i = 0; i < N; i++) {
-        delete[] D[i];
-      }
-      delete[] D;
-      memory_status = false;
-    }
     for (int i = 0; i < N; i++) {
       vector<int>().swap(neighbor[i]);
       vector<int>().swap(edgelist[i]);
@@ -800,12 +794,6 @@ void Graph::loadMatrixData_t(const char * data) {
       cerr << "File not found\n";
       exit(0);
     }
-    
-    ifs >> N;
-    D = new int*[N];
-    memory_status = true;
-    neighbor = new vector<int>[N];
-    edgelist = new vector<int>[N];
     
     for (int i = 0; i < N; i++) {
       D[i] = new int[N];
@@ -851,44 +839,33 @@ void Graph::loadMatrixData_t(const char * data) {
 }
 
 void Graph::loadMatrixData_b(const char * data) {
-  if(this->isLoaded()) {
-    //Free Memory
-    {
-      if (memory_status) {
-        for (int i = 0; i < N; i++) {
-          delete[] D[i];
-        }
-        delete[] D;
-        memory_status = false;
-      }
-      for (int i = 0; i < N; i++) {
-        vector<int>().swap(neighbor[i]);
-        vector<int>().swap(edgelist[i]);
-      }
-      vector< pair<int, int> >().swap(edges);
-      vector<string>().swap(labels);
-    }
+  ifstream ifs(data, ios::out | ios::binary);
+  if (ifs.fail()) {
+    cerr << "File not found\n";
+    exit(0);
   }
   
+  int _N;
+  ifs.read((char *) &_N, sizeof (int));
+  N = _N;
+  int * buffer = (int *) malloc((long) sizeof (int)*(N * N));
+  ifs.read((char *) buffer, (long) sizeof (int)*N * N);
+  ifs.close();
+  
+  D = new int*[N];
+  neighbor = new vector<int>[N];
+  edgelist = new vector<int>[N];
   
   {
-    ifstream ifs(data, ios::out | ios::binary);
-    if (ifs.fail()) {
-      cerr << "File not found\n";
-      exit(0);
+    for (int i = 0; i < N; i++) {
+      vector<int>().swap(neighbor[i]);
+      vector<int>().swap(edgelist[i]);
     }
-    
-    int _N;
-    ifs.read((char *) &_N, sizeof (int));
-    N = _N;
-    int * buffer = (int *) malloc((long) sizeof (int)*(N * N));
-    ifs.read((char *) buffer, (long) sizeof (int)*N * N);
-    ifs.close();
-    
-    D = new int*[N];
-    memory_status = true;
-    neighbor = new vector<int>[N];
-    edgelist = new vector<int>[N];
+    vector< pair<int, int> >().swap(edges);
+    vector<string>().swap(labels);
+  }
+  
+  {
     
     for (int i = 0; i < N; i++) {
       D[i] = new int[N];
@@ -934,40 +911,29 @@ void Graph::loadMatrixData_b(const char * data) {
 }
 
 void Graph::loadLayoutData_t(const char * data) {
-  //Free Memory
+  ifstream ifs(data);
+  string str;
+  
+  if (ifs.fail()) {
+    cerr << "File not found\n";
+    exit(0);
+  }
+  
+  ifs >> str >> N >> M;
+  
+  neighbor = new vector<int>[N];
+  edgelist = new vector<int>[N];
+  
   {
-    if (memory_status) {
-      for (int i = 0; i < N; i++) {
-        delete[] D[i];
-      }
-      delete[] D;
-      memory_status = false;
-    }
     for (int i = 0; i < N; i++) {
       vector<int>().swap(neighbor[i]);
       vector<int>().swap(edgelist[i]);
     }
     vector< pair<int, int> >().swap(edges);
     vector<string>().swap(labels);
-    delete[] lambdas;
-    delete[] P_norms;
-    delete[] P;
   }
   
   {
-    ifstream ifs(data);
-    string str;
-    
-    if (ifs.fail()) {
-      cerr << "File not found\n";
-      exit(0);
-    }
-    
-    ifs >> str >> N >> M;
-    
-    neighbor = new vector<int>[N];
-    edgelist = new vector<int>[N];
-    
     //load Edges and binary
     for (int i = 0; i < M; i++) {
       int _from, _to;
@@ -1015,41 +981,29 @@ void Graph::loadLayoutData_t(const char * data) {
 }
 
 void Graph::loadLayoutData_b(const char * data) {
+  ifstream layoutData(data, ios::out | ios::binary);
+  
+  if (layoutData.fail()) {
+    cerr << "File not found\n";
+    exit(0);
+  }
+  
+  int _N = 0, _dim = 0;
+  layoutData.read((char *) &_N, sizeof (int));
+  layoutData.read((char *) &_dim, sizeof (int));
+  N = _N;
+  dim = _dim;
   const std::string& graphName = this->getName();
-  //Free Memory
   {
-    if (memory_status) {
-      for (int i = 0; i < N; i++) {
-        delete[] D[i];
-      }
-      delete[] D;
-      memory_status = false;
-    }
     for (int i = 0; i < N; i++) {
       vector<int>().swap(neighbor[i]);
       vector<int>().swap(edgelist[i]);
     }
     vector< pair<int, int> >().swap(edges);
     vector<string>().swap(labels);
-    delete[] lambdas;
-    delete[] P_norms;
-    delete[] P;
   }
   
   {
-    ifstream layoutData(data, ios::out | ios::binary);
-    
-    if (layoutData.fail()) {
-      cerr << "File not found\n";
-      exit(0);
-    }
-    
-    int _N = 0, _dim = 0;
-    layoutData.read((char *) &_N, sizeof (int));
-    layoutData.read((char *) &_dim, sizeof (int));
-    N = _N;
-    dim = _dim;
-    
     float * _lambdas = new float[dim];
     layoutData.read((char *) _lambdas, (long) sizeof (float)*(dim));
     lambdas = new float[dim];

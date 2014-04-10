@@ -37,6 +37,7 @@ namespace agi3d {
               const std::shared_ptr<Configuration>& configuration);
     
     void moveTo(int x, int y);
+    void moveEye(int delta);
     void refresh();
     void resize();
     int pick(int x, int y);
@@ -44,24 +45,10 @@ namespace agi3d {
     void releaseRight();
     void downRight(int x, int y);
     void renderScene();
-    
-    //TODO: refactor this
     void setupPanel();
-    
     void savePixelData();
     
-    //TODO:下のAPIは整理が必要
-    //モデルの内容を書き換えて、Refresh呼ぶだけなので、
-    //Observerパターンでよい。
-    //そんで、前処理はGraphに持っていく
-    void moveEye(int delta);
-    
   private:
-    /**
-     * @TODO: remove this
-     */
-    void changeEye(float);
-
     int getWidth();
     int getHeight();
     void changeAutoRotation();

@@ -30,8 +30,9 @@ public:
   wxCheckBox * edgeCheckBox;
   wxCheckBox * nodeSizeCheckBox;
 
-  void Init();
+  void showModel();
 
+private:
   void CloseWindow(wxCommandEvent & event);
 
   void UpdateNodeSize(wxScrollEvent& event);

@@ -59,7 +59,8 @@ AppearanceWindow::AppearanceWindow(wxWindow * parent, const wxString& title)
   Center();
 }
 
-void AppearanceWindow::Init() {
+void AppearanceWindow::showModel() {
+ //FIXME: userdefault, configurationの値に合わせて設定する。
   nodeSizeSlider->SetValue(100);
   edgeThicknessSlider->SetValue(50);
   edgeCheckBox->SetValue(true);

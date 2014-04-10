@@ -14,8 +14,8 @@
 #include "Frame.h"
 #include "GraphicPanel.h"
 #include "ControlPanel.h"
-#include "UserDefaultController.h"
-#include "ConfigurationController.h"
+#include "MenuBarController.h"
+#include "ControlPanelController.h"
 #include "GraphicController.h"
 #include "AppearanceWindow.h"
 
@@ -27,6 +27,7 @@ namespace agi3d {
     static AppDelegete& instance();
     virtual ~AppDelegete();
     void initMVC();
+    void changeGraph(const std::string& graphFilePath);
     void run();
     
     Frame* getFrame() const;
@@ -35,8 +36,8 @@ namespace agi3d {
     ControlPanel* getControlPanel() const;
     GraphicPanel* getGraphicPanel() const;
     AppearanceWindow* getAppearanceWindow() const;
-    
-    const std::shared_ptr<ConfigurationController>& getConfigurationController();
+        
+    const std::shared_ptr<ControlPanelController>& getConfigurationController();
     const std::shared_ptr<GraphicController>& getGraphicController();
     
     const std::shared_ptr<Graph>& getGraph();
@@ -45,6 +46,7 @@ namespace agi3d {
     
   private:
     void outputOpenGLInfo();
+    void initMV();
     
   private:
     Frame *_frame;
@@ -54,9 +56,9 @@ namespace agi3d {
     ControlPanel *_controlPanel;
     AppearanceWindow *_appearanceWindow;
     
-    std::shared_ptr<UserDefaultController> _userDefaultController;
-    std::shared_ptr<ConfigurationController> _configurationController;
-    std::shared_ptr<GraphicController> _graphicController;
+    std::shared_ptr<MenuBarController> _menuBarController;
+    std::shared_ptr<ControlPanelController> _controlPanelController;
+    std::shared_ptr<GraphicController> _graphicPanelController;
     
     std::shared_ptr<Graph> _graph;
     std::shared_ptr<UserDefault> _userDefault;

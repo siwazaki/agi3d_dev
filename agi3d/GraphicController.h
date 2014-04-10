@@ -15,14 +15,15 @@
 #include "Configuration.h"
 
 namespace agi3d {
+  class AppDelegete;
   
   class GraphicController
   {
-    
+    friend class AppDelegete;
   public:
-    GraphicController(const std::shared_ptr<Graph>& graph,
-                      const std::shared_ptr<Configuration>& configuration);
+    GraphicController();
     virtual ~GraphicController();
+    void initEventHandlers();
         
   private:
     GraphicPanel *_graphicPanel;

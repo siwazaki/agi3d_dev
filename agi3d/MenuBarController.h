@@ -23,12 +23,13 @@
 namespace agi3d {
   class AppDelegete;
   
-  class UserDefaultController
+  class MenuBarController
   {
     friend class AppDelegete;
   public:
-    UserDefaultController(const std::shared_ptr<UserDefault>& userDefault, const std::shared_ptr<Graph>& graph);
-    virtual ~UserDefaultController();
+    MenuBarController();
+    virtual ~MenuBarController();
+    void initEventHandlers();    
 
   private:
     std::shared_ptr<UserDefault> _userDefault;
@@ -38,7 +39,6 @@ namespace agi3d {
     GraphicPanel* _graphicPanel;
     ControlPanel* _controlPanel;
     
-
     void notifyUpdateNodeSize(wxScrollEvent& event);
     void setAutoXRotation(wxCommandEvent& event);
     void setAutoYRotation(wxCommandEvent& event);

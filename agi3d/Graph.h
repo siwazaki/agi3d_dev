@@ -134,7 +134,6 @@ namespace agi3d
     float init2D[6];
     float scale = 1.0f;
     float delta = 0.5;
-    float memory_status = false;
     int strToInt(const std::string &str);
     std::string IntToString(int num);
     

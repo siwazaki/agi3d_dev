@@ -20,6 +20,7 @@ namespace agi3d {
     virtual ~MenuBar(){}
     virtual void update(const Observable& observable, E_ObserveType observeType);
     void init(const std::shared_ptr<UserDefault> userDefault);
+    void showModel();
     
   private:
     std::shared_ptr<UserDefault> _userDefault;
