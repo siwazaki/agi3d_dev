@@ -30,7 +30,7 @@ namespace agi3d {
     ConfigurationController(const std::shared_ptr<Configuration>& configuration, const std::shared_ptr<UserDefault>& userDefault, const std::shared_ptr<Graph>& graph);
     virtual ~ConfigurationController();
     //TODO: remane
-    void init();
+
   private:
     std::shared_ptr<Configuration> _configuration;
     std::shared_ptr<UserDefault> _userDefault;

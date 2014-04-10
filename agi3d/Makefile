@@ -1,20 +1,19 @@
 PROGNAME := agi3d
 #release or debug
 buildtype := debug
-BIN_WXCONFIG :=$(HOME)/homebrew/bin/wx-config	
 CXX := g++
 CPPFLAGS += -std=c++11 -stdlib=libc++
 #CPPFLAGS +=
 LDFLAGS +=
 LBFGSLIB = -llbfgs
-WXLIBS = `$(BIN_WXCONFIG) --libs --gl-libs`
+WXLIBS = `wx-config --libs --gl-libs`
 FRAMEWORK = -framework OpenGL
 FRAMEWORK += -framework GLUT
 FRAMEWORK += -framework Accelerate
 FRAMEWORK += -framework IOKit
 FRAMEWORK += -framework Cocoa
 LIBS += -lpng15 $(FRAMEWORK) -lglfw3 -lpthread -llapack -lblas $(LBFGSLIB) $(WXLIBS)
-WXCONFIG = `$(BIN_WXCONFIG) --cxxflags`
+WXCONFIG = `wx-config --cxxflags`
 INCLUDES := -I../vendor
 DEFS := $(INCLUDES) $(WXCONFIG) 
 

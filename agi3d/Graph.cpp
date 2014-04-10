@@ -33,16 +33,16 @@ Graph::~Graph() {
 //      ファイルを開いたら、古いモデルはdestroyして、新しいモデルをnewする
 void Graph::reset() {
   if(isNeighbor) {
-    //delete[] isNeighbor;
+    delete[] isNeighbor;
   }
   if(isdrawingNodes) {
-    //delete[] isdrawingNodes;
+    delete[] isdrawingNodes;
   }
   if(edgeAttribute) {
-    //delete[] edgeAttribute;
+    delete[] edgeAttribute;
   }
   if(isdrawingEdges) {
-    //delete[] isdrawingEdges;
+    delete[] isdrawingEdges;
   }
   
   isNeighbor = new bool[N];
@@ -143,6 +143,7 @@ void Graph::changeEdgeThreshold(float b, float t) {
 }
 
 bool Graph::loadData(const std::string &filePath){
+  _isLoaded = true;
   string fname = string(filePath);
   int path_i = fname.find_last_of("/");
   int ext_i = fname.find_last_of(".");
@@ -160,6 +161,7 @@ bool Graph::loadData(const std::string &filePath){
       _name = fname.substr(path_i + 1, fname.size() - path_i - 12);
       loadLayoutData_t(filePath.c_str());
     } else {
+      _isLoaded = false;
       cerr << "This file is not available" << endl;
       return false;
     }
@@ -174,11 +176,12 @@ bool Graph::loadData(const std::string &filePath){
       _name = fname.substr(path_i + 1, fname.size() - path_i - 18);
       loadLayoutData_b(filePath.c_str());
     } else {
+     _isLoaded = false;
       cerr << "This file is not available" << endl;
       return false;
     }
   }
-  _isLoaded = true;
+  this->reset();
   return true;
 }
 
@@ -278,7 +281,6 @@ void Graph::calcmdsLayout() {
     delete[] P_norms;
     delete[] P;
   }
-  
   float * D2 = new float[N * N];
   for (int i = 0; i < N; i++) {
     D2[i + i * N] = 0.0f;

@@ -57,12 +57,7 @@ namespace agi3d
     float calcNodeThreshold(float t) const;
     float calcEdgeThreshold(float t) const;
     
-    //initialization
     bool isLoaded() const;
-    
-    //FIXME:この関数は消すこと
-    void reset();
-    bool loadData(const std::string& filePath);
     
     int getNew3DLayout(int, float, float, float, float, float, float);
     void resetLayout3D();
@@ -77,19 +72,10 @@ namespace agi3d
     void updateDimension2D(float);
     
     //データ取込
+    bool loadData(const std::string& filePath);
     void loadNodeAttrData(int n);
     void loadEdgeAttrData(int n);
     void loadLabelData();
-    void loadMatrixData_t(const char * data);
-    void loadMatrixData_b(const char * data);
-    void loadLayoutData_b(const char * data);
-    void loadLayoutData_t(const char * data);
-    
-    void calcmdsLayout();
-    void calc2DLayout();
-    void calc3DLayout();
-    
-    double getETime();
     
     float posX2D(int i) const;
     float posY2D(int i) const;
@@ -99,6 +85,17 @@ namespace agi3d
     
     const std::string& getNodeLabel(int id) const;
     std::vector<int> getNeiborIds(int id, float nodethreshold_b, float nodethreshold_t) const;
+    
+  private:
+    void reset();
+    void loadMatrixData_t(const char * data);
+    void loadMatrixData_b(const char * data);
+    void loadLayoutData_b(const char * data);
+    void loadLayoutData_t(const char * data);
+    void calcmdsLayout();
+    void calc2DLayout();
+    void calc3DLayout();
+    double getETime();
     
   private:
     //graph properties

@@ -82,11 +82,10 @@ void UserDefaultController::stopAutoRotation(wxCommandEvent&) {
 void UserDefaultController::onOpen(wxCommandEvent&) {
   wxFileDialog * openFileDialog = new wxFileDialog(_menuBar);
   if (openFileDialog->ShowModal() == wxID_OK) {
-     wxString filePath = openFileDialog->GetPath();
+     wxString filePath = openFileDialog->GetPath();    
     _graph->loadData(std::string(filePath.mb_str()));
-    auto appearanceWindow = AppDelegete::instance().getAppearanceWindow();
-    _graphicPanel->setupPanel();
     _appearanceWindow->Init();
+    _graphicPanel->setupPanel();
   }
 }
 

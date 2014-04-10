@@ -25,7 +25,7 @@ ConfigurationController::ConfigurationController(const std::shared_ptr<Configura
                                                  , const std::shared_ptr<Graph>& graph) {
   _configuration = configuration;
   _userDefault = userDefault;
-  _graph = graph;  
+  _graph = graph;
   _controlPanel = AppDelegete::instance().getControlPanel();
   
   auto notifyUpdateNodeSizeHandler(bind(&ConfigurationController::notifyUpdateNodeSize, this, placeholders::_1));

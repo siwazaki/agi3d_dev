@@ -778,8 +778,7 @@ void GraphicPanel::relayout2D() {
   }
 }
 
-void GraphicPanel::setupPanel() {
-  _graph->reset();
+void GraphicPanel::setupPanel() {  
   //Free Memory
   {
     if(LOAD_FLAG) {
