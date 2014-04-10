@@ -100,19 +100,21 @@ void UserDefaultController::reset(wxCommandEvent&) {
 
 void UserDefaultController::changeLayoutModeTo2D(wxCommandEvent&) {
   _userDefault->changeLayout(E_Layout::D2);
+//TODO:
 //  right->Init();
 //  appw->Init();
 }
 
 void UserDefaultController::changeLayoutModeTo3D(wxCommandEvent&) {
     _userDefault->changeLayout(E_Layout::D3);
-
+//TODO:
 //  right->Init();
 //  appw->Init();
 }
 
 
 void UserDefaultController::captureImage(wxCommandEvent&) {
+//TODO:  
   //left->SavePixelData();
 }
 
