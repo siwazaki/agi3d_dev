@@ -1,11 +1,3 @@
-//
-//  SettingController.h
-//  agi3d
-//
-//  Created by 岩崎 敏 on 2014/03/31.
-//  Copyright (c) 2014年 com.nefrock. All rights reserved.
-//
-
 #ifndef __agi3d__UserDefaultController__
 #define __agi3d__UserDefaultController__
 
